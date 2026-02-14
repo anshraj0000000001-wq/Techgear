@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechGear | Premium Electronics Affiliate</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --accent: #f59e0b;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Global Layout --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* --- Sections --- */
+        section {
+            padding: 4rem 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- Hero --- */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--white);
+            text-align: center;
+            padding: 6rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        /* --- Product Grid --- */
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        /* --- Product Card --- */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f1f5f9;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .card-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .rating {
+            color: var(--accent);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: var(--dark);
+            color: #94a3b8;
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-title {
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+        }
+
+        .bottom-footer {
+            border-top: 1px solid #1e293b;
+            padding-top: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        /* Detail Page Styling */
+        .detail-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .detail-image img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        @media (max-width: 768px) {
+            .detail-layout { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="container">
+            <a onclick="navigateTo('home')" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>
+                TECHGEAR
+            </a>
+            <ul class="nav-links">
+                <li><a onclick="navigateTo('home')">Home</a></li>
+                <li><a onclick="navigateTo('category')">Catalog</a></li>
+                <li><a onclick="navigateTo('about')">About</a></li>
+                <li><a onclick="navigateTo('contact')">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="app">
+        <!-- Home View -->
+        <div id="view-home">
+            <section class="hero">
+                <div class="container">
+                    <h1>Future Tech, Handpicked.</h1>
+                    <p>Direct affiliate links to the world's best-selling electronics. Expertly curated, verified for quality.</p>
+                    <a onclick="navigateTo('category')" class="btn btn-primary">Browse Catalog</a>
+                </div>
+            </section>
+
+            <section class="container">
+                <div class="section-title">
+                    <h2>Featured Selections</h2>
+                </div>
+                <div id="featured-grid" class="grid"></div>
+            </section>
+        </div>
+
+        <!-- Catalog View -->
+        <div id="view-category" class="hidden">
+            <section class="container">
+                <div class="section-title">
+                    <h1>Full Electronics Catalog</h1>
+                    <p>Find the best hardware at the best price.</p>
+                </div>
+                <div id="catalog-grid" class="grid"></div>
+            </section>
+        </div>
+
+        <!-- Detail View -->
+        <div id="view-detail" class="hidden">
+            <section class="container" id="product-detail-content"></section>
+        </div>
+
+        <!-- Info View -->
+        <div id="view-info" class="hidden">
+            <section class="container" id="info-content"></section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="footer-title">TechGear</h3>
+                    <p>Your premium source for electronic product reviews and affiliate recommendations.</p>
+                </div>
+                <div>
+                    <h4 class="footer-title">Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a onclick="navigateTo('home')">Home</a></li>
+                        <li><a onclick="navigateTo('category')">Catalog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="footer-title">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a onclick="navigateTo('privacy')">Privacy Policy</a></li>
+                        <li><a onclick="navigateTo('disclosure')">Affiliate Disclosure</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bottom-footer">
+                <p>&copy; 2024 TechGear Affiliate. As an Amazon Associate, we earn from qualifying purchases.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const PRODUCTS = [
+            { id: 1, asin: 'B0CHX7N2R9', title: 'Noise Cancelling Headphones Pro', description: 'Industry-leading noise cancellation technology with 40-hour battery life.', price: 299.00, rating: 4.8, category: 'Audio', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600' },
+            { id: 2, asin: 'B0C767T5SS', title: 'Ultra Slim Mechanical Keyboard', description: 'Minimalist mechanical keyboard featuring low-profile switches and RGB.', price: 129.50, rating: 4.5, category: 'Computing', image: 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=600' },
+            { id: 3, asin: 'B08L5K18B6', title: '4K UltraHD Smart Webcam', description: 'Crystal clear video calls with AI framing and dual noise-reducing mics.', price: 89.00, rating: 4.2, category: 'Peripherals', image: 'https://images.unsplash.com/photo-1588508065123-287b28e013da?w=600' },
+            { id: 4, asin: 'B09G9FPHP6', title: 'Handheld Gaming Console X', description: 'High-performance mobile gaming with 7" OLED display and custom APU.', price: 349.99, rating: 4.9, category: 'Gaming', image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600' }
+        ];
+
+        const TAG = 'yourtag-21';
+
+        function navigateTo(view, param = null) {
+            document.querySelectorAll('#app > div').forEach(v => v.classList.add('hidden'));
+            window.scrollTo(0, 0);
+
+            switch(view) {
+                case 'home':
+                    document.getElementById('view-home').classList.remove('hidden');
+                    renderGrid('featured-grid', PRODUCTS.slice(0, 3));
+                    break;
+                case 'category':
+                    document.getElementById('view-category').classList.remove('hidden');
+                    renderGrid('catalog-grid', PRODUCTS);
+                    break;
+                case 'detail':
+                    document.getElementById('view-detail').classList.remove('hidden');
+                    renderDetail(param);
+                    break;
+                case 'about':
+                case 'privacy':
+                case 'disclosure':
+                case 'contact':
+                    document.getElementById('view-info').classList.remove('hidden');
+                    renderInfo(view);
+                    break;
+            }
+        }
+
+        function createCard(p) {
+            const url = `https://www.amazon.in/dp/${p.asin}?tag=${TAG}`;
+            return `
+                <div class="card">
+                    <img src="${p.image}" class="card-img" alt="${p.title}">
+                    <div class="card-body">
+                        <span class="card-category">${p.category}</span>
+                        <h3 class="card-title">${p.title}</h3>
+                        <div class="rating">
+                            ${'★'.repeat(Math.floor(p.rating))}${'☆'.repeat(5 - Math.floor(p.rating))}
+                        </div>
+                        <p class="card-price">$${p.price.toFixed(2)}</p>
+                        <button onclick="navigateTo('detail', ${p.id})" class="btn btn-outline">View Specs</button>
+                        <a href="${url}" target="_blank" class="btn btn-primary">Buy Now on Amazon</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGrid(id, items) {
+            document.getElementById(id).innerHTML = items.map(p => createCard(p)).join('');
+        }
+
+        function renderDetail(id) {
+            const p = PRODUCTS.find(x => x.id === id);
+            const url = `https://www.amazon.in/dp/${p.asin}?tag=${TAG}`;
+            document.getElementById('product-detail-content').innerHTML = `
+                <div class="detail-layout">
+                    <div class="detail-image"><img src="${p.image}"></div>
+                    <div>
+                        <span class="card-category">${p.category}</span>
+                        <h1 style="font-size: 2.5rem; margin-top: 0.5rem;">${p.title}</h1>
+                        <p style="font-size: 1.5rem; font-weight: 700; margin: 1rem 0;">$${p.price.toFixed(2)}</p>
+                        <p style="color: var(--gray); margin-bottom: 2rem;">${p.description}</p>
+                        <a href="${url}" target="_blank" class="btn btn-primary" style="width: 100%; padding: 1.2rem;">Purchase on Amazon</a>
+                        <p style="font-size: 0.8rem; text-align: center; margin-top: 1rem; color: var(--gray);">* Clicking redirects to Amazon.in</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderInfo(type) {
+            const titles = { about: 'About TechGear', privacy: 'Privacy Policy', disclosure: 'Affiliate Disclosure', contact: 'Contact Us' };
+            document.getElementById('info-content').innerHTML = `
+                <h1>${titles[type]}</h1>
+                <p style="margin-top: 2rem; max-width: 800px;">This is a placeholder for the ${type} content. TechGear is a professional affiliate portal designed for electronics enthusiasts.</p>
+            `;
+        }
+
+        window.onload = () => navigateTo('home');
+    </script>
+</body>
+</html>
+
