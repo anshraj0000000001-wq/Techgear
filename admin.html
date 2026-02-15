@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ansh Admin Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter;}
+body{
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+min-height:100vh;
+padding:20px;
+}
+
+.hidden{display:none;}
+
+.container{max-width:1200px;margin:auto;}
+
+.card{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(20px);
+padding:25px;
+border-radius:20px;
+margin-bottom:25px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+input,textarea,select{
+width:100%;
+padding:12px;
+margin-bottom:12px;
+border:none;
+border-radius:10px;
+outline:none;
+}
+
+button{
+padding:10px 18px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-weight:600;
+margin:5px 5px 5px 0;
+}
+
+.primary{background:#00f2fe;color:#000;}
+.danger{background:#ff4d4d;color:white;}
+.secondary{background:#7f5af0;color:white;}
+
+button:hover{opacity:0.85;}
+
+.project-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:20px;
+}
+
+.project{
+background:rgba(255,255,255,0.1);
+padding:15px;
+border-radius:15px;
+}
+
+.project img, .project video{
+width:100%;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+.stats{
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.stat{
+flex:1;
+background:rgba(255,255,255,0.1);
+padding:20px;
+border-radius:15px;
+text-align:center;
+}
+
+.preview img, .preview video{
+max-width:100%;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+@media(max-width:600px){
+h2{font-size:20px;}
+}
+</style>
+</head>
+<body>
+
+<div id="loginBox" class="container">
+<div class="card">
+<h2>🔐 Admin Login</h2>
+<input type="text" id="username" placeholder="Username">
+<input type="password" id="password" placeholder="Password">
+<button class="primary" onclick="login()">Login</button>
+<p id="loginMsg"></p>
+</div>
+</div>
+
+<div id="dashboard" class="hidden container">
+
+<div class="card stats">
+<div class="stat">
+<h3>Total Projects</h3>
+<h2 id="totalProjects">0</h2>
+</div>
+<div class="stat">
+<h3>Total Visits</h3>
+<h2 id="totalViews">0</h2>
+</div>
+</div>
+
+<div class="card">
+<h2>Add / Edit Project</h2>
+<input type="hidden" id="editIndex">
+<input type="text" id="title" placeholder="Project Title">
+<textarea id="description" placeholder="Project Description"></textarea>
+
+<select id="category">
+<option>Website</option>
+<option>App</option>
+<option>AI</option>
+<option>Other</option>
+</select>
+
+<input type="file" id="file" accept="image/*,video/*" onchange="previewFile()">
+
+<div class="preview">
+<img id="previewImg" class="hidden">
+<video id="previewVideo" controls class="hidden"></video>
+</div>
+
+<button class="primary" onclick="saveProject()">Save</button>
+<button class="secondary" onclick="clearForm()">Clear</button>
+</div>
+
+<div class="card">
+<h2>All Projects</h2>
+<div class="project-grid" id="projectList"></div>
+</div>
+
+</div>
+
+<script>
+
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycby1SX_rIVSOz1bi21FEU895HP2C3BuN42p4QZRGL04PuezENBm2CoWUnjxwIxoMhxVbJg/exec";
+
+const ADMIN_USER="ansh_raj";
+const ADMIN_PASS="1n19hraj";
+
+let projects=[];
+
+function login(){
+let u=username.value;
+let p=password.value;
+
+if(u===ADMIN_USER && p===ADMIN_PASS){
+loginBox.style.display="none";
+dashboard.classList.remove("hidden");
+loadProjects();
+}else{
+loginMsg.innerText="Wrong Credentials ❌";
+}
+}
+
+function previewFile(){
+const file=document.getElementById("file").files[0];
+if(!file) return;
+
+const reader=new FileReader();
+reader.onload=function(e){
+
+if(file.type.startsWith("image")){
+previewImg.src=e.target.result;
+previewImg.classList.remove("hidden");
+previewVideo.classList.add("hidden");
+}else{
+previewVideo.src=e.target.result;
+previewVideo.classList.remove("hidden");
+previewImg.classList.add("hidden");
+}
+
+};
+reader.readAsDataURL(file);
+}
+
+async function loadProjects(){
+const res=await fetch(SCRIPT_URL);
+projects=await res.json();
+
+totalProjects.innerText=projects.length;
+
+let visits=localStorage.getItem("admin_visits")||0;
+visits++;
+localStorage.setItem("admin_visits",visits);
+totalViews.innerText=visits;
+
+projectList.innerHTML="";
+
+projects.forEach((p,i)=>{
+
+projectList.innerHTML+=`
+<div class="project">
+${p.fileUrl? (p.fileUrl.includes("video")?
+`<video src="${p.fileUrl}" controls></video>`:
+`<img src="${p.fileUrl}">`) : ""}
+
+<h3>${p.title||""}</h3>
+<p>${p.description||""}</p>
+
+<button class="secondary" onclick="editProject(${i})">Edit</button>
+</div>
+`;
+});
+}
+
+function editProject(index){
+let p=projects[index];
+
+editIndex.value=index;
+title.value=p.title;
+description.value=p.description;
+category.value=p.category;
+
+window.scrollTo(0,0);
+}
+
+async function saveProject(){
+
+let id=editIndex.value;
+let file=document.getElementById("file").files[0];
+
+if(file){
+const reader=new FileReader();
+
+reader.onload=async function(){
+let base64=reader.result.split(',')[1];
+
+await sendData(base64,file.name,file.type);
+};
+
+reader.readAsDataURL(file);
+}else{
+await sendData("","","");
+}
+}
+
+async function sendData(base64,fileName,fileType){
+
+await fetch(SCRIPT_URL,{
+method:"POST",
+body:JSON.stringify({
+title:title.value,
+description:description.value,
+category:category.value,
+fileBase64:base64,
+fileName:fileName,
+fileType:fileType
+})
+});
+
+clearForm();
+loadProjects();
+}
+
+function clearForm(){
+editIndex.value="";
+title.value="";
+description.value="";
+file.value="";
+previewImg.classList.add("hidden");
+previewVideo.classList.add("hidden");
+}
+
+</script>
+
+</body>
+</html>
