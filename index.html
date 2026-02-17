@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechGear | Premium Tech Discovery Platform</title>
+    <title>TechGears | Latest Tech Reviews & Deals</title>
     
-    <!-- Google AdSense -->
+    <!-- Google AdSense - Aapka script yahan hai -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7740548645833343"
      crossorigin="anonymous"></script>
 
-    <!-- SEO Optimization -->
-    <meta name="description" content="TechGear is India's leading tech discovery platform. Find verified gadgets and exclusive deals recommended by experts.">
-    <link rel="canonical" href="https://techgear-fa27d.firebaseapp.com/">
-    
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
@@ -21,44 +17,20 @@
             --primary: #2563eb;
             --primary-glow: rgba(37, 99, 235, 0.15);
             --dark: #0f172a;
-            --dark-light: #1e293b;
-            --accent: #f59e0b;
-            --success: #10b981;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #1e293b;
             --text-muted: #64748b;
-            --amazon-orange: #ff9900;
-            --amazon-yellow: #febd69;
             --border: #e2e8f0;
             --radius-lg: 16px;
             --radius-md: 12px;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.05);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
 
         /* --- NAVIGATION --- */
         nav {
@@ -71,545 +43,244 @@
             padding: 16px 0;
         }
 
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--dark);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--dark); text-decoration: none; }
         .logo span { color: var(--primary); }
 
-        .nav-links {
-            display: flex;
-            gap: 32px;
-        }
+        .auth-buttons { display: flex; gap: 12px; align-items: center; }
+        .user-info { font-weight: 700; color: var(--primary); font-size: 0.9rem; margin-right: 10px; }
 
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover { color: var(--primary); }
+        /* --- BUTTONS --- */
+        .btn { padding: 10px 22px; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; transition: var(--transition); text-decoration: none; font-size: 0.9rem; display: inline-flex; align-items: center; justify-content: center; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px var(--primary-glow); }
+        .btn-outline { background: white; border: 1px solid var(--border); color: var(--dark); }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
 
         /* --- HERO SECTION --- */
-        .hero {
-            padding: 100px 0 60px;
-            text-align: center;
-            background: radial-gradient(circle at top right, var(--primary-glow), transparent),
-                        radial-gradient(circle at bottom left, var(--primary-glow), transparent);
-        }
-
-        .hero-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            background: var(--primary-glow);
-            color: var(--primary);
-            border-radius: 100px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 24px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            color: var(--dark);
-            letter-spacing: -0.02em;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            max-width: 700px;
-            margin: 0 auto 40px;
-        }
-
-        .cta-group {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 16px 32px;
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            font-weight: 700;
-            transition: var(--transition);
-            cursor: pointer;
-            border: none;
-            font-size: 1rem;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.5);
-            background: #1d4ed8;
-        }
+        .hero { padding: 100px 0 60px; text-align: center; background: radial-gradient(circle at top right, var(--primary-glow), transparent); }
+        .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 20px; color: var(--dark); }
+        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 40px; }
 
         /* --- SEARCH --- */
-        .search-wrapper {
-            margin: -40px auto 60px;
-            max-width: 700px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 24px 32px;
-            padding-left: 60px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            background: white;
-            box-shadow: var(--shadow-md);
-            font-size: 1.1rem;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .search-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px var(--primary-glow);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 24px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 1.2rem;
-        }
+        .search-wrapper { margin: -40px auto 60px; max-width: 700px; position: relative; z-index: 10; }
+        .search-input { width: 100%; padding: 22px 30px 22px 60px; border-radius: 20px; border: 1px solid var(--border); background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.05); font-size: 1.1rem; outline: none; transition: var(--transition); }
+        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow); }
+        .search-icon { position: absolute; left: 24px; top: 50%; transform: translateY(-50%); opacity: 0.4; }
 
         /* --- PRODUCT GRID --- */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 32px;
-            padding-bottom: 80px;
-        }
-
-        .product-card {
-            background: var(--card-bg);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            height: 100%;
-        }
-
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.08);
-            border-color: var(--primary);
-        }
-
-        .badge-discount {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: #ef4444;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            z-index: 10;
-        }
-
-        .image-box {
-            width: 100%;
-            height: 240px;
-            padding: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #fff;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .product-img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: var(--transition);
-        }
-
-        .product-card:hover .product-img {
-            transform: scale(1.08);
-        }
-
-        .content-box {
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .product-category {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--primary);
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .product-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 12px;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            height: 3.1rem;
-        }
-
-        .meta-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-
-        .stars { color: #fbbf24; font-size: 0.9rem; }
-        .price-tag {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--dark);
-        }
-
-        .old-price {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            text-decoration: line-through;
-            margin-left: 8px;
-        }
-
-        .card-btn {
-            margin-top: auto;
-            width: 100%;
-            background: var(--dark);
-            color: white;
-            padding: 14px;
-            border-radius: var(--radius-md);
-            border: none;
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .product-card:hover .card-btn {
-            background: var(--primary);
-        }
-
-        /* --- MODAL --- */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(8px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: white;
-            width: 100%;
-            max-width: 1000px;
-            max-height: 90vh;
-            border-radius: 24px;
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            overflow: hidden;
-            position: relative;
-            animation: modalFade 0.4s ease;
-        }
-
-        @keyframes modalFade {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        @media (max-width: 850px) {
-            .modal-content { grid-template-columns: 1fr; overflow-y: auto; }
-            .nav-links { display: none; }
-            .hero h1 { font-size: 2.5rem; }
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            background: var(--bg);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 10;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .modal-left {
-            background: white;
-            padding: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-right: 1px solid var(--border);
-        }
-
-        .modal-img-large {
-            max-width: 100%;
-            max-height: 450px;
-            object-fit: contain;
-        }
-
-        .modal-right {
-            padding: 60px;
-            background: #fff;
-        }
-
-        .modal-title { font-size: 2rem; font-weight: 800; line-height: 1.2; margin-bottom: 20px; }
-        .modal-desc { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 30px; line-height: 1.7; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 32px; padding-bottom: 80px; }
+        .product-card { background: white; border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; transition: var(--transition); display: flex; flex-direction: column; cursor: pointer; position: relative; }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--primary); }
         
-        .buy-amazon {
-            background: #ff9900;
-            color: #111;
-            padding: 18px 40px;
-            border-radius: 100px;
-            font-weight: 800;
-            text-decoration: none;
-            display: block;
-            text-align: center;
-            transition: var(--transition);
-            border: 2px solid transparent;
-        }
+        .image-box { width: 100%; height: 240px; padding: 25px; display: flex; align-items: center; justify-content: center; background: #fff; }
+        .product-img { max-width: 100%; max-height: 100%; object-fit: contain; transition: var(--transition); }
+        .product-card:hover .product-img { transform: scale(1.08); }
 
-        .buy-amazon:hover {
-            background: #e68a00;
-            transform: scale(1.02);
-        }
+        .content-box { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; border-top: 1px solid #f1f5f9; }
+        .product-title { font-size: 1.1rem; font-weight: 700; color: var(--dark); margin-bottom: 12px; height: 3.1rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .price-tag { font-size: 1.4rem; font-weight: 800; color: var(--dark); }
+        .card-btn { margin-top: auto; width: 100%; background: var(--dark); color: white; padding: 12px; border-radius: 10px; border: none; font-weight: 700; transition: var(--transition); }
+        .product-card:hover .card-btn { background: var(--primary); }
 
-        /* --- SKELETON --- */
-        .skeleton-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            height: 450px;
-            border: 1px solid var(--border);
-        }
+        /* --- INFO SECTIONS (About Us, Contact, etc) --- */
+        .legal-sections { background: white; padding: 80px 0; border-top: 1px solid var(--border); }
+        .legal-container { max-width: 900px; margin: 0 auto; }
+        .legal-card { margin-bottom: 60px; scroll-margin-top: 100px; }
+        .legal-card h2 { font-size: 2rem; font-weight: 800; margin-bottom: 20px; color: var(--dark); position: relative; padding-left: 20px; }
+        .legal-card h2::before { content: ''; position: absolute; left: 0; top: 5px; bottom: 5px; width: 6px; background: var(--primary); border-radius: 10px; }
+        .legal-card p { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 15px; }
+        .legal-list { list-style: none; margin-left: 5px; }
+        .legal-list li { margin-bottom: 10px; padding-left: 25px; position: relative; font-weight: 500; }
+        .legal-list li::before { content: '✓'; position: absolute; left: 0; color: var(--primary); font-weight: 800; }
 
-        .skeleton {
-            background: #f1f5f9;
-            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-            border-radius: 8px;
-        }
+        /* --- AUTH MODAL --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 20px; }
+        .auth-card { background: white; padding: 40px; border-radius: 24px; width: 100%; max-width: 420px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.2); }
+        .auth-card h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 25px; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
+        .form-group input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; outline: none; font-size: 1rem; }
+        .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+        .auth-toggle { text-align: center; margin-top: 20px; font-size: 0.95rem; color: var(--text-muted); cursor: pointer; }
+        .auth-toggle span { color: var(--primary); font-weight: 700; }
 
-        @keyframes loading {
-            from { background-position: 200% 0; }
-            to { background-position: -200% 0; }
-        }
+        /* --- PRODUCT MODAL --- */
+        .p-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 4000; padding: 20px; }
+        .p-modal-content { background: white; width: 100%; max-width: 950px; border-radius: 24px; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; position: relative; }
+        @media (max-width: 850px) { .p-modal-content { grid-template-columns: 1fr; overflow-y: auto; max-height: 90vh; } }
+        .p-modal-left { padding: 40px; background: #fff; display: flex; align-items: center; justify-content: center; }
+        .p-modal-right { padding: 50px 40px; background: #fdfdfd; border-left: 1px solid var(--border); }
+        .close-p-modal { position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 1.5rem; color: var(--text-muted); z-index: 10; }
 
-        /* --- FOOTER --- */
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 80px 0 40px;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 60px;
-            margin-bottom: 60px;
-        }
-
-        .footer-brand h2 { font-weight: 800; margin-bottom: 20px; }
-        .footer-brand p { color: #94a3b8; }
-        
-        .footer-links h4 { margin-bottom: 24px; font-weight: 700; }
-        .footer-links ul { list-style: none; }
-        .footer-links li { margin-bottom: 12px; }
-        .footer-links a { color: #94a3b8; text-decoration: none; transition: var(--transition); }
-        .footer-links a:hover { color: white; padding-left: 8px; }
-
-        .footer-bottom {
-            padding-top: 40px;
-            border-top: 1px solid #334155;
-            text-align: center;
-            color: #64748b;
-            font-size: 0.9rem;
-        }
+        footer { background: var(--dark); color: white; padding: 80px 0 30px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 60px; }
+        .footer-col h4 { margin-bottom: 25px; font-weight: 700; font-size: 1.1rem; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a { color: #94a3b8; text-decoration: none; transition: 0.2s; font-size: 0.95rem; }
+        .footer-col ul li a:hover { color: white; padding-left: 5px; }
+        .footer-bottom { border-top: 1px solid #1e293b; padding-top: 30px; text-align: center; font-size: 0.9rem; color: #64748b; }
     </style>
 </head>
 <body>
 
+    <!-- Header & Navigation -->
     <nav>
         <div class="container nav-content">
-            <a href="#" class="logo">Tech<span>Gear</span></a>
-            <div class="nav-links">
-                <a href="#home">Home</a>
-                <a href="#products">Products</a>
-                <a href="#about">About</a>
-                <a href="#contact">Contact</a>
+            <a href="#" class="logo">Tech<span>Gears</span></a>
+            <div class="auth-buttons" id="navAuth">
+                <!-- Buttons injected via Firebase Logic -->
+                <button class="btn btn-outline" onclick="openAuth('login')">Login</button>
+                <button class="btn btn-primary" onclick="openAuth('signup')">Sign Up</button>
             </div>
-            <a href="#products" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.85rem;">View Deals</a>
         </div>
     </nav>
 
-    <header class="hero" id="home">
+    <!-- Hero Section -->
+    <header class="hero">
         <div class="container">
-            <span class="hero-badge">Expert Verified Gadgets</span>
-            <h1>Level Up Your <br>Tech Game Today</h1>
-            <p>We discover, test, and hand-pick the absolute best electronics so you don't have to. Real deals, verified quality.</p>
-            <div class="cta-group">
-                <a href="#products" class="btn btn-primary">Browse Catalog</a>
-                <a href="#about" class="btn" style="background: white; border: 1px solid var(--border);">Learn More</a>
-            </div>
+            <h1>Upgrade Your <br>Digital Lifestyle</h1>
+            <p>TechGears helps you find the perfect gadgets through expert reviews and verified deals. Your smart tech journey starts here.</p>
         </div>
     </header>
 
+    <!-- Main Content Area -->
     <div class="container">
+        <!-- Search -->
         <div class="search-wrapper">
             <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search premium gadgets (e.g., iPhone, Sony, RTX)...">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search for gadgets (iPhone, Laptops, AI)...">
         </div>
 
-        <section id="products">
-            <div class="grid" id="productGrid">
-                <!-- Skeletons while loading -->
-                <div class="skeleton-card"><div class="skeleton" style="height: 180px; margin-bottom: 20px;"></div><div class="skeleton" style="height: 20px; width: 60%; margin-bottom: 10px;"></div><div class="skeleton" style="height: 15px; width: 90%;"></div></div>
-                <div class="skeleton-card"><div class="skeleton" style="height: 180px; margin-bottom: 20px;"></div><div class="skeleton" style="height: 20px; width: 60%; margin-bottom: 10px;"></div><div class="skeleton" style="height: 15px; width: 90%;"></div></div>
-                <div class="skeleton-card"><div class="skeleton" style="height: 180px; margin-bottom: 20px;"></div><div class="skeleton" style="height: 20px; width: 60%; margin-bottom: 10px;"></div><div class="skeleton" style="height: 15px; width: 90%;"></div></div>
-                <div class="skeleton-card"><div class="skeleton" style="height: 180px; margin-bottom: 20px;"></div><div class="skeleton" style="height: 20px; width: 60%; margin-bottom: 10px;"></div><div class="skeleton" style="height: 15px; width: 90%;"></div></div>
-            </div>
-        </section>
+        <!-- Product Grid -->
+        <div class="grid" id="productGrid">
+            <p style="text-align: center; grid-column: 1/-1; padding: 50px; color: var(--text-muted);">Finding the best deals for you...</p>
+        </div>
     </div>
 
-    <section id="about" style="background: white; padding: 100px 0;">
-        <div class="container">
-            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-                <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 24px;">Why Trust TechGear?</h2>
-                <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px;">Our mission is to simplify the tech buying process. We cut through the marketing noise to bring you products that actually perform.</p>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; text-align: left;">
-                    <div>
-                        <h4 style="margin-bottom: 10px;">✅ Expert Testing</h4>
-                        <p style="font-size: 0.9rem; color: var(--text-muted);">Real-world usage tests for every gadget listed.</p>
-                    </div>
-                    <div>
-                        <h4 style="margin-bottom: 10px;">✅ Price Tracking</h4>
-                        <p style="font-size: 0.9rem; color: var(--text-muted);">We only show products at their best value points.</p>
-                    </div>
-                    <div>
-                        <h4 style="margin-bottom: 10px;">✅ No Fake Reviews</h4>
-                        <p style="font-size: 0.9rem; color: var(--text-muted);">Data-driven recommendations, not paid hype.</p>
-                    </div>
-                </div>
+    <!-- About, Privacy, Disclaimer Sections -->
+    <section class="legal-sections">
+        <div class="container legal-container">
+            
+            <!-- About Us -->
+            <div class="legal-card" id="about-us">
+                <h2>Welcome to TechGears!</h2>
+                <p>TechGears is a technology-focused website where we share the latest tech news, honest product reviews, and the best gadget deals. Our goal is to provide simple, clear, and useful information to help users make smart buying decisions.</p>
+                <p>We cover topics such as:</p>
+                <ul class="legal-list">
+                    <li>Mobile phones & Laptops</li>
+                    <li>Accessories & AI tools</li>
+                    <li>Programming & tech updates</li>
+                </ul>
+                <p><strong>Our mission:</strong> “To make technology easy and useful for everyone.”</p>
             </div>
+
+            <!-- Contact Us -->
+            <div class="legal-card" id="contact-us">
+                <h2>Contact Us</h2>
+                <p>If you would like to get in touch with us, feel free to contact us through the following:</p>
+                <ul class="legal-list">
+                    <li>📧 Email: ansh0000000001@gmail.com</li>
+                    <li>🌐 Website: anshtechgears.netlify.app</li>
+                </ul>
+                <p>We try to respond within 24–48 hours. For business inquiries, please mention <strong>“Business Inquiry”</strong> in the subject line.</p>
+            </div>
+
+            <!-- Privacy Policy -->
+            <div class="legal-card" id="privacy-policy">
+                <h2>Privacy Policy</h2>
+                <p>At TechGears, your privacy is important to us. We do not collect personal information without your permission.</p>
+                <ul class="legal-list">
+                    <li>Our website may use cookies to improve user experience.</li>
+                    <li>Third-party services (such as Google Ads or Amazon affiliate links) may use their own cookies.</li>
+                    <li>We do not sell or share your personal data with third parties.</li>
+                </ul>
+                <p>If you have any questions regarding privacy, please contact us.</p>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="legal-card" id="disclaimer">
+                <h2>Disclaimer</h2>
+                <p>The information provided on TechGears is for educational and informational purposes only. We may participate in affiliate programs such as Amazon Associates.</p>
+                <ul class="legal-list">
+                    <li>We may earn a small commission when you purchase products through our links.</li>
+                    <li>Product prices and availability may change without notice.</li>
+                    <li>We recommend checking the official merchant website before making a purchase.</li>
+                </ul>
+            </div>
+
         </div>
     </section>
 
-    <footer id="contact">
+    <!-- Footer -->
+    <footer>
         <div class="container">
             <div class="footer-grid">
-                <div class="footer-brand">
-                    <h2>Tech<span>Gear</span></h2>
-                    <p>Elevating your digital lifestyle with hand-picked technology essentials and elite deals.</p>
+                <div class="footer-col">
+                    <a href="#" class="logo" style="color:white; margin-bottom: 20px; display: block;">Tech<span>Gears</span></a>
+                    <p style="color: #64748b; font-size: 0.9rem;">Helping users make smart buying decisions with verified tech insights.</p>
                 </div>
-                <div class="footer-links">
-                    <h4>Explore</h4>
+                <div class="footer-col">
+                    <h4>Quick Explore</h4>
                     <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#products">Catalog</a></li>
-                        <li><a href="#about">Reviews</a></li>
+                        <li><a href="#about-us">About Us</a></li>
+                        <li><a href="#contact-us">Contact Us</a></li>
+                        <li><a href="#privacy-policy">Privacy Policy</a></li>
+                        <li><a href="#disclaimer">Disclaimer</a></li>
                     </ul>
                 </div>
-                <div class="footer-links">
-                    <h4>Support</h4>
+                <div class="footer-col">
+                    <h4>Direct Contact</h4>
                     <ul>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Use</a></li>
+                        <li><a href="mailto:ansh0000000001@gmail.com">ansh0000000001@gmail.com</a></li>
+                        <li><a href="tel:+918809631656">+91 8809631656</a></li>
                     </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>Contact Info</h4>
-                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 10px;">📍 India Headquarters</p>
-                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 10px;">📧 ansh0000000001@gmail.com</p>
-                    <p style="color: #94a3b8; font-size: 0.9rem;">📞 +91 8809631656</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                &copy; 2026 TechGear Discovery. Crafted for the tech elite.
+                &copy; 2026 TechGears Discovery Network. All Rights Reserved.
             </div>
         </div>
     </footer>
 
-    <!-- MODAL -->
-    <div class="modal-overlay" id="productModal">
-        <div class="modal-content">
-            <span class="modal-close" id="closeModal">&times;</span>
-            <div class="modal-left">
-                <img src="" alt="" id="modalImg" class="modal-img-large">
+    <!-- AUTH MODAL -->
+    <div class="modal-overlay" id="authModal">
+        <div class="auth-card">
+            <h2 id="authTitle">Login</h2>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="authEmail" placeholder="your@email.com">
             </div>
-            <div class="modal-right">
-                <div id="modalCategory" class="product-category" style="margin-bottom: 15px;">Verified Pick</div>
-                <h2 id="modalTitle" class="modal-title"></h2>
-                <div id="modalRating" style="margin-bottom: 20px;"></div>
-                <div id="modalPrice" style="font-size: 2.2rem; font-weight: 800; color: var(--dark); margin-bottom: 24px;"></div>
-                <p id="modalDesc" class="modal-desc"></p>
-                <a href="#" class="buy-amazon" id="buyBtn">Claim Deal on Amazon</a>
-                <p style="font-size: 0.8rem; text-align: center; margin-top: 15px; color: var(--text-muted);">Secure redirection to official merchant.</p>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="authPassword" placeholder="••••••••">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; padding: 16px;" id="authSubmit">Continue</button>
+            <p class="auth-toggle" id="authToggle">Naya account banayein? <span>Sign Up</span></p>
+            <button class="btn btn-outline" style="width: 100%; margin-top: 12px;" onclick="closeAuth()">Close</button>
+        </div>
+    </div>
+
+    <!-- PRODUCT DETAIL MODAL -->
+    <div class="p-modal-overlay" id="pModal">
+        <div class="p-modal-content">
+            <span class="close-p-modal" onclick="closeProductModal()">&times;</span>
+            <div class="p-modal-left">
+                <img src="" id="pModalImg" style="max-width: 100%; max-height: 400px; object-fit: contain;">
+            </div>
+            <div class="p-modal-right">
+                <h2 id="pModalTitle" style="font-size: 2rem; margin-bottom: 15px; font-weight: 800;"></h2>
+                <div id="pModalPrice" style="font-size: 2rem; font-weight: 800; color: var(--primary); margin-bottom: 25px;"></div>
+                <p id="pModalDesc" style="color: var(--text-muted); line-height: 1.8; margin-bottom: 35px;"></p>
+                <a href="#" id="pModalBuy" target="_blank" class="btn btn-primary" style="width: 100%; padding: 18px; background: #ff9900; color: #000; font-size: 1.1rem; border: none;">Claim Deal on Amazon</a>
             </div>
         </div>
     </div>
 
-    <!-- SCRIPTS - Maintaining your exact logic structure -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
-        import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD-rcdGnoGOc0XFvWyRaNQzJQl01DOGZGs",
@@ -617,118 +288,114 @@
             projectId: "techgear-fa27d",
             storageBucket: "techgear-fa27d.firebasestorage.app",
             messagingSenderId: "389961280322",
-            appId: "1:389961280322:web:77d9064c1079355cec36db",
-            measurementId: "G-7834784WQQ"
+            appId: "1:389961280322:web:77d9064c1079355cec36db"
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
-        const analytics = getAnalytics(app);
 
         let allProducts = [];
-        const FALLBACK_IMG = 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000';
+        let authMode = 'login';
 
-        const formatPrice = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
-
-        const getStars = (r) => {
-            let h = '';
-            const full = Math.floor(r);
-            for(let i=0; i<5; i++) {
-                if(i < full) h += '★';
-                else h += '☆';
-            }
-            return `<span class="stars">${h}</span>`;
+        // --- AUTH LOGIC ---
+        window.openAuth = (mode) => {
+            authMode = mode;
+            document.getElementById('authTitle').innerText = mode === 'login' ? 'Welcome Back' : 'Create Account';
+            document.getElementById('authToggle').innerHTML = mode === 'login' ? 'Naya account banayein? <span>Sign Up</span>' : 'Pehle se account hai? <span>Login</span>';
+            document.getElementById('authModal').style.display = 'flex';
         };
 
+        window.closeAuth = () => { document.getElementById('authModal').style.display = 'none'; };
+
+        document.getElementById('authToggle').onclick = () => openAuth(authMode === 'login' ? 'signup' : 'login');
+
+        document.getElementById('authSubmit').onclick = async () => {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            if(!email || !password) return alert("Pura detail bhariye!");
+            try {
+                if(authMode === 'signup') {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    alert("Account created successfully!");
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+                closeAuth();
+            } catch (e) { alert("Auth Error: " + e.message); }
+        };
+
+        window.handleLogout = () => signOut(auth);
+
+        onAuthStateChanged(auth, (user) => {
+            const navAuth = document.getElementById('navAuth');
+            if(user) {
+                navAuth.innerHTML = `
+                    <span class="user-info">Hi, ${user.email.split('@')[0]}</span>
+                    <button class="btn btn-outline" onclick="handleLogout()">Logout</button>
+                `;
+            } else {
+                navAuth.innerHTML = `
+                    <button class="btn btn-outline" onclick="openAuth('login')">Login</button>
+                    <button class="btn btn-primary" onclick="openAuth('signup')">Sign Up</button>
+                `;
+            }
+        });
+
+        // --- PRODUCT LOGIC ---
         async function fetchProducts() {
+            const grid = document.getElementById('productGrid');
             try {
                 const snap = await getDocs(collection(db, "products"));
-                allProducts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                allProducts = snap.docs.map(doc => ({id: doc.id, ...doc.data()}));
                 renderProducts(allProducts);
-            } catch (e) {
-                console.error("Firebase error:", e);
-                document.getElementById('productGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><h3>Unable to load catalog</h3><p>Please check your connection or refresh the page.</p></div>';
-            }
+            } catch (e) { grid.innerHTML = "<p>Nahi ho pa raha load. Firebase check karein.</p>"; }
         }
 
         function renderProducts(products) {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '';
-            
-            if (products.length === 0) {
-                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><h3>No products found</h3></div>';
-                return;
-            }
-
-            products.forEach(product => {
+            products.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
-                
-                const hasDiscount = product.originalPrice && product.originalPrice > product.price;
-                const discountPercent = hasDiscount ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
-                
                 card.innerHTML = `
-                    ${hasDiscount ? `<div class="badge-discount">SAVE ${discountPercent}%</div>` : ''}
-                    <div class="image-box">
-                        <img src="${product.image || FALLBACK_IMG}" alt="${product.title}" class="product-img" loading="lazy">
-                    </div>
+                    <div class="image-box"><img src="${p.image}" class="product-img" loading="lazy"></div>
                     <div class="content-box">
-                        <span class="product-category">${product.category || 'Electronics'}</span>
-                        <h3 class="product-title">${product.title}</h3>
-                        <div class="meta-row">
-                            <div class="rating-wrap">
-                                ${getStars(product.rating || 4.5)}
-                            </div>
-                            <div class="price-wrap">
-                                <span class="price-tag">${formatPrice(product.price)}</span>
-                            </div>
+                        <h3 class="product-title">${p.title}</h3>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto;">
+                            <span class="price-tag">₹${p.price.toLocaleString('en-IN')}</span>
+                            <button class="card-btn" style="width:auto; padding:8px 20px;">View</button>
                         </div>
-                        <button class="card-btn">Explore Details</button>
                     </div>
                 `;
-
-                card.addEventListener('click', () => openModal(product));
+                card.onclick = () => openProductModal(p);
                 grid.appendChild(card);
             });
         }
 
-        function openModal(p) {
-            document.getElementById('modalImg').src = p.image || FALLBACK_IMG;
-            document.getElementById('modalTitle').textContent = p.title;
-            document.getElementById('modalPrice').innerHTML = `${formatPrice(p.price)} ${p.originalPrice ? `<span class="old-price">${formatPrice(p.originalPrice)}</span>` : ''}`;
-            document.getElementById('modalRating').innerHTML = `${getStars(p.rating || 4.5)} <span style="margin-left:8px; color:#64748b; font-size:0.9rem;">Verified Choice</span>`;
-            document.getElementById('modalDesc').textContent = p.description || "The ultimate choice for high-performance technology. Hand-picked and verified for quality, reliability, and modern features.";
-            
-            const btn = document.getElementById('buyBtn');
-            btn.href = p.affiliateLink || '#';
-            btn.target = "_blank";
-            btn.onclick = () => {
-                logEvent(analytics, 'select_item', { item_id: p.id, item_name: p.title });
-            };
-
-            document.getElementById('productModal').style.display = 'flex';
+        function openProductModal(p) {
+            document.getElementById('pModalImg').src = p.image;
+            document.getElementById('pModalTitle').innerText = p.title;
+            document.getElementById('pModalPrice').innerText = '₹' + p.price.toLocaleString('en-IN');
+            document.getElementById('pModalDesc').innerText = p.description || "Expert hand-picked recommendation from TechGears.";
+            document.getElementById('pModalBuy').href = p.affiliateLink;
+            document.getElementById('pModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
 
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const val = e.target.value.toLowerCase();
-            const filtered = allProducts.filter(p => 
-                p.title.toLowerCase().includes(val) || 
-                (p.category && p.category.toLowerCase().includes(val))
-            );
-            renderProducts(filtered);
-        });
-
-        document.getElementById('closeModal').onclick = () => {
-            document.getElementById('productModal').style.display = 'none';
+        window.closeProductModal = () => {
+            document.getElementById('pModal').style.display = 'none';
             document.body.style.overflow = 'auto';
         };
 
         window.onclick = (e) => {
-            if(e.target == document.getElementById('productModal')) {
-                document.getElementById('productModal').style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
+            if(e.target === document.getElementById('pModal')) closeProductModal();
+            if(e.target === document.getElementById('authModal')) closeAuth();
+        }
+
+        document.getElementById('searchInput').oninput = (e) => {
+            const val = e.target.value.toLowerCase();
+            renderProducts(allProducts.filter(p => p.title.toLowerCase().includes(val)));
         };
 
         fetchProducts();
