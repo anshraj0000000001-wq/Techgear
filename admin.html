@@ -1,288 +1,496 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ansh Admin Pro</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ansh Admin Pro | Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --danger: #ef4444;
+            --success: #22c55e;
+        }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter;}
-body{
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-color:white;
-min-height:100vh;
-padding:20px;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 
-.hidden{display:none;}
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
 
-.container{max-width:1200px;margin:auto;}
+        .hidden { display: none !important; }
 
-.card{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(20px);
-padding:25px;
-border-radius:20px;
-margin-bottom:25px;
-box-shadow:0 10px 30px rgba(0,0,0,0.3);
-}
+        /* Login Screen */
+        #loginBox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 20px;
+        }
 
-input,textarea,select{
-width:100%;
-padding:12px;
-margin-bottom:12px;
-border:none;
-border-radius:10px;
-outline:none;
-}
+        .login-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
 
-button{
-padding:10px 18px;
-border:none;
-border-radius:10px;
-cursor:pointer;
-font-weight:600;
-margin:5px 5px 5px 0;
-}
+        .login-card h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-.primary{background:#00f2fe;color:#000;}
-.danger{background:#ff4d4d;color:white;}
-.secondary{background:#7f5af0;color:white;}
+        .login-card p {
+            color: var(--text-dim);
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
 
-button:hover{opacity:0.85;}
+        /* Dashboard Layout */
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 40px 20px;
+        }
 
-.project-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:20px;
-}
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
 
-.project{
-background:rgba(255,255,255,0.1);
-padding:15px;
-border-radius:15px;
-}
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
 
-.project img, .project video{
-width:100%;
-border-radius:10px;
-margin-bottom:10px;
-}
+        h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.stats{
-display:flex;
-gap:20px;
-flex-wrap:wrap;
-}
+        /* Form Elements */
+        .form-group { margin-bottom: 20px; }
+        
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
 
-.stat{
-flex:1;
-background:rgba(255,255,255,0.1);
-padding:20px;
-border-radius:15px;
-text-align:center;
-}
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: white;
+            outline: none;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
 
-.preview img, .preview video{
-max-width:100%;
-border-radius:10px;
-margin-bottom:10px;
-}
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
 
-@media(max-width:600px){
-h2{font-size:20px;}
-}
-</style>
+        /* Category Color Specific Styling */
+        select option {
+            background: var(--bg-dark);
+            color: white;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .primary { background: var(--primary); color: white; }
+        .primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+        .secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border); }
+        .secondary:hover { background: rgba(255,255,255,0.1); }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 20px;
+            text-align: left;
+        }
+
+        .stat-card span {
+            color: var(--text-dim);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .stat-card h3 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-top: 5px;
+        }
+
+        /* Project Grid */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .project-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .project-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .project-media {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .project-info {
+            padding: 20px;
+        }
+
+        .project-info h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .project-info p {
+            color: var(--text-dim);
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .preview-box {
+            margin-top: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .preview-box img, .preview-box video {
+            width: 100%;
+            display: block;
+        }
+
+        #loginMsg {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--danger);
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px 15px; }
+            header { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
 </head>
 <body>
 
-<div id="loginBox" class="container">
-<div class="card">
-<h2>🔐 Admin Login</h2>
-<input type="text" id="username" placeholder="Username">
-<input type="password" id="password" placeholder="Password">
-<button class="primary" onclick="login()">Login</button>
-<p id="loginMsg"></p>
-</div>
+<div id="loginBox">
+    <div class="login-card">
+        <h2>Ansh Admin</h2>
+        <p>Enter your credentials to manage projects</p>
+        <div class="form-group">
+            <input type="text" id="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+            <input type="password" id="password" placeholder="Password">
+        </div>
+        <button class="primary" style="width: 100%;" onclick="login()">Sign In</button>
+        <p id="loginMsg"></p>
+    </div>
 </div>
 
 <div id="dashboard" class="hidden container">
+    <header>
+        <div>
+            <h1 style="font-size: 24px; font-weight: 800;">Dashboard</h1>
+            <p style="color: var(--text-dim); font-size: 14px;">Welcome back, Ansh Raj</p>
+        </div>
+        <button class="secondary" onclick="location.reload()">Logout</button>
+    </header>
 
-<div class="card stats">
-<div class="stat">
-<h3>Total Projects</h3>
-<h2 id="totalProjects">0</h2>
-</div>
-<div class="stat">
-<h3>Total Visits</h3>
-<h2 id="totalViews">0</h2>
-</div>
-</div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span>Total Projects</span>
+            <h3 id="totalProjects">0</h3>
+        </div>
+        <div class="stat-card">
+            <span>System Visits</span>
+            <h3 id="totalViews">0</h3>
+        </div>
+    </div>
 
-<div class="card">
-<h2>Add / Edit Project</h2>
-<input type="hidden" id="editIndex">
-<input type="text" id="title" placeholder="Project Title">
-<textarea id="description" placeholder="Project Description"></textarea>
+    <div class="card">
+        <h2><span>📝</span> Project Editor</h2>
+        <input type="hidden" id="editIndex">
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="form-group">
+                <label>Project Title</label>
+                <input type="text" id="title" placeholder="E.g. Portfolio Website">
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <select id="category">
+                    <option value="Photo">Photo</option>
+                    <option value="Video">Video</option>
+                    <option value="Website">Website</option>
+                    <option value="App">App</option>
+                    <option value="AI">AI</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+        </div>
 
-<select id="category">
-<option>Website</option>
-<option>App</option>
-<option>AI</option>
-<option>Other</option>
-</select>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea id="description" rows="3" placeholder="Tell us about the project..."></textarea>
+        </div>
 
-<input type="file" id="file" accept="image/*,video/*" onchange="previewFile()">
+        <div class="form-group">
+            <label>Media Attachment (Image/Video)</label>
+            <input type="file" id="file" accept="image/*,video/*" onchange="previewFile()">
+        </div>
 
-<div class="preview">
-<img id="previewImg" class="hidden">
-<video id="previewVideo" controls class="hidden"></video>
-</div>
+        <div class="preview-box hidden" id="previewContainer">
+            <img id="previewImg" class="hidden">
+            <video id="previewVideo" controls class="hidden"></video>
+        </div>
 
-<button class="primary" onclick="saveProject()">Save</button>
-<button class="secondary" onclick="clearForm()">Clear</button>
-</div>
+        <div style="margin-top: 25px;">
+            <button class="primary" id="saveBtn" onclick="saveProject()">Save Changes</button>
+            <button class="secondary" onclick="clearForm()">Discard</button>
+        </div>
+    </div>
 
-<div class="card">
-<h2>All Projects</h2>
-<div class="project-grid" id="projectList"></div>
-</div>
-
+    <div class="card">
+        <h2><span>🚀</span> Published Projects</h2>
+        <div class="project-grid" id="projectList">
+            <!-- Projects injected here -->
+        </div>
+    </div>
 </div>
 
 <script>
+    // Logic remains exactly as requested
+    const SCRIPT_URL="https://script.google.com/macros/s/AKfycby1SX_rIVSOz1bi21FEU895HP2C3BuN42p4QZRGL04PuezENBm2CoWUnjxwIxoMhxVbJg/exec";
+    const ADMIN_USER="ansh_raj";
+    const ADMIN_PASS="1n19hraj";
 
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycby1SX_rIVSOz1bi21FEU895HP2C3BuN42p4QZRGL04PuezENBm2CoWUnjxwIxoMhxVbJg/exec";
+    let projects=[];
 
-const ADMIN_USER="ansh_raj";
-const ADMIN_PASS="1n19hraj";
+    function login(){
+        let u=username.value;
+        let p=password.value;
 
-let projects=[];
+        if(u===ADMIN_USER && p===ADMIN_PASS){
+            loginBox.style.display="none";
+            dashboard.classList.remove("hidden");
+            loadProjects();
+        }else{
+            loginMsg.innerText="Invalid credentials. Please try again.";
+        }
+    }
 
-function login(){
-let u=username.value;
-let p=password.value;
+    function previewFile(){
+        const file=document.getElementById("file").files[0];
+        if(!file) return;
 
-if(u===ADMIN_USER && p===ADMIN_PASS){
-loginBox.style.display="none";
-dashboard.classList.remove("hidden");
-loadProjects();
-}else{
-loginMsg.innerText="Wrong Credentials ❌";
-}
-}
+        const reader=new FileReader();
+        reader.onload=function(e){
+            const container = document.getElementById("previewContainer");
+            container.classList.remove("hidden");
 
-function previewFile(){
-const file=document.getElementById("file").files[0];
-if(!file) return;
+            if(file.type.startsWith("image")){
+                previewImg.src=e.target.result;
+                previewImg.classList.remove("hidden");
+                previewVideo.classList.add("hidden");
+            }else{
+                previewVideo.src=e.target.result;
+                previewVideo.classList.remove("hidden");
+                previewImg.classList.add("hidden");
+            }
+        };
+        reader.readAsDataURL(file);
+    }
 
-const reader=new FileReader();
-reader.onload=function(e){
+    async function loadProjects(){
+        projectList.innerHTML = "<p style='color:var(--text-dim)'>Loading assets...</p>";
+        try {
+            const res=await fetch(SCRIPT_URL);
+            projects=await res.json();
 
-if(file.type.startsWith("image")){
-previewImg.src=e.target.result;
-previewImg.classList.remove("hidden");
-previewVideo.classList.add("hidden");
-}else{
-previewVideo.src=e.target.result;
-previewVideo.classList.remove("hidden");
-previewImg.classList.add("hidden");
-}
+            totalProjects.innerText=projects.length;
 
-};
-reader.readAsDataURL(file);
-}
+            let visits=localStorage.getItem("admin_visits")||0;
+            visits++;
+            localStorage.setItem("admin_visits",visits);
+            totalViews.innerText=visits;
 
-async function loadProjects(){
-const res=await fetch(SCRIPT_URL);
-projects=await res.json();
+            projectList.innerHTML="";
 
-totalProjects.innerText=projects.length;
+            projects.forEach((p,i)=>{
+                const mediaHtml = p.fileUrl ? 
+                    (p.fileUrl.includes("video") ? 
+                    `<video class="project-media" src="${p.fileUrl}" controls></video>` : 
+                    `<img class="project-media" src="${p.fileUrl}">`) : 
+                    `<div class="project-media" style="display:flex;align-items:center;justify-content:center;color:var(--text-dim)">No Media</div>`;
 
-let visits=localStorage.getItem("admin_visits")||0;
-visits++;
-localStorage.setItem("admin_visits",visits);
-totalViews.innerText=visits;
+                projectList.innerHTML+=`
+                    <div class="project-item">
+                        ${mediaHtml}
+                        <div class="project-info">
+                            <span style="font-size:10px; text-transform:uppercase; color:var(--primary); font-weight:700;">${p.category || 'General'}</span>
+                            <h3>${p.title||"Untitled Project"}</h3>
+                            <p>${p.description||"No description provided."}</p>
+                            <button class="secondary" style="width:100%" onclick="editProject(${i})">Edit Project</button>
+                        </div>
+                    </div>
+                `;
+            });
+        } catch (e) {
+            projectList.innerHTML = "<p style='color:var(--danger)'>Failed to load data from Script URL.</p>";
+        }
+    }
 
-projectList.innerHTML="";
+    function editProject(index){
+        let p=projects[index];
 
-projects.forEach((p,i)=>{
+        editIndex.value=index;
+        title.value=p.title;
+        description.value=p.description;
+        category.value=p.category;
 
-projectList.innerHTML+=`
-<div class="project">
-${p.fileUrl? (p.fileUrl.includes("video")?
-`<video src="${p.fileUrl}" controls></video>`:
-`<img src="${p.fileUrl}">`) : ""}
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
 
-<h3>${p.title||""}</h3>
-<p>${p.description||""}</p>
+    async function saveProject(){
+        saveBtn.innerText = "Processing...";
+        saveBtn.disabled = true;
 
-<button class="secondary" onclick="editProject(${i})">Edit</button>
-</div>
-`;
-});
-}
+        let id=editIndex.value;
+        let file=document.getElementById("file").files[0];
 
-function editProject(index){
-let p=projects[index];
+        if(file){
+            const reader=new FileReader();
+            reader.onload=async function(){
+                let base64=reader.result.split(',')[1];
+                await sendData(base64,file.name,file.type);
+            };
+            reader.readAsDataURL(file);
+        }else{
+            await sendData("","","");
+        }
+    }
 
-editIndex.value=index;
-title.value=p.title;
-description.value=p.description;
-category.value=p.category;
+    async function sendData(base64,fileName,fileType){
+        try {
+            await fetch(SCRIPT_URL,{
+                method:"POST",
+                body:JSON.stringify({
+                    title:title.value,
+                    description:description.value,
+                    category:category.value,
+                    fileBase64:base64,
+                    fileName:fileName,
+                    fileType:fileType
+                })
+            });
+        } catch (e) {
+            console.error(e);
+        }
 
-window.scrollTo(0,0);
-}
+        saveBtn.innerText = "Save Changes";
+        saveBtn.disabled = false;
+        clearForm();
+        loadProjects();
+    }
 
-async function saveProject(){
-
-let id=editIndex.value;
-let file=document.getElementById("file").files[0];
-
-if(file){
-const reader=new FileReader();
-
-reader.onload=async function(){
-let base64=reader.result.split(',')[1];
-
-await sendData(base64,file.name,file.type);
-};
-
-reader.readAsDataURL(file);
-}else{
-await sendData("","","");
-}
-}
-
-async function sendData(base64,fileName,fileType){
-
-await fetch(SCRIPT_URL,{
-method:"POST",
-body:JSON.stringify({
-title:title.value,
-description:description.value,
-category:category.value,
-fileBase64:base64,
-fileName:fileName,
-fileType:fileType
-})
-});
-
-clearForm();
-loadProjects();
-}
-
-function clearForm(){
-editIndex.value="";
-title.value="";
-description.value="";
-file.value="";
-previewImg.classList.add("hidden");
-previewVideo.classList.add("hidden");
-}
-
+    function clearForm(){
+        editIndex.value="";
+        title.value="";
+        description.value="";
+        file.value="";
+        previewImg.classList.add("hidden");
+        previewVideo.classList.add("hidden");
+        document.getElementById("previewContainer").classList.add("hidden");
+    }
 </script>
 
 </body>
 </html>
+
