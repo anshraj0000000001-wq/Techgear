@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechGear | Premium Tech Discovery Platform</title>
     
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7740548645833343"
+     crossorigin="anonymous"></script>
+
     <!-- SEO Optimization -->
     <meta name="description" content="TechGear is India's leading tech discovery platform. Find verified gadgets and exclusive deals recommended by experts.">
     <link rel="canonical" href="https://techgear-fa27d.firebaseapp.com/">
@@ -638,7 +642,6 @@
 
         async function fetchProducts() {
             try {
-                // Asynchronous fetch as requested
                 const snap = await getDocs(collection(db, "products"));
                 allProducts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderProducts(allProducts);
@@ -707,7 +710,6 @@
             document.body.style.overflow = 'hidden';
         }
 
-        // Search logic - maintaining same function pattern
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const val = e.target.value.toLowerCase();
             const filtered = allProducts.filter(p => 
@@ -729,7 +731,6 @@
             }
         };
 
-        // Initialize as soon as DOM is ready
         fetchProducts();
     </script>
 </body>
