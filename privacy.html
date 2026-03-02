@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | TechGear Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-subtle: #fbfcfe;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-subtle);
+            color: #0f172a;
+            scroll-behavior: smooth;
+        }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        .premium-card {
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.02), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section-tag {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+            color: var(--primary);
+        }
+        .gradient-heading {
+            background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .scroll-indicator {
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+        .animate-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .animate-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-indigo-100 selection:text-indigo-900">
+
+    <div id="progress-bar" class="scroll-indicator"></div>
+
+    <!-- Navigation -->
+    <nav class="glass-header fixed top-0 w-full z-50">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 group cursor-pointer">
+                <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 duration-300">
+                    <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 3c1.782 0 3.442.465 4.882 1.28l.054.09m-3.44 2.04l.054-.09a9.995 9.995 0 011.127 4.72c0 .285-.012.567-.036.846m-1.42 3.551A9.998 9.998 0 0112 21c-2.76 0-5.228-1.118-7.01-2.928m11.332-9.14a4.437 4.437 0 01-.428 4.466m-6.62 0a4.437 4.437 0 01-.428-4.466m7.41 6.305A4.437 4.437 0 0112 18.5a4.437 4.437 0 01-4.382-3.699M12 11a3 3 0 110-6 3 3 0 010 6z" />
+                    </svg>
+                </div>
+                <span class="text-xl font-extrabold tracking-tight text-slate-900 uppercase">Tech<span class="text-indigo-600">Gear</span></span>
+            </div>
+            <a href="https://anshtechgears.netlify.app" class="px-5 py-2.5 rounded-full text-sm font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-all shadow-lg shadow-slate-200 active:scale-95">
+                Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-40 pb-20 px-6 animate-in">
+        <div class="max-w-4xl mx-auto">
+            <span class="inline-block px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase section-tag mb-6">Security & Transparency</span>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 gradient-heading">
+                Privacy is at our <span class="italic font-light">core.</span>
+            </h1>
+            <p class="text-xl text-slate-500 leading-relaxed max-w-2xl">
+                Ensuring your digital gear and data remain protected with industry-leading standards and total transparency.
+            </p>
+            <div class="mt-12 flex flex-wrap gap-6 items-center border-t border-slate-200 pt-8">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="text-sm font-medium text-slate-400">Version 2.4</span>
+                </div>
+                <span class="text-slate-300">|</span>
+                <span class="text-sm font-medium text-slate-600">Updated: 02 March 2026</span>
+                <span class="text-slate-300">|</span>
+                <span class="text-sm font-medium text-slate-600 underline decoration-indigo-200 underline-offset-4">IT Rules 2011 Compliant</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content Grid -->
+    <main class="max-w-4xl mx-auto px-6 pb-32">
+        <div class="space-y-12">
+            
+            <!-- Introduction -->
+            <div class="premium-card rounded-[2rem] p-10 md:p-14 animate-in">
+                <p class="text-xl text-slate-700 leading-relaxed italic">
+                    "At <span class="font-bold text-slate-900 not-italic">TechGear</span>, we believe that privacy is a fundamental human right. Our commitment is to manage your data with the highest level of integrity and care."
+                </p>
+            </div>
+
+            <!-- Section A -->
+            <section class="premium-card rounded-[2rem] p-10 md:p-14 hover:shadow-2xl transition-all duration-500 animate-in">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                    <h2 class="text-3xl font-extrabold text-slate-900">A. Information We Collect</h2>
+                    <span class="text-6xl font-black text-slate-50">01</span>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">Identity Details</h3>
+                        <p class="text-slate-500 leading-relaxed">Personal identifiers including your name, email address, and specific message content provided via our secure portal.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 21h6l-.75-4M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">Digital Footprint</h3>
+                        <p class="text-slate-500 leading-relaxed">Utilizing Firebase Analytics for non-identifiable telemetry, browser specifications, and navigation flow metrics.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section B -->
+            <section class="premium-card rounded-[2rem] p-10 md:p-14 animate-in">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                    <h2 class="text-3xl font-extrabold text-slate-900">B. Data Utilization</h2>
+                    <span class="text-6xl font-black text-slate-50">02</span>
+                </div>
+                <div class="space-y-6">
+                    <div class="flex items-center p-6 bg-slate-50 rounded-2xl border border-slate-100 group hover:bg-white hover:border-indigo-100 transition-all">
+                        <div class="w-2 h-10 bg-indigo-600 rounded-full mr-6 group-hover:h-12 transition-all"></div>
+                        <p class="text-lg text-slate-700 font-medium">Precision-based responses to client inquiries.</p>
+                    </div>
+                    <div class="flex items-center p-6 bg-slate-50 rounded-2xl border border-slate-100 group hover:bg-white hover:border-indigo-100 transition-all">
+                        <div class="w-2 h-10 bg-indigo-600 rounded-full mr-6 group-hover:h-12 transition-all"></div>
+                        <p class="text-lg text-slate-700 font-medium">Architectural refinement of user experience (UX).</p>
+                    </div>
+                    <div class="flex items-center p-6 bg-slate-50 rounded-2xl border border-slate-100 group hover:bg-white hover:border-indigo-100 transition-all">
+                        <div class="w-2 h-10 bg-indigo-600 rounded-full mr-6 group-hover:h-12 transition-all"></div>
+                        <p class="text-lg text-slate-700 font-medium">Strategic traffic analysis via Firebase Analytics engine.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section C & D -->
+            <div class="grid md:grid-cols-2 gap-12 animate-in">
+                <section class="premium-card rounded-[2rem] p-10 flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-slate-900 mb-6">C. Partnerships</h2>
+                        <p class="text-slate-500 leading-relaxed">
+                            Zero data-selling policy. Third-party links (e.g., Amazon) operate under independent mandates. We advise rigorous review of external policies.
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-slate-100 text-indigo-600 font-bold text-sm uppercase tracking-tighter">Secure Affiliates Only</div>
+                </section>
+
+                <section class="premium-card rounded-[2rem] p-10 bg-slate-900 text-white flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-2xl font-extrabold mb-6">D. Data Fortress</h2>
+                        <p class="text-slate-300 leading-relaxed">
+                            Encrypted hosting environments ensuring absolute defense against unauthorized access. Continuous monitoring of data integrity protocols.
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-slate-800 flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-indigo-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zM10 21a11.954 11.954 0 01-10-10 11.954 11.954 0 0110-10 11.954 11.954 0 0110 10 11.954 11.954 0 01-10 10zm-1-11a1 1 0 112 0 1 1 0 01-2 0zm1-4a1 1 0 011 1v2a1 1 0 11-2 0V7a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                        <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest">Encrypted</span>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-24 border-t border-slate-200 pt-12 animate-in">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="text-center md:text-left">
+                    <p class="text-slate-400 text-sm font-medium">© 2026 TechGear Global Inc.</p>
+                    <p class="text-slate-300 text-xs mt-1 italic font-light">Precision gear. Absolute privacy.</p>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="mailto:privacy@techgear.com" class="text-sm font-bold text-slate-900 hover:text-indigo-600 transition-colors underline decoration-2 decoration-indigo-100 underline-offset-8">Data Privacy Officer</a>
+                    <a href="#" class="text-sm font-bold text-slate-900 hover:text-indigo-600 transition-colors underline decoration-2 decoration-indigo-100 underline-offset-8">Terms of Service</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Progress bar scroll effect
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        // Scroll Observer for Premium Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
+
