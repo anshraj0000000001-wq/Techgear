@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Premium Object Detector</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #0f172a);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+
+        #video-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            background: #000;
+        }
+
+        video {
+            transform: scaleX(-1);
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            pointer-events: none;
+            transform: scaleX(-1);
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col items-center justify-center">
+
+    <div class="text-center mb-8">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 gradient-text">AI Object Detector</h1>
+        <p class="text-gray-400">Real-time object recognition using TensorFlow.js</p>
+    </div>
+
+    <div class="w-full max-w-4xl glass p-6 md:p-8">
+        
+        <div class="flex flex-wrap items-center justify-between mb-6 gap-4">
+            <div id="status-container" class="flex items-center gap-3">
+                <div id="loading-spinner" class="loader"></div>
+                <span id="status-text" class="text-sm font-medium text-yellow-400">Loading AI Model...</span>
+            </div>
+            
+            <div class="flex gap-3">
+                <button id="start-btn" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-full text-sm font-semibold transition-all flex items-center gap-2" disabled>
+                    <span>Start Camera</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Alert Box for Errors -->
+        <div id="error-box" class="hidden mb-4 p-4 bg-red-900/50 border border-red-500 text-red-200 rounded-xl text-sm">
+            <strong>Camera Error:</strong> <span id="error-message"></span>
+        </div>
+
+        <div id="video-container" class="aspect-video flex items-center justify-center">
+            <video id="webcam" autoplay muted playsinline class="w-full h-full object-cover opacity-0 transition-opacity duration-500"></video>
+            <canvas id="canvas"></canvas>
+            
+            <div id="placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <p>Waiting for camera access...</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+            <div class="glass p-4 text-center">
+                <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">FPS</p>
+                <p id="fps-counter" class="text-2xl font-bold text-green-400">--</p>
+            </div>
+            <div class="glass p-4 text-center">
+                <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Objects Detected</p>
+                <p id="count-display" class="text-2xl font-bold text-blue-400">0</p>
+            </div>
+            <div class="glass p-4 text-center">
+                <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Inference Time</p>
+                <p id="inference-time" class="text-2xl font-bold text-purple-400">-- ms</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8 text-sm text-gray-500 text-center max-w-lg">
+        <p>This tool runs entirely in your browser. No video data is sent to any server.</p>
+    </div>
+
+    <script>
+        const video = document.getElementById('webcam');
+        const canvas = document.getElementById('canvas');
+        const startBtn = document.getElementById('start-btn');
+        const statusText = document.getElementById('status-text');
+        const spinner = document.getElementById('loading-spinner');
+        const errorBox = document.getElementById('error-box');
+        const errorMessage = document.getElementById('error-message');
+        const placeholder = document.getElementById('placeholder');
+        
+        let model = undefined;
+        let lastTime = 0;
+
+        async function loadModel() {
+            try {
+                model = await cocoSsd.load();
+                statusText.innerText = 'Model Ready';
+                statusText.className = 'text-sm font-medium text-green-400';
+                spinner.style.display = 'none';
+                startBtn.disabled = false;
+            } catch (err) {
+                showError("Could not load AI model. Please check your internet connection.");
+            }
+        }
+
+        function showError(msg) {
+            errorBox.classList.remove('hidden');
+            errorMessage.innerText = msg;
+        }
+
+        async function setupCamera() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                throw new Error("Your browser does not support camera access.");
+            }
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user' },
+                    audio: false,
+                });
+                video.srcObject = stream;
+                return new Promise((resolve) => {
+                    video.onloadedmetadata = () => resolve(video);
+                });
+            } catch (err) {
+                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                    throw new Error("Permission Denied: Please enable camera access in browser settings.");
+                } else if (err.name === 'NotFoundError') {
+                    throw new Error("Camera not found: Please check your hardware.");
+                } else {
+                    throw new Error("Camera error: " + err.message);
+                }
+            }
+        }
+
+        async function detectFrame() {
+            if (!model) return;
+            const startTime = performance.now();
+            const predictions = await model.detect(video);
+            const endTime = performance.now();
+            
+            renderPredictions(predictions);
+            
+            const now = performance.now();
+            const fps = Math.round(1000 / (now - lastTime));
+            lastTime = now;
+            
+            document.getElementById('fps-counter').innerText = fps;
+            document.getElementById('inference-time').innerText = Math.round(endTime - startTime) + ' ms';
+            document.getElementById('count-display').innerText = predictions.length;
+
+            requestAnimationFrame(detectFrame);
+        }
+
+        function renderPredictions(predictions) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.font = "14px Outfit";
+            ctx.textBaseline = "top";
+
+            predictions.forEach(prediction => {
+                const [x, y, width, height] = prediction.bbox;
+                ctx.strokeStyle = "#60a5fa";
+                ctx.lineWidth = 3;
+                ctx.strokeRect(x, y, width, height);
+
+                ctx.fillStyle = "#60a5fa";
+                const label = `${prediction.class.toUpperCase()} ${Math.round(prediction.score * 100)}%`;
+                const textWidth = ctx.measureText(label).width;
+                ctx.fillRect(x, y, textWidth + 10, 22);
+
+                ctx.fillStyle = "#ffffff";
+                ctx.fillText(label, x + 5, y + 4);
+            });
+        }
+
+        startBtn.addEventListener('click', async () => {
+            errorBox.classList.add('hidden');
+            startBtn.innerText = 'Connecting...';
+            try {
+                await setupCamera();
+                video.style.opacity = '1';
+                placeholder.style.display = 'none';
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                startBtn.style.display = 'none';
+                statusText.innerText = 'Live Detection Active';
+                detectFrame();
+            } catch (err) {
+                startBtn.innerText = 'Start Camera';
+                showError(err.message);
+            }
+        });
+
+        window.onload = loadModel;
+    </script>
+</body>
+</html>
+
