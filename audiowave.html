@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Fluid Audio Visualizer - Download Fixed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+        #visualizer-container {
+            aspect-ratio: 16 / 9;
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 150, 255, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .loader-container {
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 5, 5, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+        .fluid-loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid transparent;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .progress-bar-inner {
+            transition: width 0.1s linear;
+        }
+        .download-ready-btn {
+            background: linear-gradient(45deg, #2563eb, #7c3aed);
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="text-center mb-6">
+        <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-2">
+            Premium Audio Wave Creator
+        </h1>
+        <p class="text-gray-400 text-sm">Audio khatam hone par niche diya gaya button click karein</p>
+    </div>
+
+    <div id="visualizer-container" class="glass-card">
+        <canvas id="visualizerCanvas"></canvas>
+        
+        <!-- Loading & Progress Overlay -->
+        <div id="loadingOverlay" class="loader-container hidden">
+            <div id="loaderIcon" class="fluid-loader mb-4"></div>
+            <p id="statusHeading" class="text-xl font-medium mb-2">Processing Audio Visuals...</p>
+            
+            <div id="progressWrapper" class="w-64 h-2 bg-gray-800 rounded-full overflow-hidden mb-2">
+                <div id="progressBar" class="progress-bar-inner h-full bg-blue-500" style="width: 0%"></div>
+            </div>
+            <p id="progressText" class="text-blue-400 font-mono text-sm mb-4">0%</p>
+            
+            <!-- Force Download Button -->
+            <button id="finalDownloadBtn" class="hidden download-ready-btn text-white px-10 py-4 rounded-full font-bold text-lg flex items-center gap-2">
+                <span>📥 Download Wave Video</span>
+            </button>
+            <p id="restartTip" class="hidden mt-4 text-gray-500 text-xs">Naya audio banane ke liye page refresh karein.</p>
+        </div>
+
+        <!-- Initial UI -->
+        <div id="uploadPrompt" class="absolute inset-0 flex items-center justify-center">
+            <label class="cursor-pointer bg-white/10 hover:bg-white/20 border border-white/20 px-10 py-6 rounded-3xl transition-all group text-center">
+                <span class="text-5xl block mb-2 group-hover:scale-110 transition-transform">🎵</span>
+                <span class="font-bold uppercase tracking-widest text-blue-400">Select Audio File</span>
+                <p class="text-gray-500 text-xs mt-2">MP3, WAV ya koi bhi audio format</p>
+                <input type="file" id="audioInput" accept="audio/*" class="hidden">
+            </label>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('visualizerCanvas');
+        const ctx = canvas.getContext('2d');
+        const audioInput = document.getElementById('audioInput');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const uploadPrompt = document.getElementById('uploadPrompt');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const finalDownloadBtn = document.getElementById('finalDownloadBtn');
+        const statusHeading = document.getElementById('statusHeading');
+        const loaderIcon = document.getElementById('loaderIcon');
+        const restartTip = document.getElementById('restartTip');
+
+        let audioCtx, analyser, source, dataArray, bufferLength;
+        let audio = new Audio();
+        let mediaRecorder;
+        let recordedChunks = [];
+        let videoBlob = null;
+
+        function resize() {
+            canvas.width = 1280; 
+            canvas.height = 720; 
+        }
+        resize();
+
+        audioInput.onchange = function() {
+            const file = this.files[0];
+            if (!file) return;
+
+            uploadPrompt.classList.add('hidden');
+            loadingOverlay.classList.remove('hidden');
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                audio.src = e.target.result;
+                audio.load();
+                audio.oncanplaythrough = () => startProcessing();
+            };
+            reader.readAsDataURL(file);
+        };
+
+        function startProcessing() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioCtx.createAnalyser();
+                source = audioCtx.createMediaElementSource(audio);
+                source.connect(analyser);
+                analyser.connect(audioCtx.destination);
+                analyser.fftSize = 512;
+                bufferLength = analyser.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
+            }
+
+            recordedChunks = [];
+            const canvasStream = canvas.captureStream(60);
+            
+            let combinedStream;
+            try {
+                const audioStream = audio.captureStream ? audio.captureStream() : audio.mozCaptureStream();
+                combinedStream = new MediaStream([
+                    ...canvasStream.getVideoTracks(),
+                    ...audioStream.getAudioTracks()
+                ]);
+            } catch (e) {
+                combinedStream = canvasStream;
+            }
+
+            // MimeType check for compatibility
+            const options = { mimeType: 'video/webm; codecs=vp9,opus' };
+            if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                options.mimeType = 'video/webm';
+            }
+
+            mediaRecorder = new MediaRecorder(combinedStream, options);
+            
+            mediaRecorder.ondataavailable = (e) => {
+                if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+            };
+            
+            mediaRecorder.onstop = () => {
+                videoBlob = new Blob(recordedChunks, { type: options.mimeType });
+                loaderIcon.classList.add('hidden');
+                document.getElementById('progressWrapper').classList.add('hidden');
+                progressText.classList.add('hidden');
+                
+                statusHeading.innerText = "Video Creation Complete!";
+                finalDownloadBtn.classList.remove('hidden');
+                restartTip.classList.remove('hidden');
+
+                // Fallback direct trigger
+                triggerDownload();
+            };
+
+            audio.play();
+            mediaRecorder.start(1000); // Save data every second for safety
+            renderFrame();
+        }
+
+        function triggerDownload() {
+            if (!videoBlob) return;
+            const url = URL.createObjectURL(videoBlob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `Premium_Wave_${Date.now()}.webm`;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 100);
+        }
+
+        finalDownloadBtn.onclick = triggerDownload;
+
+        function renderFrame() {
+            if (audio.ended || (audio.paused && audio.currentTime > 0)) {
+                if (mediaRecorder && mediaRecorder.state === "recording") {
+                    mediaRecorder.stop();
+                }
+                return;
+            }
+
+            requestAnimationFrame(renderFrame);
+            analyser.getByteFrequencyData(dataArray);
+
+            ctx.fillStyle = '#050505';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const centerY = canvas.height / 2;
+            
+            // Multiple fluid layers
+            for (let j = 0; j < 6; j++) {
+                ctx.beginPath();
+                ctx.lineWidth = 4 - (j * 0.5);
+                const hue = 190 + (j * 20);
+                ctx.strokeStyle = `hsla(${hue}, 100%, 65%, ${0.9 - j * 0.15})`;
+                ctx.shadowBlur = 25;
+                ctx.shadowColor = `hsla(${hue}, 100%, 50%, 0.6)`;
+                
+                for (let i = 0; i < bufferLength; i++) {
+                    const v = dataArray[i] / 128.0;
+                    const x = (i / bufferLength) * canvas.width;
+                    
+                    // Complex fluid math for waves
+                    const time = Date.now() * 0.002;
+                    const noise = Math.sin(i * 0.05 + time + j);
+                    const waveHeight = (v * canvas.height / 5) * noise;
+                    const finalY = centerY + waveHeight;
+
+                    if (i === 0) ctx.moveTo(x, finalY);
+                    else {
+                        const nextX = ((i + 1) / bufferLength) * canvas.width;
+                        const xc = (x + nextX) / 2;
+                        ctx.quadraticCurveTo(x, finalY, xc, finalY);
+                    }
+                }
+                ctx.stroke();
+            }
+
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressText.innerText = `${Math.floor(progress)}% Completed`;
+        }
+    </script>
+</body>
+</html>
+
