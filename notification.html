@@ -2,12 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Advanced Notification Admin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notification Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  body { font-family: Arial, sans-serif; margin: 20px; }
-  input, select, button { padding: 5px; margin: 5px; }
-  #users, #notifications { margin-top: 10px; }
-  #notifications p { border-bottom: 1px solid #eee; padding: 3px; }
+  body { font-family: 'Inter', sans-serif; margin:0; padding:0; background:#f4f6f8; color:#333; }
+  header { background:#3b82f6; color:white; padding:20px; text-align:center; font-size:1.5rem; }
+  main { padding:20px; max-width:900px; margin:auto; }
+  section { background:white; padding:20px; margin-bottom:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+  input, select, button { padding:10px; margin:5px 0; width:100%; border-radius:5px; border:1px solid #ccc; font-size:1rem; }
+  button { background:#3b82f6; color:white; border:none; cursor:pointer; transition:0.2s; }
+  button:hover { background:#2563eb; }
+  ul { list-style:none; padding-left:0; max-height:150px; overflow-y:auto; }
+  ul li { padding:5px 0; border-bottom:1px solid #eee; font-size:0.95rem; }
+  #notifications { max-height:250px; overflow-y:auto; border:1px solid #ddd; padding:10px; border-radius:5px; background:#fefefe; }
+  #notifications p { margin:5px 0; padding:5px; border-bottom:1px solid #eee; }
+  .flex { display:flex; gap:10px; flex-wrap:wrap; }
+  .flex > * { flex:1; }
+  .status { font-size:0.9rem; color:green; margin-top:5px; }
+  .error { color:red; }
 </style>
 
 <!-- Firebase SDK -->
@@ -16,45 +29,44 @@
 
 </head>
 <body>
-<h1>Advanced Notification Admin Dashboard</h1>
 
-<!-- Login -->
-<div>
+<header>Notification Admin Dashboard</header>
+
+<main>
+
+<!-- Admin Login -->
+<section>
   <h2>Admin Login</h2>
   <input type="email" id="email" placeholder="Email">
   <input type="password" id="password" placeholder="Password">
   <button id="loginBtn">Login</button>
-  <p id="status"></p>
-</div>
-
-<hr>
+  <p id="status" class="status"></p>
+</section>
 
 <!-- Connected Users -->
-<div>
+<section>
   <h2>Connected Users</h2>
   <ul id="users"></ul>
-</div>
-
-<hr>
+</section>
 
 <!-- Send Notification -->
-<div>
+<section>
   <h2>Send Notification</h2>
-  <select id="userSelect">
-    <option value="">--Select User or Broadcast All--</option>
-  </select>
-  <input type="text" id="message" placeholder="Message">
+  <div class="flex">
+    <select id="userSelect">
+      <option value="">--Select User or Broadcast All--</option>
+    </select>
+    <input type="text" id="message" placeholder="Type your message here">
+  </div>
   <button id="sendBtn">Send</button>
-  <p id="sendStatus"></p>
-</div>
-
-<hr>
+  <p id="sendStatus" class="status"></p>
+</section>
 
 <!-- Incoming Notifications -->
-<div>
+<section>
   <h2>Incoming Notifications</h2>
   <div id="notifications"></div>
-</div>
+</section>
 
 <script>
 const firebaseConfig = {
@@ -65,12 +77,10 @@ const firebaseConfig = {
   messagingSenderId: "389961280322",
   appId: "1:389961280322:web:77d9064c1079355cec36db"
 };
-
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
 const backendUrl = "https://web-production-e681c.up.railway.app";
-
 let token = null;
 let ws = null;
 let connectedUsers = {}; // {uid:true}
@@ -87,38 +97,47 @@ document.getElementById("loginBtn").onclick = async () => {
     document.getElementById("status").innerText = "Logged in as " + email;
 
     connectWebSocket(token);
-    fetchConnectedUsers(); // populate connected users list
-
+    fetchConnectedUsersFromBackend();
   } catch(error) {
     console.error(error);
     document.getElementById("status").innerText = "Login failed: " + error.message;
+    document.getElementById("status").classList.add("error");
   }
 };
 
-// ===== WebSocket Connection =====
+// ===== Fetch connected users =====
+async function fetchConnectedUsersFromBackend() {
+  try {
+    const res = await fetch(`${backendUrl}/connected-users`);
+    const data = await res.json();
+    connectedUsers = {};
+    data.users.forEach(uid => connectedUsers[uid] = true);
+    updateUserList();
+  } catch (err) {
+    console.error("Failed to fetch connected users:", err);
+  }
+}
+
+// ===== WebSocket =====
 function connectWebSocket(token){
   ws = new WebSocket(`${backendUrl}/ws?token=${token}`);
 
-  ws.onopen = () => {
-    console.log("WebSocket connected");
-    document.getElementById("status").innerText += " | WebSocket connected";
-  };
+  ws.onopen = () => console.log("WebSocket connected");
 
   ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    console.log("Notification received:", data);
+
+    // Add user dynamically
+    if(data.user_id){
+      connectedUsers[data.user_id] = true;
+      updateUserList();
+    }
 
     // Show incoming notification
     const div = document.getElementById("notifications");
     const p = document.createElement("p");
     p.innerText = `[${data.user_id || "Broadcast"}] ${data.message}`;
-    div.prepend(p); // latest on top
-
-    // Track connected users (dynamic update)
-    if(data.user_id){
-      connectedUsers[data.user_id] = true;
-      updateUserList();
-    }
+    div.prepend(p);
   };
 
   ws.onclose = () => {
@@ -127,25 +146,11 @@ function connectWebSocket(token){
   };
 }
 
-// ===== Fetch Connected Users from Backend =====
-async function fetchConnectedUsers(){
-  try {
-    const res = await fetch(`${backendUrl}/connected-users`);
-    const data = await res.json();
-    connectedUsers = {};
-    data.users.forEach(uid => connectedUsers[uid] = true);
-    updateUserList();
-  } catch(err){
-    console.error("Failed to fetch connected users", err);
-  }
-}
-
-// ===== Update User List Dropdown and UL =====
+// ===== Update User List =====
 function updateUserList(){
   const userSelect = document.getElementById("userSelect");
   const usersUl = document.getElementById("users");
 
-  // Reset
   userSelect.innerHTML = '<option value="">--Select User or Broadcast All--</option>';
   usersUl.innerHTML = '';
 
@@ -174,15 +179,16 @@ document.getElementById("sendBtn").onclick = async () => {
   try {
     if(user_id){ // single user
       await sendNotification(user_id, message);
-    } else { // broadcast
-      for(const uid in connectedUsers){
-        await sendNotification(uid, message);
-      }
+    } else { // broadcast all
+      await sendNotification("ALL", message);
     }
     document.getElementById("sendStatus").innerText = "Message sent!";
+    document.getElementById("sendStatus").classList.remove("error");
+    document.getElementById("message").value = "";
   } catch(err){
     console.error(err);
     document.getElementById("sendStatus").innerText = "Send failed!";
+    document.getElementById("sendStatus").classList.add("error");
   }
 };
 
@@ -195,5 +201,6 @@ async function sendNotification(user_id, message){
   return res.json();
 }
 </script>
+
 </body>
 </html>
