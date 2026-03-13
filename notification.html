@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Notification Admin Dashboard</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  input, button { padding: 5px; margin: 5px; }
+  #users { margin-top: 10px; }
+  #notifications { margin-top: 10px; border-top: 1px solid #ccc; padding-top: 10px; }
+</style>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+</head>
+<body>
+<h1>Notification Admin Dashboard</h1>
+
+<!-- Login -->
+<div>
+  <h2>Admin Login</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button id="loginBtn">Login</button>
+  <p id="status"></p>
+</div>
+
+<hr>
+
+<!-- Connected Users -->
+<div>
+  <h2>Connected Users</h2>
+  <ul id="users"></ul>
+</div>
+
+<hr>
+
+<!-- Send Notification -->
+<div>
+  <h2>Send Notification</h2>
+  <select id="userSelect">
+    <option value="">--Select User or All--</option>
+  </select>
+  <input type="text" id="message" placeholder="Message">
+  <button id="sendBtn">Send</button>
+  <p id="sendStatus"></p>
+</div>
+
+<hr>
+
+<!-- Incoming Notifications -->
+<div>
+  <h2>Incoming Notifications</h2>
+  <div id="notifications"></div>
+</div>
+
+<script>
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyD-rcdGnoGOc0XFvWyRaNQzJQl01DOGZGs",
+    authDomain: "techgear-fa27d.firebaseapp.com",
+    projectId: "techgear-fa27d",
+    storageBucket: "techgear-fa27d.firebasestorage.app",
+    messagingSenderId: "389961280322",
+    appId: "1:389961280322:web:77d9064c1079355cec36db"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  let token = null;
+  let ws = null;
+  let connectedUsers = {}; // {uid: true}
+
+  const backendUrl = "https://web-production-e681c.up.railway.app";
+
+  // Login
+  document.getElementById("loginBtn").onclick = async () => {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+      token = await user.getIdToken();
+      document.getElementById("status").innerText = "Logged in as " + email;
+
+      connectWebSocket(token);
+
+    } catch (error) {
+      console.error(error);
+      document.getElementById("status").innerText = "Login failed: " + error.message;
+    }
+  };
+
+  // Connect WebSocket
+  function connectWebSocket(token) {
+    const url = backendUrl + "/ws?token=" + token;
+    ws = new WebSocket(url);
+
+    ws.onopen = () => {
+      console.log("WebSocket connected");
+      document.getElementById("status").innerText += " | WebSocket connected";
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("Notification received:", data);
+
+      // Display notifications
+      const div = document.getElementById("notifications");
+      const p = document.createElement("p");
+      p.innerText = `[${data.user_id || "Broadcast"}] ${data.message}`;
+      div.appendChild(p);
+
+      // Track connected users (simple)
+      if(data.type === "notification" && data.user_id){
+        connectedUsers[data.user_id] = true;
+        updateUserList();
+      }
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket disconnected, reconnecting in 3s...");
+      setTimeout(() => connectWebSocket(token), 3000);
+    };
+  }
+
+  // Update user select & list
+  function updateUserList(){
+    const userSelect = document.getElementById("userSelect");
+    const usersUl = document.getElementById("users");
+    userSelect.innerHTML = '<option value="">--Select User or All--</option>';
+    usersUl.innerHTML = '';
+    for(const uid in connectedUsers){
+      const opt = document.createElement("option");
+      opt.value = uid;
+      opt.innerText = uid;
+      userSelect.appendChild(opt);
+
+      const li = document.createElement("li");
+      li.innerText = uid;
+      usersUl.appendChild(li);
+    }
+  }
+
+  // Send Notification
+  document.getElementById("sendBtn").onclick = async () => {
+    const user_id = document.getElementById("userSelect").value;
+    const message = document.getElementById("message").value;
+
+    if(!message){
+      document.getElementById("sendStatus").innerText = "Enter a message!";
+      return;
+    }
+
+    try {
+      if(user_id){
+        // Single user
+        await sendNotification(user_id, message);
+      } else {
+        // Broadcast to all connected users
+        for(const uid in connectedUsers){
+          await sendNotification(uid, message);
+        }
+      }
+      document.getElementById("sendStatus").innerText = "Message sent!";
+    } catch(err){
+      console.error(err);
+      document.getElementById("sendStatus").innerText = "Send failed!";
+    }
+  };
+
+  async function sendNotification(user_id, message){
+    const res = await fetch(backendUrl + "/notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id, message })
+    });
+    return res.json();
+  }
+</script>
+</body>
+</html>
