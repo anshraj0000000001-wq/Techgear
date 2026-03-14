@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ansh Studio | Expert HTML/CSS Developer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'gradient': 'gradient 5s ease infinite',
+                        'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Body and scrollbar styling */
+        body {
+            background-color: #020202;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Hero section text gradient */
+        .hero-gradient {
+            background: linear-gradient(-45deg, #3b82f6, #9333ea, #2563eb, #7c3aed);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* 3D perspective effect */
+        .perspective-lg {
+            perspective: 1000px;
+        }
+
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Modal overlay styling */
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+        }
+
+        .img-fit {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="selection:bg-blue-500/30">
+
+    <!-- Background dynamic elements -->
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[120px] rounded-full"></div>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <nav class="fixed top-0 w-full z-40 border-b border-white/5 bg-black/60 backdrop-blur-2xl">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 h-20 md:h-24 flex justify-between items-center">
+            <div onclick="toggleModal(true)" class="text-xl md:text-2xl font-black tracking-tighter text-white flex items-center gap-3 cursor-pointer group">
+                <div class="w-10 h-10 md:w-12 md:h-12 bg-white/5 border border-white/10 rounded-lg md:rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform overflow-hidden p-1">
+                    <img src="https://res.cloudinary.com/dbmcddwjd/image/upload/v1773508203/1770704703567_lnhtpp.png" class="object-contain w-full h-full" alt="Ansh Logo">
+                </div>
+                <span class="group-hover:text-blue-400 transition-colors uppercase tracking-widest hidden sm:block">Ansh Studio</span>
+            </div>
+            
+            <div class="hidden lg:flex gap-10 text-[10px] font-bold text-white/50 tracking-[0.2em]">
+                <a href="#work" class="hover:text-white transition-all uppercase">Work</a>
+                <a href="#experience" class="hover:text-white transition-all uppercase">Experience</a>
+                <a href="#contact" class="hover:text-white transition-all uppercase">Contact</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <span class="hidden sm:flex items-center gap-2 text-[10px] text-white/30 font-mono uppercase tracking-widest">
+                    <i data-lucide="calendar" class="w-3 h-3"></i> 14/03/2026
+                </span>
+                <button class="px-4 py-2 md:px-6 md:py-2.5 bg-white text-black text-[10px] md:text-xs font-black rounded-lg md:rounded-xl hover:bg-blue-600 hover:text-white transition-all shadow-xl">
+                    HIRE ME
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Hero Section -->
+    <section class="relative pt-32 pb-20 md:pt-48 md:pb-24 px-4 md:px-6 min-h-screen flex items-center z-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center w-full text-center lg:text-left">
+            <div class="flex flex-col items-center lg:items-start">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 font-mono text-[10px] tracking-widest mb-6 md:mb-8">
+                    <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-ping"></span>
+                    2026 - PRESENT
+                </div>
+                <h1 class="text-5xl sm:text-7xl lg:text-8xl font-black text-white leading-[0.9] mb-8 tracking-tighter">
+                    Welcome to <br />
+                    <span class="hero-gradient animate-gradient">Ansh Studio</span>
+                </h1>
+                <p class="text-base md:text-xl lg:text-2xl text-white/50 max-w-xl mb-10 leading-relaxed font-light">
+                    Crafting high-impact digital experiences with a mission to build projects that drive <span class="text-white font-medium italic">optimal user engagement</span>.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
+                    <a href="#work" class="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-blue-500 transition-all shadow-2xl shadow-blue-600/30 group">
+                        View Projects <i data-lucide="chevron-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    
+                    <div class="flex flex-col items-center gap-3 w-full sm:w-auto">
+                        <!-- Centered APK Preview Box -->
+                        <div class="w-14 h-14 bg-white/5 border border-white/20 rounded-2xl flex items-center justify-center p-2 shadow-lg overflow-hidden glass hover:scale-105 transition-all">
+                            <img src="https://res.cloudinary.com/dbmcddwjd/image/upload/v1773508974/file_0000000014987208ba9496be79fda60c_aai6dc.png" class="img-fit rounded-lg" alt="APK Icon">
+                        </div>
+                        <!-- Updated APK Download Link -->
+                        <a href="anshstudio.apk" download class="w-full sm:w-auto px-7 py-4 bg-white/5 border border-white/10 text-white text-[10px] md:text-xs font-black rounded-2xl flex items-center justify-center gap-2 hover:bg-white/10 transition-all uppercase tracking-widest group">
+                            <i data-lucide="download" class="w-4 h-4 group-hover:animate-bounce"></i> Download APK
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile card with 3D hover animation -->
+            <div class="relative hidden lg:block perspective-lg">
+                <div class="glass card-3d aspect-square flex flex-col justify-center items-center text-center p-12 rounded-[3.5rem] overflow-hidden">
+                    <div class="w-32 h-32 md:w-40 md:h-40 bg-gradient-to-br from-blue-500 to-purple-600 rounded-[2.5rem] rotate-12 mb-10 flex items-center justify-center shadow-2xl transition-transform hover:rotate-0 duration-700 border-4 border-white/10 group overflow-hidden">
+                        <img src="https://res.cloudinary.com/dbmcddwjd/image/upload/v1773507827/profile-pic_udycul.png" class="img-fit" alt="Ansh Raj">
+                    </div>
+                    <h3 class="text-4xl md:text-5xl font-black text-white mb-2 tracking-tighter">Ansh Raj</h3>
+                    <p class="text-blue-400 font-mono text-base md:text-lg mb-8 uppercase tracking-widest">Expert HTML/CSS Dev</p>
+                    <div class="grid grid-cols-2 gap-4 md:gap-6 w-full">
+                        <div class="p-4 md:p-6 bg-white/5 rounded-3xl border border-white/10">
+                            <div class="text-2xl md:text-3xl font-black text-white">2026</div>
+                            <div class="text-[10px] text-white/40 uppercase tracking-widest mt-2">Current</div>
+                        </div>
+                        <div class="p-4 md:p-6 bg-white/5 rounded-3xl border border-white/10">
+                            <div class="text-2xl md:text-3xl font-black text-white">150+</div>
+                            <div class="text-[10px] text-white/40 uppercase tracking-widest mt-2">Projects</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Work Showcase Section -->
+    <section id="work" class="py-24 md:py-40 px-4 md:px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 md:mb-20 text-center lg:text-left">
+                <h2 class="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-4 tracking-tighter uppercase">Featured Projects</h2>
+                <p class="text-white/40 text-sm md:text-lg font-light">Showcasing high-performance web applications and creative AI integrations.</p>
+                <div class="h-1.5 w-24 bg-blue-600 mt-6 rounded-full mx-auto lg:mx-0"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+                <!-- Shopping project card updated with provided image -->
+                <div class="glass group flex flex-col h-full p-8 md:p-10 rounded-[2.5rem]">
+                    <div class="mb-8 flex justify-between items-start">
+                        <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-500/10 rounded-2xl overflow-hidden p-1.5 border border-blue-500/20 transition-all shadow-lg group-hover:bg-blue-600/20">
+                            <img src="https://res.cloudinary.com/dbmcddwjd/image/upload/v1773507981/file_00000000adc471fa835cbf4f580a9db6_y9a6d0.png" class="img-fit rounded-lg" alt="Shopping Web">
+                        </div>
+                        <a href="https://anshtechgears.netlify.app" target="_blank" class="text-white/20 hover:text-white"><i data-lucide="external-link" class="w-5 h-5"></i></a>
+                    </div>
+                    <div class="text-[10px] font-mono text-blue-500 uppercase tracking-widest mb-3">E-Commerce</div>
+                    <h3 class="text-2xl md:text-3xl font-black text-white mb-4 group-hover:text-blue-400 transition-colors uppercase tracking-tighter">Shopping Web</h3>
+                    <p class="text-white/40 text-sm leading-relaxed mb-10 flex-1">A modern shopping platform featuring a fluid interface, high responsiveness, and seamless navigation.</p>
+                    <a href="https://anshtechgears.netlify.app" target="_blank" class="inline-flex items-center gap-2 text-xs font-black text-white group-hover:gap-6 transition-all">
+                        LAUNCH PROJECT <i data-lucide="chevron-right" class="w-4 h-4 text-blue-500"></i>
+                    </a>
+                </div>
+
+                <!-- Portfolio project card -->
+                <div class="glass group flex flex-col h-full p-8 md:p-10 rounded-[2.5rem]">
+                    <div class="mb-8 flex justify-between items-start">
+                        <div class="p-5 bg-purple-500/10 rounded-2xl text-purple-400 group-hover:bg-purple-600 group-hover:text-white transition-all shadow-lg border border-purple-500/20">
+                            <i data-lucide="globe" class="w-8 h-8"></i>
+                        </div>
+                        <a href="https://anshtechgears.netlify.app/portfolio.html" target="_blank" class="text-white/20 hover:text-white"><i data-lucide="external-link" class="w-5 h-5"></i></a>
+                    </div>
+                    <div class="text-[10px] font-mono text-purple-500 uppercase tracking-widest mb-3">UI Showcase</div>
+                    <h3 class="text-2xl md:text-3xl font-black text-white mb-4 group-hover:text-purple-400 transition-colors uppercase tracking-tighter">Main Portfolio</h3>
+                    <p class="text-white/40 text-sm leading-relaxed mb-10 flex-1">A complete professional showcase of design skills, project history, and technical expertise.</p>
+                    <a href="https://anshtechgears.netlify.app/portfolio.html" target="_blank" class="inline-flex items-center gap-2 text-xs font-bold text-white group-hover:gap-6 transition-all">
+                        LAUNCH PROJECT <i data-lucide="chevron-right" class="w-4 h-4 text-purple-500"></i>
+                    </a>
+                </div>
+
+                <!-- AI project card -->
+                <div class="glass group flex flex-col h-full p-8 md:p-10 rounded-[2.5rem]">
+                    <div class="mb-8 flex justify-between items-start">
+                        <div class="p-5 bg-green-500/10 rounded-2xl text-green-400 group-hover:bg-green-600 group-hover:text-white transition-all shadow-lg border border-green-500/20">
+                            <i data-lucide="target" class="w-8 h-8"></i>
+                        </div>
+                        <a href="https://anshtechgears.netlify.app/aiobject.html" target="_blank" class="text-white/20 hover:text-white"><i data-lucide="external-link" class="w-5 h-5"></i></a>
+                    </div>
+                    <div class="text-[10px] font-mono text-green-500 uppercase tracking-widest mb-3">Intelligence</div>
+                    <h3 class="text-2xl md:text-3xl font-black text-white mb-4 group-hover:text-green-400 transition-colors uppercase tracking-tighter">AI Object Detector</h3>
+                    <p class="text-white/40 text-sm leading-relaxed mb-10 flex-1">Real-time object detection tool powered by advanced machine learning models integrated directly into the web.</p>
+                    <a href="https://anshtechgears.netlify.app/aiobject.html" target="_blank" class="inline-flex items-center gap-2 text-xs font-black text-white group-hover:gap-6 transition-all">
+                        LAUNCH PROJECT <i data-lucide="chevron-right" class="w-4 h-4 text-green-500"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Professional Experience Timeline -->
+    <section id="experience" class="py-24 md:py-40 px-4 md:px-6 bg-white/[0.01]">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-16 md:gap-24">
+                <div class="text-center lg:text-left">
+                    <h2 class="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter uppercase leading-none">Proven<br />Experience</h2>
+                    <p class="text-white/40 text-lg md:text-xl font-light leading-relaxed max-w-lg mx-auto lg:mx-0 italic">
+                        "Maintaining professional coding standards since 2026. Every line of code is written with scalability and engagement in mind."
+                    </p>
+                </div>
+                
+                <div class="relative pl-10 md:pl-16 border-l-2 border-dashed border-white/10 space-y-16">
+                    <div class="relative">
+                        <div class="absolute -left-[54px] md:-left-[74px] top-0 w-12 h-12 md:w-14 md:h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-2xl border-4 border-black">
+                            <i data-lucide="briefcase" class="text-white w-5 h-5 md:w-6 md:h-6"></i>
+                        </div>
+                        <div class="mb-4 text-left">
+                            <span class="text-blue-500 font-mono text-[10px] font-bold tracking-[0.3em] uppercase">Jan 2026 — Dec 2029</span>
+                            <h3 class="text-2xl md:text-4xl font-black text-white mt-2 uppercase tracking-tighter">Senior Web Developer</h3>
+                            <div class="text-white/60 font-bold mt-1 tracking-widest text-lg">TechGear Studio</div>
+                        </div>
+                        <p class="text-white/40 text-lg text-left leading-relaxed mb-8">
+                            Leading frontend architecture and executing complex responsive designs. Focused on AI integration and creating seamless UI/UX workflows for enterprise clients.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-5 py-2 bg-white/5 rounded-xl text-[10px] font-bold uppercase tracking-widest text-white/40 border border-white/5 hover:border-blue-500/50 transition-colors">React</span>
+                            <span class="px-5 py-2 bg-white/5 rounded-xl text-[10px] font-bold uppercase tracking-widest text-white/40 border border-white/5 hover:border-blue-500/50 transition-colors">Tailwind</span>
+                            <span class="px-5 py-2 bg-white/5 rounded-xl text-[10px] font-bold uppercase tracking-widest text-white/40 border border-white/5 hover:border-blue-500/50 transition-colors">AI Integration</span>
+                            <span class="px-5 py-2 bg-white/5 rounded-xl text-[10px] font-bold uppercase tracking-widest text-white/40 border border-white/5 hover:border-blue-500/50 transition-colors">Architecture</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer with contact info -->
+    <footer id="contact" class="pt-24 pb-12 md:pt-32 md:pb-16 px-4 md:px-6 border-t border-white/5 bg-black/40">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 mb-20">
+                <div class="text-center lg:text-left flex flex-col items-center lg:items-start">
+                    <div class="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center p-2 shadow-2xl mb-6 overflow-hidden">
+                        <img src="https://res.cloudinary.com/dbmcddwjd/image/upload/v1773508203/1770704703567_lnhtpp.png" class="object-contain w-full h-full" alt="Ansh Logo">
+                    </div>
+                    <div class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-6 uppercase">ANSH STUDIO</div>
+                    <p class="text-white/40 text-lg md:text-xl font-light leading-relaxed max-w-md mx-auto lg:mx-0">Engineering high-impact digital engagement through minimalist design and technical precision since 2026.</p>
+                </div>
+                <div class="flex flex-col items-center lg:items-end gap-6 md:gap-8">
+                    <div class="text-center lg:text-right">
+                        <div class="text-[10px] text-white/20 uppercase tracking-[0.3em] mb-3">Get in Touch</div>
+                        <a href="mailto:anshraj0000000001@gmail.com" class="text-xl md:text-3xl lg:text-4xl font-black text-white hover:text-blue-500 transition-colors break-all underline decoration-blue-500/30 underline-offset-8">
+                            anshraj0000000001@gmail.com
+                        </a>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="https://github.com/anshraj0000000001-wq" target="_blank" class="w-12 h-12 md:w-14 md:h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-white/60 hover:text-white hover:bg-blue-600 transition-all shadow-xl hover:scale-110"><i data-lucide="github"></i></a>
+                        <a href="mailto:anshraj0000000001@gmail.com" class="w-12 h-12 md:w-14 md:h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-white/60 hover:text-white hover:bg-blue-600 transition-all shadow-xl hover:scale-110"><i data-lucide="mail"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row justify-between items-center pt-10 border-t border-white/5 gap-6">
+                <p class="text-[9px] text-white/20 uppercase tracking-[0.4em] font-bold text-center">© 2026 Ansh Raj Studio • Crafted in Bihar.</p>
+                <div class="flex items-center gap-2 text-[9px] text-blue-500/50 font-mono tracking-widest uppercase">
+                    <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]"></span>
+                    Updated: 14 March 2026
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- User Profile Modal overlay -->
+    <div id="profileModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 md:p-6 overflow-hidden">
+        <div onclick="toggleModal(false)" class="absolute inset-0 modal-overlay opacity-0 transition-opacity duration-300" id="modalOverlay"></div>
+        <div class="relative w-full max-w-lg bg-slate-900 border border-white/10 rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden shadow-2xl scale-95 opacity-0 transition-all duration-300" id="modalContent">
+            <div class="h-28 md:h-36 bg-gradient-to-r from-blue-600 to-purple-600"></div>
+            <button onclick="toggleModal(false)" class="absolute top-4 right-4 p-2.5 bg-black/20 hover:bg-black/40 rounded-full text-white transition-all active:scale-90">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="px-6 md:px-10 pb-12 -mt-12 md:-mt-20 text-center">
+                <div class="inline-block p-1.5 bg-slate-900 rounded-full mb-6 shadow-2xl">
+                    <div class="w-24 h-24 md:w-36 md:h-36 rounded-full bg-slate-800 border-4 md:border-6 border-blue-500 flex items-center justify-center overflow-hidden">
+                        <img src="https://res.cloudinary.com/dbmcddwjd/image/upload/v1773507827/profile-pic_udycul.png" class="img-fit" alt="Ansh Raj">
+                    </div>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-black text-white tracking-tighter mb-2">Ansh Raj</h2>
+                <div class="flex items-center justify-center gap-2 text-blue-400 font-mono text-xs md:text-sm mb-10 uppercase tracking-widest">
+                    <i data-lucide="map-pin" class="w-4 h-4"></i> Bihar, Gaya, Tekari
+                </div>
+                <div class="space-y-4 mb-10 text-left">
+                    <div class="p-5 bg-white/5 rounded-3xl border border-white/5 flex items-center gap-5 group hover:bg-white/10 transition-all">
+                        <i data-lucide="cpu" class="text-blue-400 group-hover:scale-110 transition-transform w-6 h-6"></i>
+                        <div>
+                            <div class="text-[10px] text-white/40 uppercase font-bold tracking-widest mb-0.5">Focus Domain</div>
+                            <div class="text-white font-bold text-sm">AI and Machine Learning</div>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-white/5 rounded-3xl border border-white/5 flex items-center gap-5 group hover:bg-white/10 transition-all">
+                        <i data-lucide="palette" class="text-purple-400 group-hover:scale-110 transition-transform w-6 h-6"></i>
+                        <div>
+                            <div class="text-[10px] text-white/30 uppercase font-bold tracking-widest mb-0.5">Specialization</div>
+                            <div class="text-white font-bold text-sm">UI/UX Designing</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <a href="mailto:anshraj0000000001@gmail.com" class="w-full py-4.5 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-2xl text-xs md:text-sm flex items-center justify-center gap-3 shadow-xl transition-all">
+                        <i data-lucide="mail" class="w-5 h-5"></i> anshraj0000000001@gmail.com
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50">
+        <div id="chatWindow" class="hidden mb-6 w-[calc(100vw-3rem)] sm:w-96 h-[450px] md:h-[500px] bg-slate-950/95 backdrop-blur-3xl border border-white/20 rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden">
+            <div class="p-5 bg-blue-600/10 border-b border-white/10 flex justify-between items-center text-white">
+                <span class="font-bold text-sm tracking-wide flex items-center gap-3 uppercase">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-lg"></span> Ansh Live Support
+                </span>
+                <button onclick="toggleChat()" class="p-1 hover:bg-white/10 rounded-full transition-all"><i data-lucide="x" class="w-5 h-5 opacity-60"></i></button>
+            </div>
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-hide text-xs md:text-sm">
+                <div class="flex justify-start">
+                    <div class="max-w-[85%] p-4 bg-white/10 text-white/90 rounded-3xl rounded-tl-none border border-white/5 leading-relaxed">
+                        Hello! Welcome to Ansh Studio. How can I help you today?
+                    </div>
+                </div>
+            </div>
+            <form onsubmit="sendMessage(event)" class="p-4 bg-white/5 border-t border-white/10 flex gap-3">
+                <input id="chatInput" placeholder="Write your message..." class="flex-1 bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white text-xs focus:outline-none focus:border-blue-500 placeholder:text-white/20">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white p-4 rounded-2xl shadow-xl transition-all active:scale-90"><i data-lucide="send" class="w-4 h-4"></i></button>
+            </form>
+        </div>
+        <button onclick="toggleChat()" class="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-tr from-blue-600 to-purple-600 text-white rounded-2xl flex items-center justify-center shadow-2xl transform hover:scale-110 transition-transform">
+            <i data-lucide="message-square" id="chatIcon" class="w-7 h-7"></i>
+        </button>
+    </div>
+
+    <script>
+        // Initialize icons
+        lucide.createIcons();
+
+        const profileModal = document.getElementById('profileModal');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalContent = document.getElementById('modalContent');
+
+        // Modal Logic
+        function toggleModal(show) {
+            if (show) {
+                profileModal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalOverlay.classList.replace('opacity-0', 'opacity-100');
+                    modalContent.classList.replace('scale-95', 'scale-100');
+                    modalContent.classList.replace('opacity-0', 'opacity-100');
+                }, 10);
+            } else {
+                modalOverlay.classList.replace('opacity-100', 'opacity-0');
+                modalContent.classList.replace('scale-100', 'scale-95');
+                modalContent.classList.replace('opacity-100', 'opacity-0');
+                setTimeout(() => profileModal.classList.add('hidden'), 300);
+            }
+        }
+
+        const chatWindow = document.getElementById('chatWindow');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+
+        // Chat open/close
+        function toggleChat() {
+            chatWindow.classList.toggle('hidden');
+        }
+
+        // Messaging logic
+        function sendMessage(e) {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            const userDiv = document.createElement('div');
+            userDiv.className = 'flex justify-end';
+            userDiv.innerHTML = `<div class="max-w-[85%] p-4 bg-blue-600 text-white rounded-3xl rounded-tr-none shadow-lg">${text}</div>`;
+            chatMessages.appendChild(userDiv);
+            chatInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            setTimeout(() => {
+                const responses = [
+                    "Ansh is currently focused on a new high-impact project.", 
+                    "You can explore the featured projects in the Work section.", 
+                    "For inquiries, please reach out via email: anshraj0000000001@gmail.com",
+                    "We specialize in premium UI/UX design and clean HTML/CSS architecture."
+                ];
+                const botText = responses[Math.floor(Math.random() * responses.length)];
+                const botDiv = document.createElement('div');
+                botDiv.className = 'flex justify-start';
+                botDiv.innerHTML = `<div class="max-w-[85%] p-4 bg-white/10 text-white/90 rounded-3xl rounded-tl-none border border-white/5 leading-relaxed">${botText}</div>`;
+                chatMessages.appendChild(botDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+        }
+
+        // 3D Card logic for desktop
+        const card = document.querySelector('.card-3d');
+        if (window.innerWidth > 1024) {
+            document.querySelector('.perspective-lg').addEventListener('mousemove', e => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const rotateX = (y - rect.height / 2) / 10;
+                const rotateY = (rect.width / 2 - x) / 10;
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            document.querySelector('.perspective-lg').addEventListener('mouseleave', () => {
+                card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+            });
+        }
+    </script>
+</body>
+</html>
+
