@@ -1,7 +1,6 @@
-@media (max-width: 600px) {
-  body {
-    background-color: #c9b693;
-  }
+body {
+  background-color: #c9b693;
+  height: 100%;
 }
 #form{
   border: 2px solid black;
