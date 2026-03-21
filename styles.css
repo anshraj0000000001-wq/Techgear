@@ -1,6 +1,7 @@
 body {
   background-color: #c9b693;
   height: 100%;
+  width: 90%;
 }
 #form{
   border: 2px solid black;
