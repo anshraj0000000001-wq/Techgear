@@ -1,7 +1,7 @@
 body {
   background-color: #c9b693;
   height: 100%;
-  width: 90%;
+  width: 100%;
 }
 #form{
   border: 2px solid black;
@@ -119,7 +119,7 @@ body {
 #photo{
   position: absolute;
   left: 15px;
-  top: 75px;
+  top: 65px;
 }
 
 
