@@ -106,7 +106,7 @@ body {
   border: none;
   background: #40322c;
   right: 20px;
-  bottom: 100px;
+  top: 100px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.5), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 #youtube{
