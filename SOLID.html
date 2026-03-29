@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Mastery: SOLID & Advanced Concepts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #34d399 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .code-container {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+        }
+        pre {
+            scrollbar-width: thin;
+            scrollbar-color: #334155 transparent;
+        }
+    </style>
+</head>
+<body class="bg-[#020617] text-slate-200 antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 glass border-b border-slate-800/50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                <i data-lucide="terminal" class="text-emerald-400"></i>
+                Python<span class="text-emerald-400">Mastery</span>
+            </h1>
+            <div class="hidden md:flex gap-8 text-sm font-medium">
+                <a href="#solid" class="hover:text-emerald-400 transition-colors">SOLID</a>
+                <a href="#decorators" class="hover:text-emerald-400 transition-colors">Decorators</a>
+                <a href="#generators" class="hover:text-emerald-400 transition-colors">Generators</a>
+            </div>
+            <button class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 px-5 py-2 rounded-full font-bold text-sm transition-all">
+                Pro Dashboard
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="relative py-24 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-6xl md:text-8xl font-black mb-6 tracking-tighter">
+                Code Like a <br/> <span class="gradient-text">Senior Architect</span>
+            </h2>
+            <p class="text-slate-400 text-xl max-w-2xl mx-auto">
+                Deep dive into SOLID principles, metaprogramming with Decorators, and memory-efficient Generators.
+            </p>
+        </div>
+    </header>
+
+    <!-- SOLID DEEP DIVE -->
+    <section id="solid" class="max-w-7xl mx-auto px-6 py-12">
+        <div class="mb-16">
+            <h3 class="text-4xl font-bold mb-4">SOLID Deep Dive</h3>
+            <p class="text-slate-500 text-lg">Har principle ka practical Python implementation.</p>
+        </div>
+
+        <div class="space-y-12">
+            <!-- S: SRP -->
+            <div class="grid lg:grid-cols-2 gap-10 items-center border-b border-slate-800 pb-16">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded-lg font-bold text-xl border border-emerald-500/20">S</span>
+                        <h4 class="text-2xl font-bold">Single Responsibility</h4>
+                    </div>
+                    <p class="text-slate-400 mb-6">Ek class ka kaam sirf ek specific domain tak mehdood hona chahiye. Isse testing aur debugging asaan ho jati hai.</p>
+                    <ul class="text-sm text-slate-500 space-y-2">
+                        <li>• Separate logic for data and persistence.</li>
+                        <li>• Easier to maintain as the app grows.</li>
+                    </ul>
+                </div>
+                <div class="code-container rounded-2xl overflow-hidden shadow-2xl">
+                    <div class="bg-slate-800/50 px-4 py-2 text-xs text-slate-400 border-b border-slate-700">srp_example.py</div>
+                    <pre class="p-6 text-sm text-emerald-300 overflow-x-auto"><code>class User:
+    def __init__(self, name: str):
+        self.name = name
+
+class UserDB:
+    def save(self, user: User):
+        print(f"Saving {user.name} to DB")
+
+# User sirf data handle karta hai, DB nahi.</code></pre>
+                </div>
+            </div>
+
+            <!-- O: OCP -->
+            <div class="grid lg:grid-cols-2 gap-10 items-center border-b border-slate-800 pb-16">
+                <div class="lg:order-last">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-lg font-bold text-xl border border-blue-500/20">O</span>
+                        <h4 class="text-2xl font-bold">Open/Closed Principle</h4>
+                    </div>
+                    <p class="text-slate-400 mb-6">Naye features add karne ke liye purane code ko touch mat karo. Interfaces aur Inheritance ka use karke functionality extend karo.</p>
+                </div>
+                <div class="code-container rounded-2xl overflow-hidden shadow-2xl">
+                    <div class="bg-slate-800/50 px-4 py-2 text-xs text-slate-400 border-b border-slate-700">ocp_example.py</div>
+                    <pre class="p-6 text-sm text-blue-300 overflow-x-auto"><code>from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    @abstractmethod
+    def area(self): pass
+
+class Circle(Shape):
+    def area(self): return 3.14 * (5**2)
+
+class Square(Shape):
+    def area(self): return 10 * 10</code></pre>
+                </div>
+            </div>
+
+            <!-- L: LSP -->
+            <div class="grid lg:grid-cols-2 gap-10 items-center border-b border-slate-800 pb-16">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-lg font-bold text-xl border border-purple-500/20">L</span>
+                        <h4 class="text-2xl font-bold">Liskov Substitution</h4>
+                    </div>
+                    <p class="text-slate-400 mb-6">Child class ko hamesha Parent class ki jagah fit aana chahiye. Logic break nahi honi chahiye.</p>
+                </div>
+                <div class="code-container rounded-2xl overflow-hidden shadow-2xl">
+                    <div class="bg-slate-800/50 px-4 py-2 text-xs text-slate-400 border-b border-slate-700">lsp_example.py</div>
+                    <pre class="p-6 text-sm text-purple-300 overflow-x-auto"><code>class Bird: pass
+class FlyingBird(Bird):
+    def fly(self): print("Flying...")
+
+class Ostrich(Bird):
+    # Ostrich fly nahi kar sakta
+    # Isliye ye FlyingBird ko inherit nahi karega
+    pass</code></pre>
+                </div>
+            </div>
+
+            <!-- I: ISP -->
+            <div class="grid lg:grid-cols-2 gap-10 items-center border-b border-slate-800 pb-16">
+                <div class="lg:order-last">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="px-3 py-1 bg-pink-500/10 text-pink-400 rounded-lg font-bold text-xl border border-pink-500/20">I</span>
+                        <h4 class="text-2xl font-bold">Interface Segregation</h4>
+                    </div>
+                    <p class="text-slate-400 mb-6">Badi interfaces ko chhota kardo taaki classes sirf zaruri methods ko hi implement karein.</p>
+                </div>
+                <div class="code-container rounded-2xl overflow-hidden shadow-2xl">
+                    <div class="bg-slate-800/50 px-4 py-2 text-xs text-slate-400 border-b border-slate-700">isp_example.py</div>
+                    <pre class="p-6 text-sm text-pink-300 overflow-x-auto"><code>class Printer(ABC):
+    @abstractmethod
+    def print_doc(self): pass
+
+class Scanner(ABC):
+    @abstractmethod
+    def scan_doc(self): pass
+
+class OldPrinter(Printer):
+    def print_doc(self): print("Printing...")</code></pre>
+                </div>
+            </div>
+
+            <!-- D: DIP -->
+            <div class="grid lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="px-3 py-1 bg-orange-500/10 text-orange-400 rounded-lg font-bold text-xl border border-orange-500/20">D</span>
+                        <h4 class="text-2xl font-bold">Dependency Inversion</h4>
+                    </div>
+                    <p class="text-slate-400 mb-6">High-level modules ko low-level classes par nahi, balki interfaces par depend hona chahiye (Abstraction).</p>
+                </div>
+                <div class="code-container rounded-2xl overflow-hidden shadow-2xl">
+                    <div class="bg-slate-800/50 px-4 py-2 text-xs text-slate-400 border-b border-slate-700">dip_example.py</div>
+                    <pre class="p-6 text-sm text-orange-300 overflow-x-auto"><code>class DBInterface(ABC):
+    @abstractmethod
+    def connect(self): pass
+
+class App:
+    def __init__(self, db: DBInterface):
+        # Specific DB par depend nahi hai
+        self.db = db</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Decorators -->
+    <section id="decorators" class="bg-slate-900/40 py-24 px-6 border-y border-slate-800">
+        <div class="max-w-7xl mx-auto">
+            <h3 class="text-4xl font-bold mb-12">Professional Decorators</h3>
+            <div class="glass p-8 rounded-3xl grid lg:grid-cols-2 gap-12">
+                <div>
+                    <h4 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <i data-lucide="layers" class="text-emerald-400"></i> Logic Wrapper
+                    </h4>
+                    <p class="text-slate-400 mb-6">Decorator original function ko wrap kar leta hai. Hum <code>@functools.wraps</code> ka use karte hain taaki function metadata (name, docstring) loss na ho.</p>
+                    <div class="space-y-4">
+                        <div class="flex gap-4 p-4 bg-slate-800/30 rounded-xl">
+                            <i data-lucide="shield-check" class="text-emerald-500 shrink-0"></i>
+                            <div>
+                                <p class="text-sm font-bold">Authentication</p>
+                                <p class="text-xs text-slate-500">Function execute hone se pehle user check karein.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-4 bg-slate-800/30 rounded-xl">
+                            <i data-lucide="timer" class="text-blue-500 shrink-0"></i>
+                            <div>
+                                <p class="text-sm font-bold">Performance</p>
+                                <p class="text-xs text-slate-500">Function ne kitna time liya, ye calculate karein.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="code-container rounded-2xl overflow-hidden">
+                    <pre class="p-6 text-xs code-font text-emerald-400"><code>import functools
+import time
+
+def timer(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        end = time.perf_counter()
+        print(f"{func.__name__} took {end-start:.4f}s")
+        return result
+    return wrapper
+
+@timer
+def heavy_task():
+    time.sleep(1)</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Generators -->
+    <section id="generators" class="max-w-7xl mx-auto px-6 py-24">
+        <h3 class="text-4xl font-bold mb-12">Stream Processing: Generators</h3>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="glass p-8 rounded-3xl border-l-4 border-l-blue-500">
+                <h4 class="text-xl font-bold mb-4">The Yield Keyword</h4>
+                <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                    Generators memory mein poori list save nahi karte. Wo "Lazy Evaluation" use karte hain, yani jab data ki zaroorat ho tabhi generate karte hain.
+                </p>
+                <div class="code-container rounded-xl p-4">
+                    <pre class="text-xs text-blue-300"><code>def large_file_reader(path):
+    with open(path) as f:
+        for line in f:
+            yield line # Ek waqt par ek line</code></pre>
+                </div>
+            </div>
+            <div class="glass p-8 rounded-3xl border-l-4 border-l-purple-500">
+                <h4 class="text-xl font-bold mb-4">Generator Pipeline</h4>
+                <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                    Aap multiple generators ko ek ke baad ek chain kar sakte hain bina memory usage badhaye.
+                </p>
+                <div class="code-container rounded-xl p-4">
+                    <pre class="text-xs text-purple-300"><code>data = (i for i in range(10**10))
+filtered = (x for x in data if x % 2 == 0)
+# Sirf call karne par hi compute hoga</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass border-t border-slate-800/50 py-16 px-6 text-center">
+        <div class="max-w-2xl mx-auto">
+            <h5 class="text-xl font-bold mb-4 gradient-text">Ready to Build Scalable Apps?</h5>
+            <p class="text-slate-500 text-sm mb-8">In principles ko use karke aapka code enterprise-grade ban jayega.</p>
+            <div class="flex justify-center gap-8">
+                <i data-lucide="github" class="w-6 h-6 text-slate-500 cursor-pointer hover:text-white transition-all"></i>
+                <i data-lucide="twitter" class="w-6 h-6 text-slate-500 cursor-pointer hover:text-white transition-all"></i>
+                <i data-lucide="mail" class="w-6 h-6 text-slate-500 cursor-pointer hover:text-white transition-all"></i>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
+
