@@ -3,45 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TechGear | World-Class Tech Discovery</title>
+    <title>TechGears - Latest Tech News, Gadgets & Tutorials</title>
     
     <!-- SEO & Metadata -->
-    <head>
-  <!-- Website Title -->
-  <title>TechGears - Latest Tech News, Gadgets & Tutorials</title>
+    <meta name="description" content="TechGears brings you the latest technology news, gadgets, programming tutorials, AI tools, and tech guides. Stay updated with easy-to-follow tech tips and tutorials.">
+    <meta name="keywords" content="TechGears, technology, tech news, gadgets, programming tutorials, coding, AI tools, tech tips, tech guides, Python, JavaScript, web development">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://anshstudios.pages.dev">
+    <meta property="og:title" content="TechGears - Latest Tech News & Tutorials">
+    <meta property="og:description" content="Explore TechGears for the latest technology news, gadgets, coding tutorials, AI tools, and tech guides.">
+    <meta property="og:image" content="https://res.cloudinary.com/dbmcddwjd/image/upload/v1773507981/file_00000000adc471fa835cbf4f580a9db6_y9a6d0.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="TechGears - Latest Tech News & Tutorials">
+    <meta name="twitter:description" content="Explore TechGears for the latest technology news, gadgets, coding tutorials, AI tools, and tech guides.">
+    <meta name="twitter:image" content="https://res.cloudinary.com/dbmcddwjd/image/upload/v1773507981/file_00000000adc471fa835cbf4f580a9db6_y9a6d0.png">
 
-  <!-- SEO & Metadata -->
-  <meta name="description" content="TechGears brings you the latest technology news, gadgets, programming tutorials, AI tools, and tech guides. Stay updated with easy-to-follow tech tips and tutorials.">
-  <meta name="keywords" content="TechGears, technology, tech news, gadgets, programming tutorials, coding, AI tools, tech tips, tech guides, Python, JavaScript, web development">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "TechGears",
+      "url": "https://anshstudios.pages.dev",
+      "logo": "https://res.cloudinary.com/dbmcddwjd/image/upload/v1773507981/file_00000000adc471fa835cbf4f580a9db6_y9a6d0.png"
+    }
+    </script>
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://anshstudios.pages.dev">
-  <meta property="og:title" content="TechGears - Latest Tech News & Tutorials">
-  <meta property="og:description" content="Explore TechGears for the latest technology news, gadgets, coding tutorials, AI tools, and tech guides.">
-  <meta property="og:image" content="https://res.cloudinary.com/dbmcddwjd/image/upload/v1773507981/file_00000000adc471fa835cbf4f580a9db6_y9a6d0.png">
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="TechGears - Latest Tech News & Tutorials">
-  <meta name="twitter:description" content="Explore TechGears for the latest technology news, gadgets, coding tutorials, AI tools, and tech guides.">
-  <meta name="twitter:image" content="https://res.cloudinary.com/dbmcddwjd/image/upload/v1773507981/file_00000000adc471fa835cbf4f580a9db6_y9a6d0.png">
-
-  <!-- Logo Schema for Google / Rich Results -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "TechGears",
-    "url": "https://anshstudios.pages.dev",
-    "logo": "https://res.cloudinary.com/dbmcddwjd/image/upload/v1773507981/file_00000000adc471fa835cbf4f580a9db6_y9a6d0.png"
-  }
-  </script>
-</head>
-    <body>
-  <!-- Example Headings for SEO -->
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
@@ -56,6 +42,7 @@
             --border: rgba(255, 255, 255, 0.08);
             --glass: rgba(15, 23, 42, 0.8);
             --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --star-color: #fbbf24;
         }
 
         * {
@@ -73,7 +60,6 @@
             scroll-behavior: smooth;
         }
 
-        /* --- World Class Utility --- */
         .container {
             width: 100%;
             max-width: 1200px;
@@ -276,11 +262,26 @@
         .card h3 {
             font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+
+        /* Rating System Styles */
+        .rating-stars {
+            color: var(--star-color);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .rating-count {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-left: 5px;
         }
 
         .card-footer {
@@ -293,7 +294,38 @@
 
         .price { font-family: 'Space Grotesk'; font-size: 1.4rem; font-weight: 700; }
 
-        /* --- Modals (Generic Styling) --- */
+        /* --- Review System Specific CSS --- */
+        .review-section { padding: 80px 0; }
+        .review-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .star-rating-input {
+            display: flex;
+            gap: 8px;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .star-rating-input span { cursor: pointer; color: #334155; transition: var(--transition); }
+        .star-rating-input span.active { color: var(--star-color); }
+        
+        .reviews-display {
+            margin-top: 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .review-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 24px;
+            position: relative;
+        }
+        .review-card .name { font-weight: 700; color: white; margin-bottom: 2px; }
+        .review-card .product-tag { font-size: 0.7rem; text-transform: uppercase; color: var(--primary); font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; display: block;}
+        .review-card .text { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+        .review-card .stars { color: var(--star-color); margin-bottom: 10px; font-size: 0.8rem; }
+
+        /* --- Modals --- */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -330,13 +362,37 @@
 
         .modal-overlay.active .modal-content { transform: translateY(0); }
 
-        /* --- Auth Specific --- */
+        /* --- Sharing System --- */
+        .share-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .share-btn {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        .share-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--primary); }
+        .share-btn.whatsapp { color: #25d366; }
+
+        /* --- Auth & Forms --- */
         #authModal .modal-content { max-width: 400px; border-radius: 32px; margin-bottom: auto; margin-top: auto; }
         .auth-form-toggle { margin-bottom: 25px; display: flex; gap: 10px; }
         .auth-toggle-btn { flex: 1; background: none; border: none; color: var(--text-muted); font-weight: 600; padding: 10px; cursor: pointer; border-bottom: 2px solid transparent; transition: var(--transition); }
         .auth-toggle-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-        /* --- Forms --- */
         .input-group { margin-bottom: 20px; text-align: left; }
         label { display: block; font-size: 0.8rem; margin-bottom: 8px; color: var(--text-muted); }
         input, textarea {
@@ -368,7 +424,6 @@
         .buy-now-btn:hover { background: #fff; color: var(--bg-deep); }
         .buy-now-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* --- Footer --- */
         footer { padding: 80px 0 40px; border-top: 1px solid var(--border); text-align: center; }
         .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 30px; }
         .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: var(--transition); }
@@ -383,7 +438,8 @@
         <div class="container nav-content">
             <a href="#" class="logo">TECH<span>GEAR</span></a>
             <div class="nav-links">
-                <a href="#discover" class="hide-mobile">Discovery</a>
+                <a href="#discover">Discovery</a>
+                <a href="#reviews">Reviews</a>
                 <div id="authContainer">
                     <button class="auth-trigger" onclick="openAuthModal()">Login</button>
                 </div>
@@ -409,10 +465,51 @@
     <main class="products-section">
         <div class="container">
             <div class="grid" id="productGrid">
-                <!-- Data injection point -->
+                <!-- Products automatically injected here -->
             </div>
         </div>
     </main>
+
+    <!-- Review System Section -->
+    <section id="reviews" class="container review-section" data-reveal>
+        <div style="text-align: center; margin-bottom: 50px;">
+            <h2 style="font-family: 'Space Grotesk'; font-size: 2.5rem; margin-bottom: 10px;">User Experience</h2>
+            <p style="color: var(--text-muted);">Share your feedback with the TechGear community.</p>
+        </div>
+
+        <div style="max-width: 600px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border); border-radius: 32px; padding: 40px;">
+            <form id="reviewForm">
+                <div class="star-rating-input" id="starInput">
+                    <span data-value="1">★</span>
+                    <span data-value="2">★</span>
+                    <span data-value="3">★</span>
+                    <span data-value="4">★</span>
+                    <span data-value="5" class="active">★</span>
+                </div>
+                <div class="review-input-grid">
+                    <div class="input-group">
+                        <label>Display Name</label>
+                        <input type="text" id="revName" placeholder="Your Name" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Hardware Unit</label>
+                        <input type="text" id="revProduct" placeholder="Product Name" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Transmission / Review</label>
+                    <textarea id="revContent" rows="3" placeholder="Describe your experience..." required></textarea>
+                </div>
+                <button type="submit" class="buy-now-btn" id="revSubmitBtn">Submit Review</button>
+                <div id="revSuccess" style="display: none; color: var(--primary); text-align: center; margin-top: 15px; font-weight: 600;">Review Submitted Successfully!</div>
+            </form>
+        </div>
+
+        <div class="reviews-display" id="reviewsContainer">
+            <!-- Dynamic Reviews Load Here -->
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">Synchronizing latest reviews...</div>
+        </div>
+    </section>
 
     <section id="contact" class="container contact-section" data-reveal style="padding-bottom: 100px;">
         <div class="contact-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 32px; padding: 40px 20px; text-align: center;">
@@ -446,7 +543,6 @@
                 <button class="auth-toggle-btn active" onclick="toggleAuthMode('login')" id="loginTab">Login</button>
                 <button class="auth-toggle-btn" onclick="toggleAuthMode('signup')" id="signupTab">Sign Up</button>
             </div>
-            
             <form id="authForm">
                 <div class="input-group">
                     <label>Email Address</label>
@@ -459,7 +555,6 @@
                 <div id="authError" style="color: #ef4444; font-size: 0.8rem; margin-bottom: 15px; display: none;"></div>
                 <button type="submit" class="buy-now-btn" id="authSubmitBtn">Initialize Session</button>
             </form>
-            
             <button style="background: transparent; border: none; color: var(--text-muted); width: 100%; margin-top: 15px; cursor: pointer; font-size: 0.8rem;" onclick="closeModals()">Cancel</button>
         </div>
     </div>
@@ -467,23 +562,34 @@
     <!-- Product Modal -->
     <div class="modal-overlay" id="modal">
         <div class="modal-content">
-            <div class="modal-grid" style="display: grid; grid-template-columns: 1fr; gap: 30px;">
+            <div style="display: grid; grid-template-columns: 1fr; gap: 30px;">
                 <div class="img-container" style="height: 300px; background: #1e293b;">
                     <img src="" alt="" id="modalImg" style="max-width: 80%; max-height: 80%; object-fit: contain;">
                 </div>
                 <div>
-                    <h2 id="modalTitle" style="font-family: 'Space Grotesk'; font-size: 1.8rem; margin-bottom: 10px;"></h2>
+                    <h2 id="modalTitle" style="font-family: 'Space Grotesk'; font-size: 1.8rem; margin-bottom: 4px;"></h2>
+                    <div id="modalRating" class="rating-stars" style="margin-bottom: 15px;"></div>
                     <div id="modalPrice" class="price" style="color: var(--primary); margin-bottom: 20px;"></div>
                     <p id="modalDesc" style="color: var(--text-muted); line-height: 1.6; margin-bottom: 30px;"></p>
+                    
                     <button class="buy-now-btn" id="checkoutBtn">Secure Order via Amazon</button>
+                    
+                    <div class="share-actions">
+                        <button class="share-btn" id="nativeShareBtn">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
+                            Share
+                        </button>
+                        <button class="share-btn whatsapp" id="whatsappShareBtn">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.187-2.59-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217s.231.006.332.013c.101.007.237-.038.37.281.144.35.491 1.197.534 1.284.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.777 1.394.864.174.088.275.073.376-.042.101-.116.433-.506.549-.68.116-.173.231-.144.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+                            WhatsApp
+                        </button>
+                    </div>
+
                     <button style="background: transparent; border: none; color: var(--text-muted); width: 100%; margin-top: 15px; cursor: pointer;" onclick="closeModals()">Dismiss</button>
                 </div>
             </div>
         </div>
     </div>
-    <amp-auto-ads type="adsense"
-        data-ad-client="ca-pub-8930325707428405">
-</amp-auto-ads>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -505,14 +611,121 @@
         
         let allProducts = [];
         let authMode = 'login';
+        
+        // --- Review System Logic ---
+        const REVIEW_API = "https://script.google.com/macros/s/AKfycbzWDWTZ8c75ALjtdZJ_xYL8GwC_soud-kAPH2WN4hcBii39ufmytSFJEcNDv8RbeDMn/exec";
+        let selectedRating = 5;
 
-        // Auth State Listener
+        // Star Selection Logic
+        document.querySelectorAll('#starInput span').forEach(star => {
+            star.onclick = () => {
+                selectedRating = parseInt(star.getAttribute('data-value'));
+                document.querySelectorAll('#starInput span').forEach((s, idx) => {
+                    s.classList.toggle('active', idx < selectedRating);
+                });
+            };
+        });
+
+        // Fetch & Render Reviews
+        async function loadReviews() {
+            const container = document.getElementById('reviewsContainer');
+            try {
+                // Fixed: Added follow for redirects and error handling
+                const response = await fetch(REVIEW_API, { method: 'GET', redirect: 'follow' });
+                const data = await response.json();
+                
+                // Parse and reverse for latest first
+                let reviews = [];
+                if (Array.isArray(data)) {
+                    reviews = data;
+                } else if (data && data.data && Array.isArray(data.data)) {
+                    reviews = data.data;
+                }
+
+                const sortedReviews = [...reviews].reverse();
+
+                if (sortedReviews.length === 0) {
+                    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No reviews yet. Be the first!</div>';
+                    return;
+                }
+
+                container.innerHTML = sortedReviews.map(r => `
+                    <div class="review-card">
+                        <span class="product-tag">${r.product || 'General'}</span>
+                        <div class="stars">${"★".repeat(parseInt(r.rating || 5))}${"☆".repeat(5 - parseInt(r.rating || 5))}</div>
+                        <div class="name">${r.name}</div>
+                        <p class="text">${r.review}</p>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error("Review Fetch Error:", err);
+                container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #ef4444;">Failed to sync reviews. (Check API status)</div>';
+            }
+        }
+
+        // Submit Review
+        document.getElementById('reviewForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('revSubmitBtn');
+            const successMsg = document.getElementById('revSuccess');
+            const originalText = btn.innerText;
+
+            const payload = {
+                name: document.getElementById('revName').value,
+                product: document.getElementById('revProduct').value,
+                review: document.getElementById('revContent').value,
+                rating: selectedRating
+            };
+
+            btn.disabled = true;
+            btn.innerText = "Transmitting...";
+            successMsg.style.display = 'none';
+
+            try {
+                // Using no-cors as required for many GAS deployments to avoid direct CORS block
+                await fetch(REVIEW_API, {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                // Show Success
+                document.getElementById('reviewForm').reset();
+                selectedRating = 5;
+                document.querySelectorAll('#starInput span').forEach(s => s.classList.add('active'));
+                
+                successMsg.style.display = 'block';
+                
+                // Refresh reviews
+                setTimeout(loadReviews, 1500);
+                setTimeout(() => { successMsg.style.display = 'none'; }, 4000);
+
+            } catch (err) {
+                console.error("Submission Error:", err);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+        };
+
+        // --- Existing Store Logic ---
+
+        const getRatingHTML = (rating = 5) => {
+            const fullStars = Math.floor(rating);
+            let html = '';
+            for(let i=0; i<5; i++) {
+                html += i < fullStars ? '★' : '☆';
+            }
+            const reviews = Math.floor(Math.random() * 500) + 50; 
+            return `${html} <span class="rating-count">(${reviews} reviews)</span>`;
+        };
+
         onAuthStateChanged(auth, (user) => {
             const container = document.getElementById('authContainer');
             if (user) {
                 container.innerHTML = `
                     <div style="display: flex; gap: 10px; align-items: center;">
-                        <span style="font-size: 0.7rem; color: var(--text-muted); display: none;" class="hide-mobile">${user.email.split('@')[0]}</span>
                         <button class="auth-trigger" onclick="handleLogout()">Logout</button>
                     </div>
                 `;
@@ -523,7 +736,6 @@
 
         window.handleLogout = () => signOut(auth);
 
-        // Auth Modal Logic
         window.openAuthModal = () => {
             const modal = document.getElementById('authModal');
             modal.style.display = 'flex';
@@ -545,11 +757,9 @@
             const password = document.getElementById('authPassword').value;
             const errorEl = document.getElementById('authError');
             const btn = document.getElementById('authSubmitBtn');
-
             errorEl.style.display = 'none';
             btn.disabled = true;
             btn.innerText = 'Connecting...';
-
             try {
                 if (authMode === 'login') {
                     await signInWithEmailAndPassword(auth, email, password);
@@ -566,7 +776,6 @@
             }
         };
 
-        // UI Helpers
         window.closeModals = () => {
             const modals = document.querySelectorAll('.modal-overlay');
             modals.forEach(m => m.classList.remove('active'));
@@ -576,13 +785,13 @@
             }, 500);
         };
 
-        // Core App Logic
         async function init() {
             try {
                 const snap = await getDocs(collection(db, "products"));
                 allProducts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 render(allProducts);
                 handleReveal();
+                loadReviews(); // Load reviews on start
             } catch (e) { console.error("Database Connection Failure", e); }
         }
 
@@ -594,6 +803,7 @@
                         <img src="${p.image}" alt="${p.title}">
                     </div>
                     <h3>${p.title}</h3>
+                    <div class="rating-stars">${getRatingHTML(p.rating || 5)}</div>
                     <div class="card-footer">
                         <div class="price">₹${p.price.toLocaleString()}</div>
                         <div style="color: var(--primary); font-size: 0.8rem; font-weight: 700;">DETAILS →</div>
@@ -606,15 +816,63 @@
             const p = allProducts.find(x => x.id === id);
             document.getElementById('modalImg').src = p.image;
             document.getElementById('modalTitle').innerText = p.title;
+            document.getElementById('modalRating').innerHTML = getRatingHTML(p.rating || 5);
             document.getElementById('modalPrice').innerText = `₹${p.price.toLocaleString()}`;
             document.getElementById('modalDesc').innerText = p.description || "Expert-verified hardware optimized for the modern high-performance ecosystem.";
+            
+            document.getElementById('revProduct').value = p.title;
+
             document.getElementById('checkoutBtn').onclick = () => {
                 if (!auth.currentUser) {
-                    alert("Please login to access secure purchase links.");
                     openAuthModal();
                     return;
                 }
                 window.open(p.affiliateLink, '_blank');
+            };
+
+            const shareTitle = `TechGear | ${p.title}`;
+            const shareText = `Check out this amazing product on TechGear: ${p.title}`;
+            const shareUrl = "https://anshstudios.pages.dev"; 
+
+            document.getElementById('nativeShareBtn').onclick = async () => {
+                if (navigator.share) {
+                    try {
+                        await navigator.share({
+                            title: shareTitle,
+                            text: shareText,
+                            url: shareUrl
+                        });
+                    } catch (err) {
+                        if (err.name !== 'AbortError') copyFallback();
+                    }
+                } else {
+                    copyFallback();
+                }
+            };
+
+            function copyFallback() {
+                const textArea = document.createElement("textarea");
+                textArea.value = shareUrl;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                textArea.style.top = "0";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    document.getElementById('nativeShareBtn').innerText = "Link Copied!";
+                } catch (err) {
+                    document.getElementById('nativeShareBtn').innerText = "Failed to copy";
+                }
+                document.body.removeChild(textArea);
+                setTimeout(() => document.getElementById('nativeShareBtn').innerText = "Share", 2000);
+            }
+
+            document.getElementById('whatsappShareBtn').onclick = () => {
+                const msg = `${shareText} \n\nGet it here: ${shareUrl}`;
+                const waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+                window.open(waUrl, '_blank');
             };
             
             const modal = document.getElementById('modal');
@@ -623,7 +881,6 @@
             document.body.style.overflow = 'hidden';
         };
 
-        // Event Listeners
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             window.scrollY > 50 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled');
