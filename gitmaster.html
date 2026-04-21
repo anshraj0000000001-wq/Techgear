@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Commands Master Guide</title>
+    <style>
+        :root {
+            --git-color: #f05032;
+            --bg-color: #f4f7f6;
+            --text-main: #333;
+            --text-muted: #666;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--git-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        header p {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .category-title {
+            color: var(--git-color);
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .command-name {
+            display: inline-block;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #d63384;
+            background: #f8f9fa;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            margin-bottom: 1rem;
+        }
+
+        .description {
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .example-box {
+            background-color: #272822;
+            color: #f8f8f2;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+
+        .example-box span.comment {
+            color: #75715e;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Git Commands Master Guide</h1>
+        <p>Your ultimate A to Z cheat sheet for Git with explanations and examples.</p>
+    </header>
+
+    <div class="container">
+
+        <h2 class="category-title">1. Setup & Initialization</h2>
+        
+        <div class="card">
+            <div class="command-name">git config</div>
+            <div class="description">Sets configuration values for your user name, email, gpg key, preferred diff algorithm, file formats and more. This is essential for tracking who made the commits.</div>
+            <div class="example-box">
+                <span class="comment"># Set your username globally</span><br>
+                git config --global user.name "John Doe"<br><br>
+                <span class="comment"># Set your email globally</span><br>
+                git config --global user.email "johndoe@example.com"
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command-name">git init</div>
+            <div class="description">Initializes a brand new Git repository and begins tracking an existing directory. It adds a hidden .git subfolder within the existing directory that houses the internal data structure required for version control.</div>
+            <div class="example-box">
+                <span class="comment"># Navigate to your project folder and run:</span><br>
+                git init
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command-name">git clone</div>
+            <div class="description">Creates a local copy of a project that already exists remotely (like on GitHub or GitLab). The clone includes all the project's files, history, and branches.</div>
+            <div class="example-box">
+                <span class="comment"># Clone a repository using its URL</span><br>
+                git clone https://github.com/user/repository.git
+            </div>
+        </div>
+
+        <h2 class="category-title">2. Staging & Committing</h2>
+
+        <div class="card">
+            <div class="command-name">git status</div>
+            <div class="description">Shows the status of changes as untracked, modified, or staged. It helps you see what is going on with your files before you commit them.</div>
+            <div class="example-box">
+                <span class="comment"># Check the current state of your repository</span><br>
+                git status
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command-name">git add</div>
+            <div class="description">Moves changes from the working directory to the staging area. This tells Git that you want to include updates to a particular file in the next commit.</div>
+            <div class="example-box">
+                <span class="comment"># Stage a specific file</span><br>
+                git add index.html<br><br>
+                <span class="comment"># Stage all changed files at once</span><br>
+                git add .
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command-name">git commit</div>
+            <div class="description">Takes the staged snapshot and commits it to the project history. Combined with the "-m" flag, it lets you write a descriptive message explaining the changes.</div>
+            <div class="example-box">
+                <span class="comment"># Commit with a short, descriptive message</span><br>
+                git commit -m "Add login form styling"
+            </div>
+        </div>
+
+        <h2 class="category-title">3. Branching & Merging</h2>
+
+        <div class="card">
+            <div class="command-name">git branch</div>
+            <div class="description">Lists all the local branches in your repository. It can also be used to create a new branch or delete an existing one.</div>
+            <div class="example-box">
+                <span class="comment"># List all branches</span><br>
+                git branch<br><br>
+                <span class="comment"># Create a new branch named "feature-login"</span><br>
+                git branch feature-login
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command-name">git checkout / git switch</div>
+            <div class="description">Used to switch between different branches in your repository. 'git switch' is the newer, more intuitive command dedicated specifically to switching branches.</div>
+            <div class="example-box">
+                <span class="comment"># Switch to an existing branch</span><br>
+                git switch feature-login<br><br>
+                <span class="comment"># Create a new branch and switch to it immediately</span><br>
+                git checkout -b new-feature
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command-name">git merge</div>
+            <div class="description">Combines the history of independent lines of development (branches) into a single branch. Usually, you merge a feature branch into your main branch.</div>
+            <div class="example-box">
+                <span class="comment"># First, switch to the main branch</span><br>
+                git switch main<br><br>
+                <span class="comment"># Then, merge the feature branch into main</span><br>
+                git merge feature-login
+            </div>
+        </div>
+
+        <h2 class="category-title">4. Remote Repositories</h2>
+
+        <div class="card">
+            <div class="command-name">git push</div>
+            <div class="description">Uploads local repository content to a remote repository. It transfers commits from your local branch to the corresponding remote branch.</div>
+            <div class="example-box">
+                <span class="comment"># Push local commits to the remote "origin" on branch "main"</span><br>
+                git push origin main
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command-name">git pull</div>
+            <div class="description">Fetches and downloads content from a remote repository and immediately updates the local repository to match that content. It is essentially a combination of 'git fetch' and 'git merge'.</div>
+            <div class="example-box">
+                <span class="comment"># Get the latest changes from the remote server</span><br>
+                git pull origin main
+            </div>
+        </div>
+
+        <h2 class="category-title">5. History & Undoing</h2>
+
+        <div class="card">
+            <div class="command-name">git log</div>
+            <div class="description">Displays the entire commit history for the repository. You can see author details, dates, and commit messages.</div>
+            <div class="example-box">
+                <span class="comment"># View full history</span><br>
+                git log<br><br>
+                <span class="comment"># View history in a clean, single-line format</span><br>
+                git log --oneline
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command-name">git revert</div>
+            <div class="description">Undoes a previous commit by creating a brand new commit that reverses the changes. This is the safest way to undo changes in public branches because it doesn't rewrite history.</div>
+            <div class="example-box">
+                <span class="comment"># Revert a specific commit using its ID</span><br>
+                git revert a1b2c3d
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>Built to help you master Git Version Control.</p>
+    </footer>
+
+</body>
+</html>
