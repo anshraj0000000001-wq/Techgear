@@ -1,0 +1,868 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete CNN Pipeline Visualization-by ansh raj</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Base Fluid Theme */
+        body {
+            background-color: #0f172a; /* Deep slate */
+            color: #e2e8f0;
+            overflow-x: hidden;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .fluid-text {
+            background: linear-gradient(90deg, #00f2fe, #4facfe, #38bdf8, #818cf8);
+            background-size: 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 5s ease infinite;
+        }
+
+        @keyframes gradientText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glassmorphism Panels */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
+        }
+
+        .panel-inactive {
+            opacity: 0.25;
+            pointer-events: none;
+            filter: grayscale(90%);
+        }
+
+        /* Information Sidebar Styling */
+        .info-sidebar {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0.1) 100%);
+            border-right: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        /* Matrix Cells Styling */
+        .matrix-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 10;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* Status Colors for Cells */
+        .cell-blue { color: #60a5fa; border-color: rgba(96, 165, 250, 0.3); }
+        .cell-purple { color: #c084fc; border-color: rgba(192, 132, 252, 0.3); }
+        .cell-emerald { color: #34d399; border-color: rgba(52, 211, 153, 0.3); }
+        .cell-cyan { color: #22d3ee; border-color: rgba(34, 211, 238, 0.3); }
+        .cell-amber { color: #fbbf24; border-color: rgba(251, 191, 36, 0.3); }
+        .cell-orange { color: #fb923c; border-color: rgba(251, 146, 60, 0.3); }
+        .cell-pink { color: #f472b6; border-color: rgba(244, 114, 182, 0.3); }
+        .cell-rose { color: #fb7185; border-color: rgba(251, 113, 133, 0.3); }
+
+        /* Active Animation Classes */
+        .active-scan {
+            background: rgba(96, 165, 250, 0.3);
+            border-color: #60a5fa;
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.6);
+            transform: scale(1.05);
+        }
+        
+        .active-calc {
+            background: rgba(52, 211, 153, 0.3);
+            border-color: #34d399;
+            box-shadow: 0 0 20px rgba(52, 211, 153, 0.6);
+            transform: scale(1.1);
+        }
+
+        .active-dead {
+            background: rgba(248, 113, 113, 0.3);
+            color: #f87171 !important;
+            border-color: #f87171;
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
+        /* Sliding Windows */
+        .sliding-window {
+            position: absolute;
+            border-radius: 0.5rem;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 20;
+            display: none;
+        }
+        #conv-window { border: 3px solid #c084fc; box-shadow: 0 0 20px rgba(192, 132, 252, 0.6); background: rgba(192, 132, 252, 0.1); }
+        #pool-window { border: 3px solid #fb923c; box-shadow: 0 0 20px rgba(251, 146, 60, 0.6); background: rgba(251, 146, 60, 0.1); }
+
+        /* Math Display Area */
+        .math-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #334155;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        }
+
+        /* SVG Connections */
+        .svg-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+        path.fnn-line { fill: none; stroke: rgba(148, 163, 184, 0.15); stroke-width: 2; transition: stroke 0.3s, stroke-width 0.3s; }
+        path.fnn-line.active-line {
+            stroke: #f472b6; stroke-width: 3; filter: drop-shadow(0 0 8px #f472b6);
+            animation: dashFlow 1s linear infinite; stroke-dasharray: 10;
+        }
+        @keyframes dashFlow { to { stroke-dashoffset: -20; } }
+
+        /* Progress Bar */
+        .progress-step { transition: all 0.3s; padding: 0.5rem 1rem; border-radius: 999px; }
+        .progress-step.active { 
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8; 
+            font-weight: bold; 
+            transform: scale(1.05); 
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-32">
+
+    <!-- Sticky Navigation / Progress -->
+    <nav class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-700 p-3 shadow-xl">
+        <div class="container mx-auto flex flex-wrap justify-center items-center gap-2 text-xs md:text-sm text-slate-500 font-medium" id="progress-bar">
+            <span class="progress-step active" id="nav-conv">1. Conv2D</span> <span class="text-slate-600">➔</span>
+            <span class="progress-step" id="nav-bn">2. BatchNorm</span> <span class="text-slate-600">➔</span>
+            <span class="progress-step" id="nav-relu">3. ReLU</span> <span class="text-slate-600">➔</span>
+            <span class="progress-step" id="nav-pool">4. MaxPool2D</span> <span class="text-slate-600">➔</span>
+            <span class="progress-step" id="nav-dense">5. Flatten & Dense</span> <span class="text-slate-600">➔</span>
+            <span class="progress-step" id="nav-softmax">6. Softmax</span>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        
+        <!-- Header Section -->
+        <header class="text-center mb-16 mt-8">
+            <div class="inline-block bg-slate-800 border border-slate-700 rounded-full px-4 py-1 mb-4 text-xs font-semibold tracking-widest text-slate-400 uppercase">Educational Visualization Tool</div>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 fluid-text">Convolutional Neural Network Pipeline</h1>
+            <p class="text-slate-400 text-lg max-w-4xl mx-auto leading-relaxed">
+                Experience the complete mathematical journey of a tensor inside a CNN. Watch as raw matrix inputs pass through Feature Extraction (Conv2D), Normalization, Non-linear Activation, Spatial Downsampling, and finally into a Dense Classification head to yield probabilistic predictions.
+            </p>
+            <button id="startBtn" class="mt-10 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:scale-105 text-white font-bold py-4 px-12 rounded-full shadow-[0_0_25px_rgba(168,85,247,0.4)] transform transition active:scale-95 text-lg border border-white/20">
+                ▶ Initialize Architecture Workflow
+            </button>
+        </header>
+
+        <!-- Phase 1: Conv2D -->
+        <div class="glass-panel grid grid-cols-1 lg:grid-cols-4 overflow-hidden mb-12 relative" id="panel-conv">
+            <!-- Info Sidebar -->
+            <div class="info-sidebar p-6 lg:p-8 col-span-1">
+                <h2 class="text-2xl font-bold text-white mb-4">1. Conv2D Layer</h2>
+                <div class="text-slate-300 text-sm space-y-4">
+                    <p><strong>Workflow:</strong> The network extracts local spatial features (like edges, textures) from the input image.</p>
+                    <p><strong>Mechanism:</strong> A parameter matrix called a <em>Kernel</em> or <em>Filter</em> slides across the input. At each position, it computes the element-wise dot product.</p>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 font-mono text-xs">
+                        <span class="text-slate-500">// Hyperparameters</span><br>
+                        Kernel_Size: (2, 2)<br>
+                        Stride: 1<br>
+                        Padding: 0 (Valid)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization Area -->
+            <div class="p-6 lg:p-8 col-span-1 lg:col-span-3 flex flex-col lg:flex-row items-center justify-between gap-8">
+                <!-- Input Matrix -->
+                <div class="flex flex-col items-center">
+                    <h3 class="text-blue-400 mb-3 text-xs font-bold tracking-widest uppercase">Input Tensor (4x4)</h3>
+                    <div id="grid-input" class="grid grid-cols-4 gap-2 w-64 h-64 relative bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+                        <div id="conv-window" class="sliding-window"></div>
+                        <!-- JS injects cells here -->
+                    </div>
+                </div>
+
+                <!-- Kernel & Math -->
+                <div class="flex flex-col items-center flex-1 w-full max-w-sm">
+                    <h3 class="text-purple-400 mb-3 text-xs font-bold tracking-widest uppercase">Kernel (2x2)</h3>
+                    <div id="grid-kernel" class="grid grid-cols-2 gap-2 w-24 h-24 mb-6"></div>
+                    
+                    <div class="math-box w-full p-5 rounded-xl text-center min-h-[140px] flex flex-col justify-center border border-slate-700">
+                        <div class="text-slate-400 text-xs mb-3 uppercase tracking-wider">Dot Product Calculation</div>
+                        <div id="math-conv-eq" class="text-lg text-yellow-300 font-bold leading-relaxed">Waiting for initialization...</div>
+                        <div id="math-conv-res" class="text-2xl text-emerald-400 font-bold mt-3 h-8"></div>
+                    </div>
+                </div>
+
+                <!-- Feature Map -->
+                <div class="flex flex-col items-center">
+                    <h3 class="text-emerald-400 mb-3 text-xs font-bold tracking-widest uppercase">Feature Map (3x3)</h3>
+                    <div id="grid-conv-out" class="grid grid-cols-3 gap-2 w-48 h-48 bg-slate-900/50 p-3 rounded-xl border border-slate-800"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 2 & 3: BatchNorm2D & ReLU -->
+        <div class="glass-panel grid grid-cols-1 lg:grid-cols-4 overflow-hidden mb-12 relative panel-inactive" id="panel-bn-relu">
+            <!-- Info Sidebar -->
+            <div class="info-sidebar p-6 lg:p-8 col-span-1">
+                <h2 class="text-2xl font-bold text-white mb-4">2. BatchNorm <br><span class="text-slate-500 text-lg">&</span> 3. ReLU</h2>
+                <div class="text-slate-300 text-sm space-y-4">
+                    <p><strong>BatchNorm Workflow:</strong> Stabilizes and accelerates training by re-centering and re-scaling the feature map to have a mean of 0 and standard deviation of 1.</p>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 font-mono text-xs text-cyan-300">
+                        Z = (X - μ) / σ
+                    </div>
+                    <hr class="border-slate-700 my-2">
+                    <p><strong>ReLU Workflow:</strong> Introduces non-linearity. Without it, the entire CNN would just be a linear regression model. It simply drops negative values.</p>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 font-mono text-xs text-amber-300">
+                        f(x) = max(0, x)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization Area -->
+            <div class="p-6 lg:p-8 col-span-1 lg:col-span-3 flex flex-col lg:flex-row items-center justify-center gap-16">
+                <!-- Combined Grid -->
+                <div class="flex flex-col items-center relative">
+                    <h3 class="text-cyan-400 mb-4 text-xs font-bold tracking-widest uppercase bg-slate-900 px-4 py-2 rounded-full border border-slate-700" id="bn-relu-title">Tensor State (3x3)</h3>
+                    <div id="grid-bn-relu" class="grid grid-cols-3 gap-3 w-64 h-64 relative transition-all duration-500 bg-slate-900/50 p-4 rounded-xl border border-slate-800"></div>
+                </div>
+
+                <!-- Math for BN and ReLU -->
+                <div class="math-box p-6 rounded-xl text-center w-full max-w-md min-h-[220px] flex flex-col justify-center border border-slate-700">
+                    <div id="math-bn-stats" class="text-sm text-slate-300 mb-6 h-12 leading-relaxed">
+                        <!-- Stats here -->
+                    </div>
+                    <div id="math-bn-eq" class="text-xl text-cyan-300 font-bold h-12 leading-relaxed">
+                        <!-- Calculation here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 4: MaxPool2D -->
+        <div class="glass-panel grid grid-cols-1 lg:grid-cols-4 overflow-hidden mb-12 relative panel-inactive" id="panel-pool">
+            <!-- Info Sidebar -->
+            <div class="info-sidebar p-6 lg:p-8 col-span-1">
+                <h2 class="text-2xl font-bold text-white mb-4">4. MaxPool2D</h2>
+                <div class="text-slate-300 text-sm space-y-4">
+                    <p><strong>Workflow:</strong> Performs spatial downsampling. It reduces the spatial dimensions (height & width) of the input volume for the next convolutional layer.</p>
+                    <p><strong>Benefits:</strong> Reduces computational load, memory usage, and the number of parameters (helping to prevent overfitting). It also provides basic translation invariance.</p>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 font-mono text-xs">
+                        <span class="text-slate-500">// Hyperparameters</span><br>
+                        Pool_Size: (2, 2)<br>
+                        Stride: 1
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization Area -->
+            <div class="p-6 lg:p-8 col-span-1 lg:col-span-3 flex flex-col lg:flex-row items-center justify-center gap-12">
+                <!-- Activated Map -->
+                <div class="flex flex-col items-center">
+                    <h3 class="text-amber-400 mb-3 text-xs font-bold tracking-widest uppercase">Activated Map (3x3)</h3>
+                    <div id="grid-pool-in" class="grid grid-cols-3 gap-2 w-52 h-52 relative bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+                        <div id="pool-window" class="sliding-window"></div>
+                    </div>
+                </div>
+
+                <!-- Math Pool -->
+                <div class="math-box p-5 rounded-xl text-center flex flex-col justify-center min-h-[120px] w-64 border border-slate-700">
+                    <div class="text-slate-400 text-xs mb-3 uppercase tracking-wider">Operation</div>
+                    <div id="math-pool-eq" class="text-lg text-yellow-300 font-bold">max(...) = ?</div>
+                </div>
+
+                <!-- Pooled Map -->
+                <div class="flex flex-col items-center">
+                    <h3 class="text-orange-400 mb-3 text-xs font-bold tracking-widest uppercase">Pooled Map (2x2)</h3>
+                    <div id="grid-pool-out" class="grid grid-cols-2 gap-2 w-32 h-32 bg-slate-900/50 p-3 rounded-xl border border-slate-800"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 5 & 6: Flatten, Dense & Softmax -->
+        <div class="glass-panel grid grid-cols-1 lg:grid-cols-4 overflow-hidden relative panel-inactive min-h-[500px]" id="panel-dense">
+            <!-- Info Sidebar -->
+            <div class="info-sidebar p-6 lg:p-8 col-span-1">
+                <h2 class="text-2xl font-bold text-white mb-4">5. Dense Classifier <br><span class="text-slate-500 text-lg">&</span> 6. Softmax</h2>
+                <div class="text-slate-300 text-sm space-y-4">
+                    <p><strong>Flatten:</strong> The 2D pooled tensor is unrolled into a contiguous 1D array to feed into the dense network.</p>
+                    <p><strong>Dense (Linear):</strong> Computes the raw scores (logits) mapping the features to the desired output classes using weights and biases.</p>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 font-mono text-xs text-pink-300">
+                        Z = (W · X) + b
+                    </div>
+                    <hr class="border-slate-700 my-2">
+                    <p><strong>Softmax:</strong> Normalizes the logits into a valid probability distribution (all values sum up to 100%).</p>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-700 font-mono text-xs text-rose-300">
+                        P(i) = e^(z_i) / Σ e^(z_j)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization Area -->
+            <div class="p-6 lg:p-8 col-span-1 lg:col-span-3 flex flex-col md:flex-row items-stretch justify-between relative mt-4" id="network-container">
+                <!-- SVG Connections -->
+                <svg class="svg-container" id="fnn-svg"></svg>
+
+                <!-- Flattened (4x1) -->
+                <div class="flex flex-col items-center z-10 w-1/4">
+                    <h3 class="text-indigo-400 mb-4 font-bold text-xs tracking-widest uppercase">Flattened Vector</h3>
+                    <div id="grid-flat" class="flex flex-col gap-3 w-20"></div>
+                </div>
+
+                <!-- Dense Math -->
+                <div class="flex flex-col items-center justify-center z-10 w-2/4 px-6">
+                    <div class="math-box p-6 rounded-xl w-full text-center min-h-[160px] flex flex-col justify-center border border-slate-700 bg-slate-900/80 backdrop-blur-md">
+                        <h4 class="text-slate-400 text-xs mb-3 uppercase tracking-wider">Dense Matrix Multiplication</h4>
+                        <div id="math-dense" class="text-sm text-pink-300 font-mono flex flex-col gap-1.5 leading-relaxed"></div>
+                    </div>
+                </div>
+
+                <!-- Logits & Softmax -->
+                <div class="flex flex-col justify-center items-center z-10 w-1/4 gap-10">
+                    <!-- Logits -->
+                    <div class="w-full flex flex-col items-center">
+                        <h3 class="text-pink-400 mb-3 font-bold text-xs tracking-widest uppercase">Raw Logits</h3>
+                        <div id="grid-logits" class="flex flex-col gap-5 w-28"></div>
+                    </div>
+                    
+                    <!-- Softmax Results -->
+                    <div class="w-full flex flex-col items-center">
+                        <h3 class="text-rose-400 mb-3 font-bold text-xs tracking-widest uppercase bg-rose-900/50 px-4 py-1.5 rounded-full border border-rose-500 shadow-[0_0_15px_rgba(244,114,182,0.2)]">Probabilities</h3>
+                        <div id="grid-probs" class="flex flex-col gap-5 w-36 mt-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- REAL DATA & MATRICES ---
+        // Input: 4x4
+        const inputMat = [
+            [2, 1, 0, 2],
+            [1, 2, 1, 0],
+            [0, 1, 2, 1],
+            [1, 0, 1, 2]
+        ];
+
+        // Conv Kernel: 2x2
+        const kernelMat = [
+            [ 1, -1],
+            [ 1,  0]
+        ];
+
+        // Globals to store intermediate states
+        let convOut = Array(3).fill().map(() => Array(3).fill(0));
+        let bnOut = Array(3).fill().map(() => Array(3).fill(0));
+        let reluOut = Array(3).fill().map(() => Array(3).fill(0));
+        let poolOut = Array(2).fill().map(() => Array(2).fill(0));
+        let flatArr = [];
+        
+        // Dense Weights for 4 inputs -> 2 outputs
+        const denseW = [
+            [ 1.0, -0.5,  0.5,  1.0], // Node 0 weights (Class A)
+            [-1.0,  1.0, -1.0, -0.5]  // Node 1 weights (Class B)
+        ];
+        const denseB = [0.2, 0.5]; // Biases
+        let logits = [0, 0];
+        let probs = [0, 0];
+
+        // --- DOM ELEMENTS ---
+        const startBtn = document.getElementById('startBtn');
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        
+        // Panels
+        const pConv = document.getElementById('panel-conv');
+        const pBnRelu = document.getElementById('panel-bn-relu');
+        const pPool = document.getElementById('panel-pool');
+        const pDense = document.getElementById('panel-dense');
+        
+        // Nav
+        function updateNav(activeId) {
+            document.querySelectorAll('.progress-step').forEach(el => el.classList.remove('active'));
+            document.getElementById(activeId).classList.add('active');
+        }
+
+        // --- SETUP GRIDS ---
+        function createCell(id, val, extraClass = '') {
+            return `<div class="matrix-cell ${extraClass}" id="${id}">${val}</div>`;
+        }
+
+        function initGrids() {
+            // 1. Input (4x4)
+            const gIn = document.getElementById('grid-input');
+            let inHtml = '<div id="conv-window" class="sliding-window"></div>';
+            for(let r=0; r<4; r++) {
+                for(let c=0; c<4; c++) {
+                    inHtml += createCell(`in-${r}-${c}`, inputMat[r][c], 'h-12 w-12 cell-blue'); // Adjusted size slightly to fit borders
+                }
+            }
+            gIn.innerHTML = inHtml;
+
+            // 2. Kernel (2x2)
+            const gK = document.getElementById('grid-kernel');
+            let kHtml = '';
+            for(let r=0; r<2; r++) {
+                for(let c=0; c<2; c++) {
+                    kHtml += createCell(`k-${r}-${c}`, kernelMat[r][c], 'h-10 w-10 cell-purple border-purple-500');
+                }
+            }
+            gK.innerHTML = kHtml;
+
+            // 3. Conv Out (3x3)
+            const gC = document.getElementById('grid-conv-out');
+            let cHtml = '';
+            for(let r=0; r<3; r++) {
+                for(let c=0; c<3; c++) {
+                    cHtml += createCell(`cout-${r}-${c}`, '?', 'h-12 w-12 cell-emerald opacity-20');
+                }
+            }
+            gC.innerHTML = cHtml;
+
+            // 4. BN/ReLU Combined Grid (3x3)
+            const gBn = document.getElementById('grid-bn-relu');
+            let bnHtml = '';
+            for(let r=0; r<3; r++) {
+                for(let c=0; c<3; c++) {
+                    bnHtml += createCell(`bn-${r}-${c}`, '?', 'h-16 w-16 cell-cyan text-lg');
+                }
+            }
+            gBn.innerHTML = bnHtml;
+
+            // 5. Pool In (3x3)
+            const gPIn = document.getElementById('grid-pool-in');
+            let pInHtml = '<div id="pool-window" class="sliding-window"></div>';
+            for(let r=0; r<3; r++) {
+                for(let c=0; c<3; c++) {
+                    pInHtml += createCell(`pin-${r}-${c}`, '?', 'h-14 w-14 cell-amber');
+                }
+            }
+            gPIn.innerHTML = pInHtml;
+
+            // 6. Pool Out (2x2)
+            const gPOut = document.getElementById('grid-pool-out');
+            let pOutHtml = '';
+            for(let r=0; r<2; r++) {
+                for(let c=0; c<2; c++) {
+                    pOutHtml += createCell(`pout-${r}-${c}`, '?', 'h-12 w-12 cell-orange opacity-20');
+                }
+            }
+            gPOut.innerHTML = pOutHtml;
+
+            // 7. Flatten (4x1)
+            const gFlat = document.getElementById('grid-flat');
+            let fHtml = '';
+            for(let i=0; i<4; i++) {
+                fHtml += createCell(`flat-${i}`, '?', 'h-12 w-full cell-indigo opacity-20');
+            }
+            gFlat.innerHTML = fHtml;
+
+            // 8. Logits (2x1)
+            const gLogits = document.getElementById('grid-logits');
+            let lHtml = '';
+            for(let i=0; i<2; i++) {
+                lHtml += createCell(`logit-${i}`, '?', 'h-14 w-full cell-pink border-pink-500 opacity-20 text-sm');
+            }
+            gLogits.innerHTML = lHtml;
+
+            // 9. Softmax Probs (2x1)
+            const gProbs = document.getElementById('grid-probs');
+            let sHtml = '';
+            for(let i=0; i<2; i++) {
+                sHtml += createCell(`prob-${i}`, '?', 'h-16 w-full cell-rose border-rose-500 rounded-full text-xl opacity-20 tracking-wider');
+            }
+            gProbs.innerHTML = sHtml;
+        }
+
+        // FNN SVG Drawing
+        function drawNetwork() {
+            const svg = document.getElementById('fnn-svg');
+            svg.innerHTML = '';
+            const container = document.getElementById('network-container').getBoundingClientRect();
+            
+            for(let i=0; i<4; i++) {
+                const flatCell = document.getElementById(`flat-${i}`);
+                if(!flatCell) continue;
+                const r1 = flatCell.getBoundingClientRect();
+                const x1 = r1.right - container.left;
+                const y1 = r1.top + (r1.height/2) - container.top;
+
+                for(let j=0; j<2; j++) {
+                    const logitCell = document.getElementById(`logit-${j}`);
+                    if(!logitCell) continue;
+                    const r2 = logitCell.getBoundingClientRect();
+                    const x2 = r2.left - container.left;
+                    const y2 = r2.top + (r2.height/2) - container.top;
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const cx = (x1 + x2) / 2;
+                    path.setAttribute('d', `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`);
+                    path.setAttribute('class', 'fnn-line');
+                    path.setAttribute('id', `line-${i}-${j}`);
+                    svg.appendChild(path);
+                }
+            }
+        }
+
+        // --- ANIMATION PIPELINE ---
+
+        async function runConv2D() {
+            updateNav('nav-conv');
+            const win = document.getElementById('conv-window');
+            const cellW = 48, gap = 8; // Tailwind h-12 = 48px
+            win.style.width = `${(cellW*2)+gap}px`;
+            win.style.height = `${(cellW*2)+gap}px`;
+            win.style.display = 'block';
+
+            for(let r=0; r<3; r++) {
+                for(let c=0; c<3; c++) {
+                    win.style.transform = `translate(${c*(cellW+gap)}px, ${r*(cellW+gap)}px)`;
+                    document.querySelectorAll('.active-scan').forEach(el => el.classList.remove('active-scan'));
+                    
+                    let sum = 0, eq = "";
+                    for(let kr=0; kr<2; kr++) {
+                        for(let kc=0; kc<2; kc++) {
+                            let inR = r + kr, inC = c + kc;
+                            let vIn = inputMat[inR][inC];
+                            let vK = kernelMat[kr][kc];
+                            document.getElementById(`in-${inR}-${inC}`).classList.add('active-scan');
+                            
+                            sum += vIn * vK;
+                            eq += `(<span class="text-blue-300">${vIn}</span>×<span class="text-purple-300">${vK}</span>)`;
+                            if(kr!==1 || kc!==1) eq += " + ";
+                        }
+                    }
+
+                    document.getElementById('math-conv-eq').innerHTML = eq;
+                    document.getElementById('math-conv-res').innerText = "= ?";
+                    await sleep(800);
+
+                    document.getElementById('math-conv-res').innerText = `= ${sum}`;
+                    convOut[r][c] = sum;
+                    
+                    let outCell = document.getElementById(`cout-${r}-${c}`);
+                    outCell.innerText = sum;
+                    outCell.classList.remove('opacity-20');
+                    outCell.classList.add('active-calc');
+                    await sleep(400);
+                    outCell.classList.remove('active-calc');
+                }
+            }
+            win.style.display = 'none';
+            document.querySelectorAll('.active-scan').forEach(el => el.classList.remove('active-scan'));
+        }
+
+        async function runBatchNorm() {
+            updateNav('nav-bn');
+            pBnRelu.classList.remove('panel-inactive');
+            pBnRelu.scrollIntoView();
+            
+            // Copy ConvOut to BN Grid
+            let sum = 0;
+            for(let r=0; r<3; r++) {
+                for(let c=0; c<3; c++) {
+                    let v = convOut[r][c];
+                    sum += v;
+                    document.getElementById(`bn-${r}-${c}`).innerText = v;
+                    document.getElementById(`pin-${r}-${c}`).innerText = v; // Setup next stage too
+                }
+            }
+            
+            await sleep(1000);
+            
+            // Calculate Mean & Var
+            let mean = sum / 9;
+            let varSum = 0;
+            for(let r=0; r<3; r++) {
+                for(let c=0; c<3; c++) {
+                    varSum += Math.pow(convOut[r][c] - mean, 2);
+                }
+            }
+            let variance = varSum / 9;
+            let std = Math.sqrt(variance) || 1; // Prevent div by 0
+
+            document.getElementById('math-bn-stats').innerHTML = `
+                Calculating statistical moments over the batch:<br>
+                <strong class="text-white text-base block mt-2">Mean (μ) = ${mean.toFixed(2)}, Std Dev (σ) = ${std.toFixed(2)}</strong>
+            `;
+
+            await sleep(2000);
+
+            // Apply BN Formula
+            for(let r=0; r<3; r++) {
+                for(let c=0; c<3; c++) {
+                    let oldV = convOut[r][c];
+                    let newV = (oldV - mean) / std;
+                    bnOut[r][c] = newV;
+                    
+                    let cell = document.getElementById(`bn-${r}-${c}`);
+                    cell.classList.add('active-scan');
+                    
+                    document.getElementById('math-bn-eq').innerHTML = `Applying Normalization: Z = (x - μ) / σ <br> <span class="text-white block mt-2 font-mono">(${oldV} - ${mean.toFixed(1)}) / ${std.toFixed(1)} = ${newV.toFixed(1)}</span>`;
+                    
+                    await sleep(600);
+                    cell.innerText = newV.toFixed(1);
+                    cell.classList.remove('active-scan');
+                }
+            }
+        }
+
+        async function runReLU() {
+            updateNav('nav-relu');
+            document.getElementById('bn-relu-title').innerText = "Activated Tensor (3x3)";
+            document.getElementById('bn-relu-title').className = "text-amber-400 mb-4 text-xs font-bold tracking-widest uppercase bg-slate-900 px-4 py-2 rounded-full border border-slate-700";
+            
+            document.getElementById('math-bn-stats').innerHTML = "Applying ReLU Non-Linearity.<br> <span class='text-xs text-slate-400'>Any value below zero is suppressed.</span>";
+            document.getElementById('math-bn-eq').innerHTML = "Activation Formula:<br> <strong class='text-amber-400 text-2xl font-mono block mt-2'>f(x) = max(0, x)</strong>";
+            
+            await sleep(1500);
+
+            for(let r=0; r<3; r++) {
+                for(let c=0; c<3; c++) {
+                    let cell = document.getElementById(`bn-${r}-${c}`);
+                    let nextCell = document.getElementById(`pin-${r}-${c}`); // For next panel
+                    let val = bnOut[r][c];
+                    
+                    if(val < 0) {
+                        cell.classList.add('active-dead');
+                        document.getElementById('math-bn-eq').innerHTML = `f(${val.toFixed(1)}) = max(0, ${val.toFixed(1)}) <br>Result = <strong class="text-red-400 text-2xl">0.0</strong>`;
+                        await sleep(500);
+                        cell.innerText = "0.0";
+                        reluOut[r][c] = 0;
+                        nextCell.innerText = "0.0";
+                    } else {
+                        cell.classList.add('active-calc');
+                        document.getElementById('math-bn-eq').innerHTML = `f(${val.toFixed(1)}) = max(0, ${val.toFixed(1)}) <br>Result = <strong class="text-emerald-400 text-2xl">${val.toFixed(1)}</strong>`;
+                        await sleep(500);
+                        reluOut[r][c] = val;
+                        nextCell.innerText = val.toFixed(1);
+                    }
+                    cell.className = "matrix-cell h-16 w-16 cell-amber text-lg"; // reset classes softly
+                }
+            }
+        }
+
+        async function runMaxPool() {
+            updateNav('nav-pool');
+            pPool.classList.remove('panel-inactive');
+            pPool.scrollIntoView();
+            
+            const win = document.getElementById('pool-window');
+            const cellW = 56, gap = 8; // Tailwind h-14 = 56px
+            win.style.width = `${(cellW*2)+gap}px`;
+            win.style.height = `${(cellW*2)+gap}px`;
+            win.style.display = 'block';
+
+            // Pool window slides over 3x3 (stride 1) -> output 2x2
+            for(let r=0; r<2; r++) {
+                for(let c=0; c<2; c++) {
+                    win.style.transform = `translate(${c*(cellW+gap)}px, ${r*(cellW+gap)}px)`;
+                    
+                    let maxVal = -Infinity;
+                    let eqHtml = "max(<br>";
+                    let vals = [];
+
+                    for(let pr=0; pr<2; pr++) {
+                        for(let pc=0; pc<2; pc++) {
+                            let inR = r + pr, inC = c + pc;
+                            let v = reluOut[inR][inC];
+                            vals.push(v.toFixed(1));
+                            if(v > maxVal) maxVal = v;
+                            document.getElementById(`pin-${inR}-${inC}`).classList.add('active-scan');
+                        }
+                    }
+                    
+                    eqHtml += vals.join(', ') + "<br>)";
+                    document.getElementById('math-pool-eq').innerHTML = eqHtml;
+                    
+                    await sleep(1000); // visualize window
+
+                    document.getElementById('math-pool-eq').innerHTML += `<br>= <strong class="text-orange-400 text-2xl font-mono">${maxVal.toFixed(1)}</strong>`;
+                    poolOut[r][c] = maxVal;
+
+                    let outCell = document.getElementById(`pout-${r}-${c}`);
+                    outCell.innerText = maxVal.toFixed(1);
+                    outCell.classList.remove('opacity-20');
+                    outCell.classList.add('active-calc');
+                    
+                    await sleep(600);
+                    outCell.classList.remove('active-calc');
+                    document.querySelectorAll('.active-scan').forEach(el => el.classList.remove('active-scan'));
+                }
+            }
+            win.style.display = 'none';
+        }
+
+        async function runFlattenDenseSoftmax() {
+            updateNav('nav-dense');
+            pDense.classList.remove('panel-inactive');
+            pDense.scrollIntoView();
+            drawNetwork();
+
+            // 1. Flatten
+            document.getElementById('math-dense').innerHTML = "<span class='text-white tracking-widest'>Flattening 2D Matrix (2x2) ➔ 1D Vector (4x1)...</span>";
+            await sleep(1000);
+            
+            let idx = 0;
+            for(let r=0; r<2; r++) {
+                for(let c=0; c<2; c++) {
+                    let val = poolOut[r][c];
+                    flatArr.push(val);
+                    let fCell = document.getElementById(`flat-${idx}`);
+                    fCell.innerText = val.toFixed(1);
+                    fCell.classList.remove('opacity-20');
+                    fCell.classList.add('active-scan');
+                    await sleep(300);
+                    fCell.classList.remove('active-scan');
+                    idx++;
+                }
+            }
+
+            // 2. Dense
+            document.getElementById('math-dense').innerHTML = "<span class='text-white'>Executing Fully Connected Transformation (W·X + b)...</span>";
+            await sleep(1000);
+
+            for(let n=0; n<2; n++) { // 2 output nodes
+                let w = denseW[n];
+                let b = denseB[n];
+                let logit = 0;
+                
+                let logitCell = document.getElementById(`logit-${n}`);
+                logitCell.classList.remove('opacity-20');
+                
+                let mathText = `<span class="text-slate-300 font-bold mb-2 block">Calculating Class ${n} Logit (Z)</span>`;
+
+                // Light up lines
+                for(let i=0; i<4; i++) {
+                    document.getElementById(`line-${i}-${n}`).classList.add('active-line');
+                    let term = flatArr[i] * w[i];
+                    logit += term;
+                    mathText += `(${flatArr[i].toFixed(1)} × ${w[i].toFixed(1)})`;
+                    if(i < 3) mathText += " + ";
+                }
+                
+                document.getElementById('math-dense').innerHTML = mathText;
+                await sleep(1500);
+
+                logit += b;
+                logits[n] = logit;
+                
+                document.getElementById('math-dense').innerHTML += `<br><span class="text-slate-400 mt-2 block">+ Bias (${b.toFixed(1)})</span> <strong class="text-pink-400 text-2xl block mt-2">${logit.toFixed(2)}</strong>`;
+                logitCell.innerText = logit.toFixed(2);
+                logitCell.classList.add('active-calc');
+                
+                await sleep(1500);
+                
+                // Turn off lines
+                for(let i=0; i<4; i++) {
+                    document.getElementById(`line-${i}-${n}`).classList.remove('active-line');
+                }
+                logitCell.classList.remove('active-calc');
+            }
+
+            // 3. Softmax
+            updateNav('nav-softmax');
+            document.getElementById('math-dense').innerHTML = "<span class='text-rose-400 text-lg font-bold block mb-2'>Applying Softmax Function...</span><span class='text-slate-300 text-xs'>Converting unbounded logits into a normalized probability distribution.</span>";
+            await sleep(1500);
+
+            let expSum = 0;
+            let exps = [];
+            for(let n=0; n<2; n++) {
+                let e = Math.exp(logits[n]);
+                exps.push(e);
+                expSum += e;
+            }
+
+            for(let n=0; n<2; n++) {
+                probs[n] = exps[n] / expSum;
+                let probCell = document.getElementById(`prob-${n}`);
+                probCell.classList.remove('opacity-20');
+                
+                document.getElementById('math-dense').innerHTML = `
+                    <div class="text-white text-sm text-left mx-auto w-fit bg-slate-900 p-4 rounded-lg border border-slate-700">
+                        <span class="text-slate-400">Class ${n} Calculation:</span><br><br>
+                        e^(${logits[n].toFixed(2)}) = <span class="text-pink-300">${exps[n].toFixed(2)}</span><br>
+                        Σ e^(z) = <span class="text-purple-300">${expSum.toFixed(2)}</span><br>
+                        <hr class="border-slate-700 my-2">
+                        P(${n}) = ${exps[n].toFixed(2)} / ${expSum.toFixed(2)} = <strong class="text-rose-400 text-xl ml-2">${(probs[n]*100).toFixed(1)}%</strong>
+                    </div>
+                `;
+                
+                probCell.innerText = `${(probs[n]*100).toFixed(1)}%`;
+                probCell.classList.add('active-calc', 'shadow-[0_0_30px_rgba(244,114,182,0.8)]');
+                await sleep(2500);
+                probCell.classList.remove('active-calc');
+            }
+            
+            document.getElementById('math-dense').innerHTML = "<div class='text-emerald-400 text-2xl font-bold animate-pulse'>🎉 Prediction Sequence Complete! 🎉</div>";
+            startBtn.innerHTML = "🔄 Restart Architecture Visualization";
+            startBtn.disabled = false;
+        }
+
+        // --- MAIN TRIGGER ---
+        startBtn.addEventListener('click', async () => {
+            startBtn.disabled = true;
+            startBtn.innerHTML = "<span class='animate-pulse'>⏳ Processing Neural Pipeline...</span>";
+            
+            // Reset state
+            initGrids();
+            convOut = Array(3).fill().map(() => Array(3).fill(0));
+            bnOut = Array(3).fill().map(() => Array(3).fill(0));
+            reluOut = Array(3).fill().map(() => Array(3).fill(0));
+            poolOut = Array(2).fill().map(() => Array(2).fill(0));
+            flatArr = [];
+            logits = [0, 0];
+            probs = [0, 0];
+            
+            pBnRelu.classList.add('panel-inactive');
+            pPool.classList.add('panel-inactive');
+            pDense.classList.add('panel-inactive');
+            document.getElementById('fnn-svg').innerHTML = '';
+            
+            pConv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            await sleep(800);
+
+            // Execute Sequential Pipeline
+            await runConv2D();
+            await runBatchNorm();
+            await runReLU();
+            await runMaxPool();
+            await runFlattenDenseSoftmax();
+        });
+
+        // Init on load
+        window.onload = () => {
+            initGrids();
+            // Handle resizing to redraw dynamic SVG FNN connections
+            window.addEventListener('resize', () => {
+                if(!pDense.classList.contains('panel-inactive')) drawNetwork();
+            });
+        };
+    </script>
+</body>
+</html>
