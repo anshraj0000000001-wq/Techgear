@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Debugger Pro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0d1117; /* GitHub dark theme style */
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #161b22; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #30363d; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b949e; 
+        }
+
+        .tab-active {
+            border-bottom: 2px solid #58a6ff;
+            color: #58a6ff;
+            font-weight: 600;
+        }
+        
+        .tab-inactive {
+            color: #8b949e;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-inactive:hover {
+            color: #c9d1d9;
+        }
+        
+        pre {
+            white-space: pre-wrap;       
+            word-wrap: break-word;       
+        }
+
+        .input-dark {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+        }
+        .input-dark:focus {
+            border-color: #58a6ff;
+            outline: none;
+            box-shadow: 0 0 0 1px #58a6ff;
+        }
+        
+        .panel-dark {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-sm">
+
+    <!-- Navbar -->
+    <nav class="panel-dark border-b-0 p-3 shadow-md z-10 sticky top-0">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-bolt text-yellow-400 text-xl"></i>
+                <h1 class="text-lg font-bold text-white tracking-wide">API Debugger</h1>
+            </div>
+            <div class="text-xs text-gray-400 hidden sm:block">Mobile & Desktop Optimized</div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto flex-grow p-2 sm:p-4 flex flex-col gap-4 max-w-6xl">
+        
+        <!-- Request Bar (URL, Method, Send) -->
+        <form id="request-form" class="panel-dark p-2 sm:p-3 rounded-lg flex flex-col sm:flex-row gap-2">
+            <div class="flex w-full sm:w-auto gap-2">
+                <select id="method" class="input-dark font-bold py-2 px-3 rounded-md w-1/3 sm:w-28 text-center cursor-pointer">
+                    <option value="GET" class="text-blue-400">GET</option>
+                    <option value="POST" class="text-green-400">POST</option>
+                    <option value="PUT" class="text-yellow-400">PUT</option>
+                    <option value="PATCH" class="text-orange-400">PATCH</option>
+                    <option value="DELETE" class="text-red-400">DELETE</option>
+                </select>
+                <input type="url" id="url" required placeholder="https://api.example.com/data" 
+                    class="input-dark flex-grow py-2 px-3 rounded-md w-2/3 sm:w-auto">
+            </div>
+            
+            <button type="submit" id="send-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md transition-colors flex items-center justify-center gap-2 w-full sm:w-auto mt-2 sm:mt-0 shadow-md">
+                <i class="fa-solid fa-paper-plane"></i> Send
+            </button>
+        </form>
+
+        <!-- Configuration Area (Params, Auth, Headers, Body) -->
+        <div class="panel-dark rounded-lg overflow-hidden flex flex-col">
+            <!-- Tabs Header -->
+            <div class="flex border-b border-[#30363d] overflow-x-auto hide-scrollbar bg-[#0d1117]">
+                <button type="button" class="req-tab-btn tab-active px-4 py-2 transition-colors whitespace-nowrap" data-target="req-params">Params</button>
+                <button type="button" class="req-tab-btn tab-inactive px-4 py-2 transition-colors whitespace-nowrap" data-target="req-auth">Auth</button>
+                <button type="button" class="req-tab-btn tab-inactive px-4 py-2 transition-colors whitespace-nowrap" data-target="req-headers">Headers</button>
+                <button type="button" class="req-tab-btn tab-inactive px-4 py-2 transition-colors whitespace-nowrap" data-target="req-body">Body</button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="p-3 sm:p-4 bg-[#161b22] min-h-[150px]">
+                
+                <!-- Params Tab -->
+                <div id="req-params" class="req-tab-content block">
+                    <p class="text-xs text-gray-400 mb-2">URL Query Parameters (e.g. ?search=test)</p>
+                    <div id="params-container" class="flex flex-col gap-2">
+                        <!-- Dynamic Params Row injected by JS -->
+                    </div>
+                    <button type="button" id="add-param-btn" class="mt-3 text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1">
+                        <i class="fa-solid fa-plus"></i> Add Param
+                    </button>
+                </div>
+
+                <!-- Auth Tab -->
+                <div id="req-auth" class="req-tab-content hidden">
+                    <p class="text-xs text-gray-400 mb-3">Select Authorization Type</p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <div class="w-full sm:w-1/3">
+                            <select id="auth-type" class="input-dark w-full p-2 rounded-md">
+                                <option value="none">No Auth</option>
+                                <option value="bearer">Bearer Token</option>
+                            </select>
+                        </div>
+                        <div id="auth-token-container" class="w-full sm:w-2/3 hidden">
+                            <input type="text" id="auth-token" placeholder="Paste token here..." class="input-dark w-full p-2 rounded-md font-mono text-xs">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Headers Tab -->
+                <div id="req-headers" class="req-tab-content hidden">
+                    <p class="text-xs text-gray-400 mb-2">Request Headers</p>
+                    <div id="headers-container" class="flex flex-col gap-2">
+                        <!-- Default Header -->
+                        <div class="flex gap-2 items-center header-row w-full">
+                            <input type="text" placeholder="Key" value="Content-Type" class="header-key flex-1 input-dark rounded p-2 text-xs">
+                            <input type="text" placeholder="Value" value="application/json" class="header-value flex-1 input-dark rounded p-2 text-xs">
+                            <button type="button" class="delete-btn text-gray-500 hover:text-red-400 p-1 px-2"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    </div>
+                    <button type="button" id="add-header-btn" class="mt-3 text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1">
+                        <i class="fa-solid fa-plus"></i> Add Header
+                    </button>
+                </div>
+
+                <!-- Body Tab -->
+                <div id="req-body" class="req-tab-content hidden h-full flex-col">
+                    <div class="mb-2 flex justify-between items-center">
+                        <span class="text-xs text-gray-400" id="body-hint">JSON data payload</span>
+                        <button type="button" id="format-json-btn" class="text-xs text-blue-400 hover:text-blue-300"><i class="fa-solid fa-align-left"></i> Format JSON</button>
+                    </div>
+                    <textarea id="json-body" class="w-full flex-grow input-dark rounded-md p-3 font-mono text-green-400 text-xs min-h-[120px] resize-y" placeholder='{\n  "key": "value"\n}'></textarea>
+                    <div id="json-error" class="text-red-400 text-xs mt-1 hidden"><i class="fa-solid fa-circle-exclamation"></i> Invalid JSON format</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Response Area -->
+        <div class="panel-dark rounded-lg flex-grow flex flex-col overflow-hidden shadow-lg border border-[#30363d] min-h-[300px]">
+            <!-- Response Meta Bar -->
+            <div class="p-3 border-b border-[#30363d] flex flex-wrap justify-between items-center gap-2 bg-[#0d1117]">
+                <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar whitespace-nowrap w-full sm:w-auto pb-1 sm:pb-0">
+                    <span class="text-gray-400 text-xs font-semibold">Status: <span id="res-status" class="font-mono text-white ml-1">000</span></span>
+                    <span class="text-gray-400 text-xs font-semibold">Time: <span id="res-time" class="font-mono text-white ml-1">0 ms</span></span>
+                    <span class="text-gray-400 text-xs font-semibold">Size: <span id="res-size" class="font-mono text-white ml-1">0 B</span></span>
+                </div>
+                
+                <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    <button id="copy-btn" class="text-xs bg-[#21262d] hover:bg-[#30363d] text-gray-300 border border-[#363b42] py-1 px-3 rounded transition-colors hidden sm:flex items-center gap-1">
+                        <i class="fa-regular fa-copy"></i> Copy
+                    </button>
+                </div>
+            </div>
+
+            <!-- Response Tabs -->
+            <div class="flex border-b border-[#30363d] bg-[#0d1117] text-xs sm:text-sm">
+                <button type="button" class="res-tab-btn tab-active px-4 py-2 transition-colors whitespace-nowrap" data-target="res-body">Response</button>
+                <button type="button" class="res-tab-btn tab-inactive px-4 py-2 transition-colors whitespace-nowrap" data-target="res-headers">Headers</button>
+            </div>
+
+            <!-- Response Content -->
+            <div class="relative flex-grow bg-[#0d1117] overflow-hidden flex flex-col">
+                
+                <!-- Loading Overlay -->
+                <div id="loading-spinner" class="absolute inset-0 flex items-center justify-center bg-[#0d1117] bg-opacity-90 hidden z-10">
+                    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-blue-500 border-r-2 border-transparent"></div>
+                </div>
+
+                <!-- Res Body -->
+                <div id="res-body" class="res-tab-content p-3 sm:p-4 overflow-auto flex-grow block">
+                    <pre id="response-output" class="text-xs sm:text-sm font-mono text-gray-500">Hit 'Send' to get a response...</pre>
+                </div>
+
+                <!-- Res Headers -->
+                <div id="res-headers" class="res-tab-content p-3 sm:p-4 overflow-auto flex-grow hidden">
+                    <table class="w-full text-left text-xs sm:text-sm text-gray-300 border-collapse">
+                        <tbody id="response-headers-table">
+                            <tr><td class="text-gray-500">Headers appear here</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Mobile Copy Button (Bottom sticky for easy thumb access) -->
+            <button id="copy-btn-mobile" class="sm:hidden w-full bg-[#21262d] active:bg-[#30363d] text-gray-300 border-t border-[#363b42] py-3 text-center text-sm font-semibold flex items-center justify-center gap-2">
+                <i class="fa-regular fa-copy"></i> Copy Response
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // --- UI Interactions & Tabs Logic ---
+        function setupTabs(btnClass, contentClass) {
+            const btns = document.querySelectorAll(btnClass);
+            const contents = document.querySelectorAll(contentClass);
+
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update buttons
+                    btns.forEach(b => {
+                        b.classList.remove('tab-active');
+                        b.classList.add('tab-inactive');
+                    });
+                    btn.classList.add('tab-active');
+                    btn.classList.remove('tab-inactive');
+
+                    // Update contents
+                    const targetId = btn.getAttribute('data-target');
+                    contents.forEach(content => {
+                        content.classList.remove('block', 'flex');
+                        content.classList.add('hidden');
+                        if (content.id === targetId) {
+                            content.classList.remove('hidden');
+                            // Use flex for body tab to allow textarea to grow
+                            if(targetId === 'req-body') content.classList.add('flex');
+                            else content.classList.add('block');
+                        }
+                    });
+                });
+            });
+        }
+
+        setupTabs('.req-tab-btn', '.req-tab-content');
+        setupTabs('.res-tab-btn', '.res-tab-content');
+
+        // --- Dynamic Rows for Params & Headers ---
+        function createRow(containerId, keyPlaceholder = 'Key', valPlaceholder = 'Value', key = '', val = '') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = 'flex gap-2 items-center w-full ' + (containerId === 'params-container' ? 'param-row' : 'header-row');
+            div.innerHTML = `
+                <input type="text" placeholder="${keyPlaceholder}" value="${key}" class="row-key flex-1 input-dark rounded p-2 text-xs">
+                <input type="text" placeholder="${valPlaceholder}" value="${val}" class="row-val flex-1 input-dark rounded p-2 text-xs">
+                <button type="button" class="delete-btn text-gray-500 hover:text-red-400 p-1 px-2"><i class="fa-solid fa-xmark"></i></button>
+            `;
+            
+            div.querySelector('.delete-btn').addEventListener('click', () => div.remove());
+            container.appendChild(div);
+            return div;
+        }
+
+        document.getElementById('add-param-btn').addEventListener('click', () => createRow('params-container'));
+        document.getElementById('add-header-btn').addEventListener('click', () => createRow('headers-container'));
+        
+        // Setup initial default delete buttons
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() { this.parentElement.remove(); });
+        });
+        
+        // Add one empty param row by default
+        createRow('params-container');
+
+        // --- Auth Tab Logic ---
+        const authTypeSelect = document.getElementById('auth-type');
+        const authTokenContainer = document.getElementById('auth-token-container');
+        authTypeSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'bearer') {
+                authTokenContainer.classList.remove('hidden');
+            } else {
+                authTokenContainer.classList.add('hidden');
+            }
+        });
+
+        // --- JSON Formatting ---
+        const jsonBody = document.getElementById('json-body');
+        const formatJsonBtn = document.getElementById('format-json-btn');
+        const jsonError = document.getElementById('json-error');
+
+        formatJsonBtn.addEventListener('click', () => {
+            try {
+                if(jsonBody.value.trim() === '') return;
+                const parsed = JSON.parse(jsonBody.value);
+                jsonBody.value = JSON.stringify(parsed, null, 2);
+                jsonError.classList.add('hidden');
+                jsonBody.classList.remove('border-red-500');
+            } catch (e) {
+                jsonError.classList.remove('hidden');
+                jsonBody.classList.add('border-red-500');
+            }
+        });
+
+        // --- Method Change Logic ---
+        const methodSelect = document.getElementById('method');
+        methodSelect.addEventListener('change', (e) => {
+            const method = e.target.value;
+            // Update UI color based on method
+            methodSelect.className = `input-dark font-bold py-2 px-3 rounded-md w-1/3 sm:w-28 text-center cursor-pointer`;
+            
+            if (method === 'GET' || method === 'DELETE') {
+                jsonBody.disabled = true;
+                jsonBody.classList.add('opacity-40', 'cursor-not-allowed');
+                document.getElementById('body-hint').innerHTML = 'Body <span class="text-red-400 text-[10px]">(Not needed for GET/DELETE)</span>';
+            } else {
+                jsonBody.disabled = false;
+                jsonBody.classList.remove('opacity-40', 'cursor-not-allowed');
+                document.getElementById('body-hint').innerHTML = 'JSON payload';
+            }
+        });
+
+        // --- Copy to Clipboard ---
+        function copyResponse() {
+            const text = document.getElementById('response-output').textContent;
+            if(!text || text.includes("Hit 'Send'")) return;
+            
+            // Modern copy fallback
+            try {
+                document.execCommand('copy'); 
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopySuccess();
+                }).catch(() => fallbackCopy(text));
+            } catch(e) {
+                fallbackCopy(text);
+            }
+        }
+        
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showCopySuccess();
+            } catch (err) {
+                console.error('Fallback copy failed', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showCopySuccess() {
+            const btns = [document.getElementById('copy-btn'), document.getElementById('copy-btn-mobile')];
+            btns.forEach(btn => {
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check text-green-400"></i> Copied!';
+                setTimeout(() => { btn.innerHTML = originalHtml; }, 2000);
+            });
+        }
+
+        document.getElementById('copy-btn').addEventListener('click', copyResponse);
+        document.getElementById('copy-btn-mobile').addEventListener('click', copyResponse);
+
+        // --- Build URL with Params Helper ---
+        function getFinalUrl() {
+            let baseUrl = document.getElementById('url').value.trim();
+            if (!baseUrl) return '';
+            
+            // Automatically add https:// if missing for better UX
+            if (!/^https?:\/\//i.test(baseUrl)) {
+                baseUrl = 'https://' + baseUrl;
+                document.getElementById('url').value = baseUrl;
+            }
+
+            try {
+                const urlObj = new URL(baseUrl);
+                // Append params from UI
+                document.querySelectorAll('.param-row').forEach(row => {
+                    const key = row.querySelector('.row-key').value.trim();
+                    const val = row.querySelector('.row-val').value.trim();
+                    if (key) {
+                        urlObj.searchParams.set(key, val);
+                    }
+                });
+                return urlObj.toString();
+            } catch(e) {
+                return baseUrl; // Fallback to raw input if invalid URL syntax
+            }
+        }
+
+        // --- Fetch API Execution ---
+        const requestForm = document.getElementById('request-form');
+        const responseOutput = document.getElementById('response-output');
+        const responseHeadersTable = document.getElementById('response-headers-table');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        
+        requestForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const finalUrl = getFinalUrl();
+            if (!finalUrl) return;
+
+            const method = methodSelect.value;
+            
+            // Build Headers
+            const headers = {};
+            document.querySelectorAll('.header-row').forEach(row => {
+                const key = row.querySelector('.row-key').value.trim();
+                const val = row.querySelector('.row-val').value.trim();
+                if (key) headers[key] = val;
+            });
+
+            // Add Auth Header if selected
+            const authType = authTypeSelect.value;
+            if (authType === 'bearer') {
+                const token = document.getElementById('auth-token').value.trim();
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const options = { method, headers };
+
+            // Add Body
+            if (method !== 'GET' && method !== 'DELETE') {
+                const bodyStr = jsonBody.value.trim();
+                if (bodyStr) {
+                    try {
+                        JSON.parse(bodyStr); 
+                        jsonError.classList.add('hidden');
+                    } catch (err) {
+                        jsonError.classList.remove('hidden');
+                        document.querySelector('[data-target="req-body"]').click();
+                        return; 
+                    }
+                    options.body = bodyStr;
+                }
+            }
+
+            // Reset UI for Loading
+            loadingSpinner.classList.remove('hidden');
+            responseOutput.textContent = '';
+            responseHeadersTable.innerHTML = '';
+            
+            document.getElementById('res-status').textContent = '...';
+            document.getElementById('res-time').textContent = '... ms';
+            document.getElementById('res-size').textContent = '... B';
+            
+            // Auto switch to response body tab
+            document.querySelector('[data-target="res-body"]').click();
+
+            const startTime = performance.now();
+
+            try {
+                const response = await fetch(finalUrl, options);
+                const endTime = performance.now();
+                
+                // Status mapping
+                const resStatus = document.getElementById('res-status');
+                resStatus.textContent = `${response.status} ${response.statusText}`;
+                resStatus.className = `font-mono ml-1 ${response.ok ? 'text-green-400' : 'text-red-400'}`;
+
+                // Time mapping
+                document.getElementById('res-time').textContent = `${Math.round(endTime - startTime)} ms`;
+
+                // Headers Mapping
+                let headersHTML = '';
+                response.headers.forEach((val, key) => {
+                    headersHTML += `
+                        <tr class="border-b border-[#30363d] hover:bg-[#161b22]">
+                            <td class="py-2 px-2 font-semibold text-blue-300 w-1/3 break-all align-top">${key}</td>
+                            <td class="py-2 px-2 text-gray-300 break-all">${val}</td>
+                        </tr>
+                    `;
+                });
+                responseHeadersTable.innerHTML = headersHTML || '<tr><td class="text-gray-500 py-2">No headers</td></tr>';
+
+                // Read Body
+                const text = await response.text();
+                
+                // Size mapping
+                const size = new Blob([text]).size;
+                document.getElementById('res-size').textContent = formatBytes(size);
+
+                // Try Format JSON
+                try {
+                    const json = JSON.parse(text);
+                    responseOutput.textContent = JSON.stringify(json, null, 2);
+                    responseOutput.className = 'text-xs sm:text-sm font-mono text-green-400';
+                } catch {
+                    responseOutput.textContent = text || 'Empty Response';
+                    responseOutput.className = 'text-xs sm:text-sm font-mono text-gray-300 whitespace-pre-wrap';
+                }
+
+            } catch (error) {
+                const endTime = performance.now();
+                document.getElementById('res-time').textContent = `${Math.round(endTime - startTime)} ms`;
+                
+                const resStatus = document.getElementById('res-status');
+                resStatus.textContent = 'ERR';
+                resStatus.className = 'font-mono text-red-500 ml-1';
+                
+                responseOutput.innerHTML = `<span class="text-red-400"><strong>Network Error:</strong> ${error.message}</span>\n\n<span class="text-gray-400 text-xs">Troubleshooting:\n1. The URL is incorrect or the server is down.\n2. CORS (Cross-Origin Resource Sharing) blocked the request. Browsers prevent fetching from domains without explicit permission.\n3. Check your internet connection.</span>`;
+            } finally {
+                loadingSpinner.classList.add('hidden');
+            }
+        });
+
+        // Format Bytes helper
+        function formatBytes(bytes, decimals = 2) {
+            if (!+bytes) return '0 B';
+            const k = 1024, dm = decimals < 0 ? 0 : decimals, sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+        }
+    </script>
+</body>
+</html>
