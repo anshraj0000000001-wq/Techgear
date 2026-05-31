@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Demystifying RAG | Interactive AI Architecture</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config for Custom Colors, Themes & Animations -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0B0F19',
+                        panel: '#151C2C',
+                        primary: '#0ea5e9', // Sky blue
+                        secondary: '#8b5cf6', // Violet
+                        accent: '#10b981', // Emerald
+                        lightbg: '#f8fafc',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    animation: {
+                        'blob': 'blob 10s infinite alternate',
+                        'flow': 'flow 3s linear infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '100%': { transform: 'translate(20px, -30px) scale(1.05)' },
+                        },
+                        flow: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '100%': { backgroundPosition: '100% 50%' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- MathJax for Mathematical Formulas -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* Base Styles & Smooth Theme Transition */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Glassmorphism Panels */
+        .glass-panel {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        /* Light Theme Glass */
+        .glass-panel-light {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Dark Theme Glass */
+        .dark .glass-panel-dark {
+            background: rgba(21, 28, 44, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .data-stream {
+            background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.2), transparent);
+            background-size: 200% 100%;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Step Transitions */
+        .step-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            transform: translateY(10px);
+        }
+        .step-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-dark dark:text-slate-200 antialiased selection:bg-primary/30 selection:text-primary">
+
+    <!-- Background Animated Blobs -->
+    <div class="fixed inset-0 w-full h-full pointer-events-none z-[-1] overflow-hidden">
+        <div class="absolute top-[-5%] left-[-10%] w-64 h-64 md:w-96 md:h-96 bg-primary/20 dark:bg-primary/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] md:blur-[120px] animate-blob"></div>
+        <div class="absolute top-[30%] right-[-10%] w-64 h-64 md:w-96 md:h-96 bg-secondary/20 dark:bg-secondary/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] md:blur-[120px] animate-blob" style="animation-delay: 2s;"></div>
+        <div class="absolute bottom-[-10%] left-[20%] w-72 h-72 md:w-[30rem] md:h-[30rem] bg-accent/15 dark:bg-accent/15 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] md:blur-[140px] animate-blob" style="animation-delay: 4s;"></div>
+    </div>
+
+    <!-- Navigation / Header -->
+    <nav class="fixed w-full z-50 glass-panel glass-panel-light dark:glass-panel-dark border-b border-slate-200 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="p-2 bg-gradient-to-br from-primary to-secondary rounded-lg text-white">
+                        <i data-lucide="network" class="w-5 h-5"></i>
+                    </div>
+                    <span class="font-bold text-lg md:text-xl tracking-tight hidden sm:block">RAG<span class="font-light text-slate-500 dark:text-slate-400">Visualizer</span></span>
+                </div>
+                
+                <!-- Desktop Nav Steps -->
+                <div class="hidden md:flex space-x-1 items-center">
+                    <button onclick="goToStep(1)" class="nav-btn px-2 py-1.5 rounded-md text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-gray-800" data-step="1">1. Ingestion</button>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+                    <button onclick="goToStep(2)" class="nav-btn px-2 py-1.5 rounded-md text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-gray-800" data-step="2">2. Embed</button>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+                    <button onclick="goToStep(3)" class="nav-btn px-2 py-1.5 rounded-md text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-gray-800" data-step="3">3. Search</button>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+                    <button onclick="goToStep(4)" class="nav-btn px-2 py-1.5 rounded-md text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-gray-800" data-step="4">4. Generate</button>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+                    <button onclick="goToStep(5)" class="nav-btn px-2 py-1.5 rounded-md text-sm font-medium transition-colors hover:bg-slate-200 dark:hover:bg-gray-800 text-primary" data-step="5">5. Architecture</button>
+                </div>
+
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" onclick="toggleTheme()" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-gray-800 transition-colors focus:outline-none" aria-label="Toggle Dark Mode">
+                    <i id="theme-icon-dark" data-lucide="moon" class="w-5 h-5 text-slate-700 hidden dark:block dark:text-slate-300"></i>
+                    <i id="theme-icon-light" data-lucide="sun" class="w-5 h-5 text-amber-500 block dark:hidden"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="pt-20 md:pt-24 pb-20 md:pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen flex flex-col">
+        
+        <!-- Header Section -->
+        <div class="text-center mb-8 md:mb-12">
+            <h1 class="text-3xl md:text-5xl font-extrabold mb-3 md:mb-4">How <span class="gradient-text">RAG</span> Actually Works</h1>
+            <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-sm md:text-base px-2">Retrieval-Augmented Generation gives AI models a custom memory. Explore the architecture step-by-step.</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 dark:bg-gray-800 rounded-full h-2 mb-6 md:mb-8 overflow-hidden">
+            <div id="progress-bar" class="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-500 ease-out" style="width: 20%"></div>
+        </div>
+
+        <!-- ================= STEP 1: INGESTION & CHUNKING ================= -->
+        <div id="step-1" class="step-content active flex-1">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center h-full">
+                <div class="order-2 lg:order-1">
+                    <div class="inline-flex items-center space-x-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs md:text-sm font-medium mb-3 md:mb-4 border border-primary/20">
+                        <i data-lucide="file-text" class="w-4 h-4"></i>
+                        <span>Phase 1: Knowledge Preparation</span>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-bold mb-3">Document Chunking</h2>
+                    <p class="text-slate-600 dark:text-slate-300 mb-5 leading-relaxed text-sm md:text-base">
+                        Before an AI can search your documents, they must be broken down into digestible pieces called <strong>chunks</strong>. Language models have a limited "context window" (amount of text processed at once).
+                    </p>
+                    
+                    <div class="glass-panel glass-panel-light dark:glass-panel-dark p-4 md:p-5 rounded-xl mb-5">
+                        <h3 class="text-xs md:text-sm font-semibold text-secondary uppercase tracking-wider mb-1 md:mb-2 flex items-center">
+                            <i data-lucide="layers" class="w-4 h-4 mr-2"></i> Key Concept: Overlap
+                        </h3>
+                        <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400">Chunks usually overlap by 10-20% to ensure context isn't lost if a sentence is split right down the middle.</p>
+                    </div>
+
+                    <button onclick="simulateChunking()" class="w-full md:w-auto bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-lg font-semibold hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors flex items-center justify-center space-x-2 group shadow-lg">
+                        <span>Simulate Chunking</span>
+                        <i data-lucide="scissors" class="w-5 h-5 group-hover:-rotate-45 transition-transform"></i>
+                    </button>
+                </div>
+
+                <!-- Visualization -->
+                <div class="order-1 lg:order-2 glass-panel glass-panel-light dark:glass-panel-dark p-4 md:p-6 rounded-2xl min-h-[300px] md:min-h-[400px] flex flex-col justify-center relative overflow-hidden">
+                    <!-- Grid Background Pattern -->
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMTQ4LDE2MywxODQsMC4xNSkiLz48L3N2Zz4=')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)]"></div>
+                    
+                    <div id="raw-document" class="p-3 md:p-4 bg-white/80 dark:bg-gray-800/80 rounded-lg border border-slate-200 dark:border-gray-600 mb-4 transition-all duration-500 relative z-10 font-serif text-slate-700 dark:text-slate-200 leading-relaxed text-xs md:text-sm shadow-sm">
+                        "Machine learning algorithms build a model based on sample data, known as training data, in order to make predictions or decisions without being explicitly programmed to do so. These algorithms are used in a wide variety of applications, such as in medicine, email filtering, speech recognition, and computer vision."
+                    </div>
+
+                    <div id="chunk-container" class="space-y-2 md:space-y-3 opacity-0 hidden relative z-10">
+                        <div class="p-3 bg-white dark:bg-panel border border-primary/40 rounded-lg text-xs md:text-sm text-slate-700 dark:text-slate-300 shadow-md transform translate-y-4 transition-all duration-500 chunk-anim">
+                            <span class="text-[10px] md:text-xs text-primary mb-1 font-semibold flex items-center"><i data-lucide="box" class="w-3 h-3 mr-1"></i> Chunk 1 (Tokens: 31)</span>
+                            "Machine learning algorithms build a model based on sample data, known as training data, in order to make predictions or decisions without being explicitly programmed to do so."
+                        </div>
+                        <div class="p-3 bg-white dark:bg-panel border border-secondary/40 rounded-lg text-xs md:text-sm text-slate-700 dark:text-slate-300 shadow-md transform translate-y-4 transition-all duration-500 chunk-anim delay-100">
+                            <span class="text-[10px] md:text-xs text-secondary mb-1 font-semibold flex items-center justify-between">
+                                <span class="flex items-center"><i data-lucide="box" class="w-3 h-3 mr-1"></i> Chunk 2 (Tokens: 28)</span>
+                                <span class="bg-secondary/10 text-secondary px-1.5 rounded-sm">Overlap</span>
+                            </span>
+                            "without being explicitly programmed to do so. These algorithms are used in a wide variety of applications, such as in medicine, email filtering, speech recognition, and computer vision."
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= STEP 2: EMBEDDINGS (The Math) ================= -->
+        <div id="step-2" class="step-content flex-1">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start h-full">
+                <div>
+                    <div class="inline-flex items-center space-x-2 bg-secondary/10 text-secondary px-3 py-1 rounded-full text-xs md:text-sm font-medium mb-3 md:mb-4 border border-secondary/20">
+                        <i data-lucide="binary" class="w-4 h-4"></i>
+                        <span>Phase 2: Vectorization</span>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-bold mb-3">Generating Embeddings</h2>
+                    <p class="text-slate-600 dark:text-slate-300 mb-5 leading-relaxed text-sm md:text-base">
+                        Computers don't understand words; they understand numbers. An <strong>Embedding Model</strong> transforms text chunks into high-dimensional arrays of floating-point numbers (vectors) representing semantic meaning.
+                    </p>
+
+                    <div class="space-y-3 md:space-y-4 mb-6">
+                        <div class="glass-panel glass-panel-light dark:glass-panel-dark p-3 md:p-4 rounded-xl transition-colors">
+                            <h3 class="text-sm md:text-base font-semibold flex justify-between items-center">
+                                <span class="flex items-center"><i data-lucide="book-a" class="w-4 h-4 mr-2 text-primary"></i> Vocab Size</span> 
+                                <span class="font-mono text-primary bg-primary/10 px-2 py-0.5 rounded text-xs md:text-sm">50,257</span>
+                            </h3>
+                            <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-2">The total number of unique tokens (sub-words) the model's tokenizer knows. Text is converted to IDs from this vocabulary before vectorization.</p>
+                        </div>
+                        
+                        <div class="glass-panel glass-panel-light dark:glass-panel-dark p-3 md:p-4 rounded-xl transition-colors">
+                            <h3 class="text-sm md:text-base font-semibold flex justify-between items-center">
+                                <span class="flex items-center"><i data-lucide="ruler" class="w-4 h-4 mr-2 text-secondary"></i> d_model (Dimensions)</span> 
+                                <span class="font-mono text-secondary bg-secondary/10 px-2 py-0.5 rounded text-xs md:text-sm">1536</span>
+                            </h3>
+                            <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-2">The size of the resulting vector array. Each dimension represents a learned semantic feature (e.g., OpenAI's <code>text-embedding-3</code> uses 1536).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visualization -->
+                <div class="glass-panel glass-panel-light dark:glass-panel-dark p-4 md:p-6 rounded-2xl">
+                    <h3 class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3 flex items-center">
+                        <i data-lucide="cpu" class="w-4 h-4 mr-2"></i> Interactive Vectorization
+                    </h3>
+                    <div class="mb-3">
+                        <input type="text" id="embed-input" value="Artificial Intelligence" class="w-full bg-white dark:bg-dark border border-slate-300 dark:border-gray-700 rounded-lg px-3 md:px-4 py-2 md:py-3 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-sm md:text-base" placeholder="Type a concept...">
+                    </div>
+                    <button onclick="generateMockEmbedding()" class="w-full bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 px-4 py-2 rounded-lg font-medium transition-colors mb-4 flex justify-center items-center space-x-2 text-sm md:text-base">
+                        <i data-lucide="zap" class="w-4 h-4"></i>
+                        <span>Generate Vector</span>
+                    </button>
+
+                    <div class="bg-slate-100 dark:bg-dark rounded-lg p-3 md:p-4 border border-slate-200 dark:border-gray-800 relative overflow-hidden group">
+                        <div class="absolute inset-0 data-stream animate-flow opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                        <div class="flex justify-between text-[10px] md:text-xs text-slate-500 font-mono mb-2">
+                            <span>Index [0]</span>
+                            <span>Index [1535]</span>
+                        </div>
+                        <div id="vector-output" class="font-mono text-xs md:text-sm text-accent break-all leading-relaxed h-28 md:h-32 overflow-y-auto custom-scrollbar transition-all duration-300 relative z-10">
+                            [ 0.0124, -0.0543, 0.1923, -0.8321, 0.4421, ... ]
+                            <br><br><span class="text-slate-400 dark:text-gray-500 italic">Click generate to see the embedding projection...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= STEP 3: RETRIEVAL & COSINE SIMILARITY ================= -->
+        <div id="step-3" class="step-content flex-1">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start h-full">
+                <div>
+                    <div class="inline-flex items-center space-x-2 bg-accent/10 text-accent px-3 py-1 rounded-full text-xs md:text-sm font-medium mb-3 md:mb-4 border border-accent/20">
+                        <i data-lucide="search" class="w-4 h-4"></i>
+                        <span>Phase 3: Similarity Search</span>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-bold mb-3">Finding Relevant Context</h2>
+                    <p class="text-slate-600 dark:text-slate-300 mb-4 leading-relaxed text-sm md:text-base">
+                        When a user asks a question, it is also embedded into a vector. The system queries the <strong>Vector Database</strong> to find document chunks pointing in a similar mathematical direction as the question.
+                    </p>
+                    
+                    <div class="glass-panel glass-panel-light dark:glass-panel-dark p-4 md:p-5 rounded-xl relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-slate-200 dark:text-gray-800 opacity-50 dark:opacity-30">
+                            <i data-lucide="calculator" class="w-24 h-24 md:w-32 md:h-32"></i>
+                        </div>
+                        <h3 class="text-base md:text-lg font-semibold mb-1 relative z-10">Cosine Similarity</h3>
+                        <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mb-3 relative z-10">Calculates the cosine of the angle between two vectors. <span class="font-bold text-accent">1</span> = identical, <span class="font-bold text-slate-400">0</span> = unrelated, <span class="font-bold text-red-400">-1</span> = opposite.</p>
+                        
+                        <div class="bg-white dark:bg-dark/80 p-2 md:p-3 rounded-lg overflow-x-auto relative z-10 border border-slate-200 dark:border-gray-700 custom-scrollbar">
+                            <span id="math-formula" class="text-xs md:text-sm">
+                                $$ \text{similarity} = \cos(\theta) = \frac{\mathbf{A} \cdot \mathbf{B}}{\|\mathbf{A}\| \|\mathbf{B}\|} = \frac{\sum_{i=1}^{n} A_i B_i}{\sqrt{\sum_{i=1}^{n} A_i^2} \sqrt{\sum_{i=1}^{n} B_i^2}} $$
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visualization: Interactive Math Calculator -->
+                <div class="glass-panel glass-panel-light dark:glass-panel-dark p-4 md:p-6 rounded-2xl">
+                    <h3 class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 flex items-center">
+                        <i data-lucide="bar-chart-2" class="w-4 h-4 mr-2"></i> 3D Vector Calculator
+                    </h3>
+                    <p class="text-[10px] md:text-xs text-slate-400 dark:text-gray-500 mb-4 italic">* Real embeddings use ~1536 dimensions; we use 3 here for visualization.</p>
+                    
+                    <div class="flex flex-col md:flex-row gap-4 mb-5">
+                        <div class="flex-1 space-y-2 p-3 bg-primary/5 rounded-lg border border-primary/10">
+                            <label class="text-xs text-primary font-mono block font-bold">Query Vector (A)</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <input type="number" id="vA1" value="0.8" step="0.1" class="w-full bg-white dark:bg-dark border border-slate-200 dark:border-gray-700 rounded px-1 md:px-2 py-1 text-xs md:text-sm font-mono text-center focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                                <input type="number" id="vA2" value="0.3" step="0.1" class="w-full bg-white dark:bg-dark border border-slate-200 dark:border-gray-700 rounded px-1 md:px-2 py-1 text-xs md:text-sm font-mono text-center focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                                <input type="number" id="vA3" value="-0.2" step="0.1" class="w-full bg-white dark:bg-dark border border-slate-200 dark:border-gray-700 rounded px-1 md:px-2 py-1 text-xs md:text-sm font-mono text-center focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                            </div>
+                        </div>
+                        <div class="flex-1 space-y-2 p-3 bg-secondary/5 rounded-lg border border-secondary/10">
+                            <label class="text-xs text-secondary font-mono block font-bold">Chunk Vector (B)</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <input type="number" id="vB1" value="0.7" step="0.1" class="w-full bg-white dark:bg-dark border border-slate-200 dark:border-gray-700 rounded px-1 md:px-2 py-1 text-xs md:text-sm font-mono text-center focus:border-secondary focus:ring-1 focus:ring-secondary outline-none">
+                                <input type="number" id="vB2" value="0.4" step="0.1" class="w-full bg-white dark:bg-dark border border-slate-200 dark:border-gray-700 rounded px-1 md:px-2 py-1 text-xs md:text-sm font-mono text-center focus:border-secondary focus:ring-1 focus:ring-secondary outline-none">
+                                <input type="number" id="vB3" value="0.1" step="0.1" class="w-full bg-white dark:bg-dark border border-slate-200 dark:border-gray-700 rounded px-1 md:px-2 py-1 text-xs md:text-sm font-mono text-center focus:border-secondary focus:ring-1 focus:ring-secondary outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-gray-800/80 rounded-xl p-3 md:p-4 border border-slate-200 dark:border-gray-700 shadow-inner">
+                        <div class="flex justify-between items-end border-b border-slate-200 dark:border-gray-700 pb-2 mb-2">
+                            <span class="text-xs md:text-sm text-slate-500 dark:text-gray-400">Dot Product (A·B)</span>
+                            <span id="calc-dot" class="font-mono text-slate-800 dark:text-white text-sm">0.66</span>
+                        </div>
+                        <div class="flex justify-between items-end border-b border-slate-200 dark:border-gray-700 pb-2 mb-2">
+                            <span class="text-xs md:text-sm text-slate-500 dark:text-gray-400">Magnitude ||A|| × ||B||</span>
+                            <span id="calc-mag" class="font-mono text-slate-800 dark:text-white text-xs md:text-sm">0.87 × 0.81 = 0.70</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-2">
+                            <span class="font-bold text-sm md:text-base">Similarity Score</span>
+                            <span id="calc-score" class="text-lg md:text-2xl font-black text-accent bg-accent/10 px-3 py-1 rounded-lg">0.94</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= STEP 4: GENERATION (Augmentation & LLM) ================= -->
+        <div id="step-4" class="step-content flex-1">
+            <div class="max-w-4xl mx-auto h-full flex flex-col">
+                <div class="text-center mb-6 md:mb-8">
+                    <div class="inline-flex items-center space-x-2 bg-gradient-to-r from-primary/20 to-secondary/20 text-slate-800 dark:text-white px-3 py-1 md:px-4 md:py-1.5 rounded-full text-xs md:text-sm font-medium mb-3 border border-slate-300 dark:border-white/10">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-secondary"></i>
+                        <span>Phase 4: Augmentation & Generation</span>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-bold mb-2">The Final Prompt</h2>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm md:text-base px-2">The retrieved chunks are injected into a prompt template alongside the user's original query. This combined prompt forces the LLM to ground its answer in your data.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 relative flex-1">
+                    <!-- Connection Icon for Desktop -->
+                    <div class="hidden md:flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0 opacity-50 justify-center items-center bg-white dark:bg-dark rounded-full p-2">
+                        <i data-lucide="arrow-right-circle" class="w-8 h-8 text-primary animate-pulse-slow"></i>
+                    </div>
+
+                    <!-- The Augmented Prompt -->
+                    <div class="glass-panel glass-panel-light dark:glass-panel-dark p-4 md:p-5 rounded-xl md:rounded-2xl border-l-4 border-l-primary relative z-10 flex flex-col shadow-sm">
+                        <h3 class="text-xs md:text-sm font-mono text-primary mb-2 flex items-center"><i data-lucide="file-code" class="w-4 h-4 mr-2"></i> Augmented Prompt</h3>
+                        <div class="bg-slate-50 dark:bg-dark/80 rounded-lg p-3 md:p-4 font-mono text-[10px] md:text-xs text-slate-600 dark:text-gray-300 flex-1 border border-slate-200 dark:border-gray-700 overflow-y-auto custom-scrollbar max-h-[200px] md:max-h-full">
+                            <span class="text-secondary dark:text-purple-400 font-bold">System:</span> You are a helpful assistant. Answer the question based ONLY on the provided context.<br><br>
+                            <span class="text-primary dark:text-blue-400 font-bold">Context (from DB):</span><br>
+                            <div class="border-l-2 border-primary/50 pl-2 my-1.5 text-slate-500 dark:text-gray-400 bg-primary/5 dark:bg-gray-800/50 p-2 rounded">
+                                "Machine learning algorithms build a model based on sample data, known as training data, in order to make predictions or decisions..."
+                            </div>
+                            <br>
+                            <span class="text-accent font-bold">User Query:</span><br>
+                            <span class="text-slate-700 dark:text-gray-200">What do machine learning algorithms use to build models?</span>
+                        </div>
+                    </div>
+
+                    <!-- The LLM Output -->
+                    <div class="glass-panel glass-panel-light dark:glass-panel-dark p-4 md:p-5 rounded-xl md:rounded-2xl border-l-4 border-l-secondary relative z-10 flex flex-col shadow-sm">
+                        <h3 class="text-xs md:text-sm font-mono text-secondary mb-2 flex items-center"><i data-lucide="bot" class="w-4 h-4 mr-2"></i> LLM Output</h3>
+                        <div id="llm-output-container" class="bg-white dark:bg-dark/80 rounded-lg p-3 md:p-4 text-xs md:text-sm text-slate-700 dark:text-gray-200 flex-1 border border-slate-200 dark:border-gray-700 relative min-h-[150px]">
+                            <div class="absolute inset-0 flex items-center justify-center bg-white/90 dark:bg-dark/90 backdrop-blur-[2px] rounded-lg z-20 transition-opacity duration-300" id="llm-overlay">
+                                <button onclick="simulateGeneration()" class="bg-secondary/10 hover:bg-secondary/20 text-secondary border border-secondary/30 px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 text-sm shadow-sm">
+                                    <i data-lucide="play" class="w-4 h-4"></i>
+                                    <span>Run Inference</span>
+                                </button>
+                            </div>
+                            <div id="typing-text" class="leading-relaxed font-serif"></div>
+                            <span id="cursor" class="inline-block w-2 h-3.5 bg-secondary ml-1 animate-pulse hidden align-middle"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= STEP 5: END-TO-END ARCHITECTURE ================= -->
+        <div id="step-5" class="step-content flex-1">
+            <div class="max-w-5xl mx-auto text-center h-full flex flex-col justify-center">
+                <div class="inline-flex items-center space-x-2 bg-slate-200 dark:bg-gray-800 text-slate-800 dark:text-white px-3 py-1 rounded-full text-xs md:text-sm font-medium mb-4 border border-slate-300 dark:border-gray-700 mx-auto">
+                    <i data-lucide="git-merge" class="w-4 h-4 text-primary"></i>
+                    <span>The Big Picture</span>
+                </div>
+                <h2 class="text-2xl md:text-4xl font-bold mb-6">End-to-End RAG Architecture</h2>
+                
+                <!-- Responsive Flowchart -->
+                <div class="glass-panel glass-panel-light dark:glass-panel-dark p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 md:gap-2 relative w-full mt-4">
+                    
+                    <!-- Background Connector Line (Desktop only) -->
+                    <div class="hidden md:block absolute top-1/2 left-[10%] right-[10%] h-1 bg-gradient-to-r from-primary via-secondary to-accent -translate-y-1/2 z-0 opacity-20 rounded-full"></div>
+
+                    <!-- Step 1: User -->
+                    <div class="flex flex-col items-center z-10 w-full md:w-auto">
+                        <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-600 flex items-center justify-center shadow-lg mb-2 relative group hover:-translate-y-1 transition-transform">
+                            <i data-lucide="user" class="w-6 h-6 md:w-8 md:h-8 text-slate-600 dark:text-slate-300"></i>
+                            <div class="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full animate-ping opacity-75"></div>
+                            <div class="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full"></div>
+                        </div>
+                        <span class="text-xs md:text-sm font-semibold">User Query</span>
+                    </div>
+
+                    <i data-lucide="arrow-down" class="w-5 h-5 text-slate-400 md:hidden z-10 animate-bounce"></i>
+                    <i data-lucide="arrow-right" class="w-5 h-5 text-primary hidden md:block z-10 bg-slate-50 dark:bg-dark p-0.5 rounded-full"></i>
+
+                    <!-- Step 2: Embed Model -->
+                    <div class="flex flex-col items-center z-10 w-full md:w-auto">
+                        <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary/10 border-2 border-primary/40 flex items-center justify-center shadow-lg mb-2 shadow-primary/20 group hover:-translate-y-1 transition-transform">
+                            <i data-lucide="binary" class="w-6 h-6 md:w-8 md:h-8 text-primary"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-semibold">Embedding Model</span>
+                        <span class="text-[10px] text-slate-500">Vectorizes query</span>
+                    </div>
+
+                    <i data-lucide="arrow-down" class="w-5 h-5 text-slate-400 md:hidden z-10 animate-bounce"></i>
+                    <i data-lucide="arrow-right" class="w-5 h-5 text-primary hidden md:block z-10 bg-slate-50 dark:bg-dark p-0.5 rounded-full"></i>
+
+                    <!-- Step 3: Vector DB -->
+                    <div class="flex flex-col items-center z-10 w-full md:w-auto">
+                        <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-secondary/10 border-2 border-secondary/40 flex items-center justify-center shadow-lg mb-2 shadow-secondary/20 group hover:-translate-y-1 transition-transform">
+                            <i data-lucide="database" class="w-6 h-6 md:w-8 md:h-8 text-secondary"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-semibold">Vector DB</span>
+                        <span class="text-[10px] text-slate-500">Similarity Search</span>
+                    </div>
+
+                    <i data-lucide="arrow-down" class="w-5 h-5 text-slate-400 md:hidden z-10 animate-bounce"></i>
+                    <i data-lucide="arrow-right" class="w-5 h-5 text-secondary hidden md:block z-10 bg-slate-50 dark:bg-dark p-0.5 rounded-full"></i>
+
+                    <!-- Step 4: LLM -->
+                    <div class="flex flex-col items-center z-10 w-full md:w-auto">
+                        <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-accent/10 border-2 border-accent/40 flex items-center justify-center shadow-lg mb-2 shadow-accent/20 group hover:-translate-y-1 transition-transform">
+                            <i data-lucide="cpu" class="w-6 h-6 md:w-8 md:h-8 text-accent"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-semibold">LLM</span>
+                        <span class="text-[10px] text-slate-500">Generates Answer</span>
+                    </div>
+
+                    <i data-lucide="arrow-down" class="w-5 h-5 text-slate-400 md:hidden z-10 animate-bounce"></i>
+                    <i data-lucide="arrow-right" class="w-5 h-5 text-accent hidden md:block z-10 bg-slate-50 dark:bg-dark p-0.5 rounded-full"></i>
+
+                    <!-- Step 5: Answer -->
+                    <div class="flex flex-col items-center z-10 w-full md:w-auto">
+                        <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-600 flex items-center justify-center shadow-lg mb-2 relative group hover:-translate-y-1 transition-transform">
+                            <i data-lucide="message-square-check" class="w-6 h-6 md:w-8 md:h-8 text-accent"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-semibold">Final Answer</span>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto bg-primary/5 p-4 rounded-lg border border-primary/10">
+                    <p>By coupling <strong>Information Retrieval</strong> with <strong>Text Generation</strong>, RAG solves the LLM hallucination problem and allows AI to access private, up-to-date knowledge without expensive retraining.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer / Navigation Controls -->
+        <div class="mt-auto pt-6 md:pt-10 flex justify-between items-center border-t border-slate-200 dark:border-gray-800/50 pb-safe">
+            <button id="prev-btn" onclick="prevStep()" class="text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white px-2 md:px-4 py-2 flex items-center disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-sm md:text-base" disabled>
+                <i data-lucide="arrow-left" class="w-4 h-4 mr-1 md:mr-2"></i> <span class="hidden sm:inline">Previous</span>
+            </button>
+            <div class="flex space-x-1.5 md:space-x-2">
+                <div class="w-2 h-2 rounded-full dot-indicator" id="dot-1"></div>
+                <div class="w-2 h-2 rounded-full dot-indicator" id="dot-2"></div>
+                <div class="w-2 h-2 rounded-full dot-indicator" id="dot-3"></div>
+                <div class="w-2 h-2 rounded-full dot-indicator" id="dot-4"></div>
+                <div class="w-2 h-2 rounded-full dot-indicator" id="dot-5"></div>
+            </div>
+            <button id="next-btn" onclick="nextStep()" class="bg-slate-900 text-white dark:bg-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200 px-4 md:px-6 py-2 rounded-lg font-medium flex items-center transition-colors text-sm md:text-base shadow-md">
+                Next <i data-lucide="arrow-right" class="w-4 h-4 ml-1 md:ml-2"></i>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Interactive Logic -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // --- Theme Toggle Logic ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const iconDark = document.getElementById('theme-icon-dark');
+        const iconLight = document.getElementById('theme-icon-light');
+
+        // On load, check preference (Default to light if no preference)
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+        }
+
+        // --- Step Navigation Logic ---
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        function updateUI() {
+            // Update contents
+            document.querySelectorAll('.step-content').forEach((el, index) => {
+                if (index + 1 === currentStep) {
+                    el.classList.add('active');
+                    // Trigger math rendering if step 3
+                    if(currentStep === 3 && window.MathJax) {
+                         MathJax.typesetPromise();
+                    }
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+
+            // Update Progress bar
+            document.getElementById('progress-bar').style.width = `${(currentStep / totalSteps) * 100}%`;
+
+            // Update Nav buttons (Desktop)
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                let step = parseInt(btn.getAttribute('data-step'));
+                if (step === currentStep) {
+                    btn.className = 'nav-btn px-2 py-1.5 rounded-md text-sm font-bold transition-colors text-primary bg-primary/10';
+                } else if (step < currentStep) {
+                    btn.className = 'nav-btn px-2 py-1.5 rounded-md text-sm font-medium transition-colors text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white';
+                } else {
+                    btn.className = 'nav-btn px-2 py-1.5 rounded-md text-sm font-medium transition-colors text-slate-400 hover:text-slate-800 dark:text-gray-500 dark:hover:text-white';
+                }
+            });
+
+            // Update Dots (Mobile/Desktop Footer)
+            for(let i=1; i<=totalSteps; i++) {
+                let dot = document.getElementById(`dot-${i}`);
+                if(i === currentStep) {
+                    dot.className = 'w-2 h-2 rounded-full bg-primary dot-indicator shadow-[0_0_8px_rgba(14,165,233,0.8)] transition-all scale-125';
+                } else if (i < currentStep) {
+                    dot.className = 'w-2 h-2 rounded-full bg-secondary/50 dot-indicator transition-all';
+                } else {
+                    dot.className = 'w-2 h-2 rounded-full bg-slate-300 dark:bg-gray-700 dot-indicator transition-all';
+                }
+            }
+
+            // Update Buttons
+            document.getElementById('prev-btn').disabled = currentStep === 1;
+            
+            let nextBtn = document.getElementById('next-btn');
+            if (currentStep === totalSteps) {
+                nextBtn.innerHTML = 'Restart <i data-lucide="rotate-ccw" class="w-4 h-4 ml-1 md:ml-2"></i>';
+                nextBtn.onclick = () => goToStep(1);
+            } else {
+                nextBtn.innerHTML = 'Next <i data-lucide="arrow-right" class="w-4 h-4 ml-1 md:ml-2"></i>';
+                nextBtn.onclick = nextStep;
+            }
+            lucide.createIcons(); // Re-init icons for buttons dynamically updated
+            
+            // Scroll to top of content on mobile when changing steps
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToStep(step) {
+            currentStep = step;
+            updateUI();
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateUI();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateUI();
+            }
+        }
+
+        // ================= STEP 1 Logic: Chunking =================
+        function simulateChunking() {
+            const rawDoc = document.getElementById('raw-document');
+            const container = document.getElementById('chunk-container');
+            const chunks = document.querySelectorAll('.chunk-anim');
+            
+            rawDoc.style.opacity = '0.4';
+            rawDoc.style.filter = 'grayscale(1)';
+            container.classList.remove('hidden');
+            
+            setTimeout(() => {
+                container.style.opacity = '1';
+                chunks.forEach(chunk => {
+                    chunk.style.transform = 'translateY(0)';
+                });
+            }, 50);
+        }
+
+        // ================= STEP 2 Logic: Embeddings =================
+        function generateMockEmbedding() {
+            const input = document.getElementById('embed-input').value;
+            const outputArea = document.getElementById('vector-output');
+            
+            if(!input) return;
+
+            outputArea.innerHTML = `<span class="text-slate-400 dark:text-gray-500 animate-pulse">Vectorizing via Embedding Model...</span>`;
+            
+            // Simulate processing delay
+            setTimeout(() => {
+                let vectorHTML = '[ <br>&nbsp;&nbsp;';
+                for(let i=0; i<1536; i++) {
+                    if (i < 15) { // Show less on mobile to save space
+                        let val = (Math.random() * 2 - 1).toFixed(4);
+                        let colorClass = val < 0 ? 'text-rose-500 dark:text-red-400' : 'text-emerald-600 dark:text-accent';
+                        vectorHTML += `<span class="${colorClass}">${val}</span>, `;
+                        if((i+1) % 5 === 0) vectorHTML += '<br>&nbsp;&nbsp;';
+                    } else if (i === 15) {
+                        vectorHTML += '<span class="text-slate-400 dark:text-gray-500 text-[10px] md:text-xs">... (1516 dimensions hidden) ...</span> <br>&nbsp;&nbsp;';
+                    } else if (i > 1530) {
+                        let val = (Math.random() * 2 - 1).toFixed(4);
+                        let colorClass = val < 0 ? 'text-rose-500 dark:text-red-400' : 'text-emerald-600 dark:text-accent';
+                        vectorHTML += `<span class="${colorClass}">${val}</span>${i===1535 ? '' : ', '}`;
+                    }
+                }
+                vectorHTML += '<br>]';
+                outputArea.innerHTML = vectorHTML;
+            }, 600);
+        }
+
+        // ================= STEP 3 Logic: Cosine Similarity =================
+        function calculateCosine() {
+            const A = [
+                parseFloat(document.getElementById('vA1').value) || 0,
+                parseFloat(document.getElementById('vA2').value) || 0,
+                parseFloat(document.getElementById('vA3').value) || 0
+            ];
+            const B = [
+                parseFloat(document.getElementById('vB1').value) || 0,
+                parseFloat(document.getElementById('vB2').value) || 0,
+                parseFloat(document.getElementById('vB3').value) || 0
+            ];
+
+            let dot = 0;
+            let magA_sq = 0;
+            let magB_sq = 0;
+
+            for(let i=0; i<3; i++) {
+                dot += A[i] * B[i];
+                magA_sq += A[i] * A[i];
+                magB_sq += B[i] * B[i];
+            }
+
+            const magA = Math.sqrt(magA_sq);
+            const magB = Math.sqrt(magB_sq);
+            const similarity = magA && magB ? dot / (magA * magB) : 0;
+
+            document.getElementById('calc-dot').innerText = dot.toFixed(3);
+            document.getElementById('calc-mag').innerText = `${magA.toFixed(2)} × ${magB.toFixed(2)} = ${(magA*magB).toFixed(3)}`;
+            
+            const scoreEl = document.getElementById('calc-score');
+            scoreEl.innerText = similarity.toFixed(4);
+            
+            // Color code score based on similarity strength
+            if(similarity > 0.7) {
+                scoreEl.className = "text-lg md:text-2xl font-black text-emerald-600 dark:text-accent bg-emerald-100 dark:bg-accent/20 px-2 md:px-3 py-1 rounded-lg transition-colors";
+            } else if (similarity > 0.3) {
+                scoreEl.className = "text-lg md:text-2xl font-black text-amber-500 dark:text-yellow-400 bg-amber-100 dark:bg-yellow-400/20 px-2 md:px-3 py-1 rounded-lg transition-colors";
+            } else {
+                scoreEl.className = "text-lg md:text-2xl font-black text-rose-500 dark:text-red-400 bg-rose-100 dark:bg-red-400/20 px-2 md:px-3 py-1 rounded-lg transition-colors";
+            }
+        }
+
+        // Attach event listeners to math inputs
+        ['vA1','vA2','vA3','vB1','vB2','vB3'].forEach(id => {
+            document.getElementById(id).addEventListener('input', calculateCosine);
+        });
+
+        // Initialize math calculation
+        calculateCosine();
+
+        // ================= STEP 4 Logic: LLM Typewriter =================
+        const finalAnswer = "Based on the provided context, machine learning algorithms use sample data (known as training data) to build models. This allows them to make predictions without explicit programming.";
+        let typingInterval;
+
+        function simulateGeneration() {
+            const overlay = document.getElementById('llm-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 300); // fade out
+            
+            const cursor = document.getElementById('cursor');
+            const target = document.getElementById('typing-text');
+            target.innerHTML = '';
+            cursor.classList.remove('hidden');
+            
+            clearInterval(typingInterval);
+            let i = 0;
+            typingInterval = setInterval(() => {
+                if (i < finalAnswer.length) {
+                    target.innerHTML += finalAnswer.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typingInterval);
+                    cursor.classList.add('hidden');
+                }
+            }, 25); // Faster typing speed
+        }
+
+        // Initialize UI
+        updateUI();
+
+    </script>
+</body>
+</html>
