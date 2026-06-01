@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ansh Raj | Professional Web Developer & AI/ML Learner</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config for Custom Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#0f172a',
+                        secondary: '#1e293b',
+                        accent: '#8b5cf6',
+                        accentHover: '#7c3aed',
+                        neonBlue: '#06b6d4',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Effects */
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #8b5cf6;
+            border-radius: 4px;
+        }
+
+        /* Neon Glow Effects */
+        .glow-text {
+            text-shadow: 0 0 10px rgba(139, 92, 246, 0.5), 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+        .glow-box {
+            transition: all 0.3s ease;
+        }
+        .glow-box:hover {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+            transform: translateY(-5px);
+        }
+
+        /* Animated Background Blob */
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: moveBlob 12s infinite alternate ease-in-out;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; max-width: 400px; max-height: 400px; background: rgba(139, 92, 246, 0.4); border-radius: 50%; }
+        .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; max-width: 500px; max-height: 500px; background: rgba(6, 182, 212, 0.3); border-radius: 50%; }
+
+        @keyframes moveBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 30px) scale(1.1); }
+        }
+
+        .typed-cursor {
+            color: #06b6d4;
+            font-size: 1.2em;
+        }
+
+        /* Iframe Preview Container Styles */
+        .iframe-container {
+            width: 100%;
+            height: 220px;
+            position: relative;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .iframe-preview {
+            width: 1280px; /* Simulate a desktop screen width */
+            height: 800px; /* Simulate a desktop screen height */
+            border: none;
+            transform: scale(0.3); /* Scale it down to fit the container */
+            transform-origin: 0 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none; /* Prevent interacting with iframe directly */
+        }
+
+        /* Adjust scaling for different screen sizes if needed */
+        @media (max-width: 768px) {
+            .iframe-preview {
+                transform: scale(0.35);
+            }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-accent selection:text-white relative">
+
+    <!-- Background Effects -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2 fixed"></div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300" id="navbar" style="backdrop-filter: blur(10px); background: rgba(15, 23, 42, 0.85); border-bottom: 1px solid rgba(255,255,255,0.05);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0">
+                    <a href="#" class="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-neonBlue tracking-wider">
+                        &lt;Ansh.Raj/&gt;
+                    </a>
+                </div>
+                <div class="hidden lg:block">
+                    <div class="ml-10 flex items-baseline space-x-6">
+                        <a href="#home" class="hover:text-neonBlue transition-colors px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                        <a href="#about" class="hover:text-neonBlue transition-colors px-3 py-2 rounded-md text-sm font-medium">About</a>
+                        <a href="#skills" class="hover:text-neonBlue transition-colors px-3 py-2 rounded-md text-sm font-medium">Skills</a>
+                        <a href="#projects" class="hover:text-neonBlue transition-colors px-3 py-2 rounded-md text-sm font-medium">Projects</a>
+                        <a href="#services" class="hover:text-neonBlue transition-colors px-3 py-2 rounded-md text-sm font-medium">Services</a>
+                        <a href="#contact" class="bg-gradient-to-r from-accent to-neonBlue text-white px-6 py-2.5 rounded-full font-medium hover:shadow-lg hover:shadow-accent/50 transition-all ml-4">Hire Me</a>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="lg:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none p-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="lg:hidden hidden bg-secondary/95 backdrop-blur-md border-t border-gray-800 absolute w-full shadow-2xl" id="mobile-menu">
+            <div class="px-4 pt-2 pb-6 space-y-2 text-center flex flex-col">
+                <a href="#home" class="mobile-link hover:bg-gray-700/50 px-3 py-3 rounded-md text-base font-medium">Home</a>
+                <a href="#about" class="mobile-link hover:bg-gray-700/50 px-3 py-3 rounded-md text-base font-medium">About</a>
+                <a href="#skills" class="mobile-link hover:bg-gray-700/50 px-3 py-3 rounded-md text-base font-medium">Skills</a>
+                <a href="#projects" class="mobile-link hover:bg-gray-700/50 px-3 py-3 rounded-md text-base font-medium">Projects</a>
+                <a href="#services" class="mobile-link hover:bg-gray-700/50 px-3 py-3 rounded-md text-base font-medium">Services</a>
+                <a href="#contact" class="mobile-link bg-gradient-to-r from-accent to-neonBlue text-white font-bold px-3 py-3 rounded-lg mt-2 mx-4 inline-block">Hire Me</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-[100svh] flex items-center justify-center pt-24 pb-12 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+            
+            <div class="gsap-hero-text order-2 lg:order-1 text-center lg:text-left">
+                <p class="text-neonBlue font-semibold tracking-wide mb-3 uppercase text-sm md:text-base">Hello World! I am</p>
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 text-white leading-tight">Ansh <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent to-neonBlue">Raj</span></h1>
+                
+                <div class="text-xl sm:text-2xl md:text-3xl font-medium text-gray-300 mb-6 h-12 md:h-10">
+                    A <span id="typed-element" class="text-neonBlue font-bold"></span>
+                </div>
+                
+                <p class="text-gray-400 text-base md:text-lg mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                    I design and develop professional, highly animated, and fully functional websites for all types of businesses. From beautiful Frontends to robust Backends and Databases.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row flex-wrap gap-4 justify-center lg:justify-start">
+                    <a href="https://wa.me/919508481289" target="_blank" class="w-full sm:w-auto bg-gradient-to-r from-accent to-accentHover text-white px-8 py-3.5 rounded-full font-semibold hover:shadow-[0_0_20px_rgba(139,92,246,0.6)] transition-all flex items-center justify-center gap-2">
+                        <i class="fab fa-whatsapp text-xl"></i> Let's Chat
+                    </a>
+                    <a href="#projects" class="w-full sm:w-auto border border-neonBlue text-neonBlue px-8 py-3.5 rounded-full font-semibold hover:bg-neonBlue hover:text-white transition-all text-center">
+                        View Portfolio
+                    </a>
+                </div>
+
+                <div class="mt-10 flex gap-6 justify-center lg:justify-start">
+                    <a href="https://github.com/ANSH-ind" target="_blank" class="text-gray-400 hover:text-white hover:-translate-y-1 transition-all text-2xl md:text-3xl p-2"><i class="fab fa-github"></i></a>
+                    <a href="https://www.youtube.com/@ansh_py" target="_blank" class="text-gray-400 hover:text-red-500 hover:-translate-y-1 transition-all text-2xl md:text-3xl p-2"><i class="fab fa-youtube"></i></a>
+                    <a href="mailto:anshraj0000000001@gmail.com" class="text-gray-400 hover:text-neonBlue hover:-translate-y-1 transition-all text-2xl md:text-3xl p-2"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <div class="gsap-hero-img order-1 lg:order-2 flex justify-center relative mt-8 lg:mt-0">
+                <div class="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-accent to-neonBlue rounded-full blur-3xl opacity-40 animate-pulse"></div>
+                    <div class="absolute inset-2 bg-secondary rounded-full border-4 border-gray-800 flex items-center justify-center overflow-hidden z-10 shadow-2xl">
+                        <i class="fas fa-laptop-code text-7xl md:text-9xl text-gray-400"></i>
+                    </div>
+                    <!-- Floating Tech Icons -->
+                    <div class="absolute -top-4 right-4 md:right-10 bg-gray-800 p-3 rounded-full shadow-lg border border-gray-700 z-20 animate-bounce" style="animation-duration: 3s;">
+                        <i class="fab fa-python text-2xl md:text-3xl text-yellow-400"></i>
+                    </div>
+                    <div class="absolute bottom-4 -left-2 md:-left-4 bg-gray-800 p-3 rounded-full shadow-lg border border-gray-700 z-20 animate-bounce" style="animation-delay: 1s; animation-duration: 4s;">
+                        <i class="fab fa-js text-2xl md:text-3xl text-yellow-300"></i>
+                    </div>
+                    <div class="absolute -bottom-6 right-10 md:right-20 bg-gray-800 p-3 rounded-full shadow-lg border border-gray-700 z-20 animate-bounce" style="animation-delay: 0.5s; animation-duration: 2.5s;">
+                        <i class="fas fa-brain text-2xl md:text-3xl text-pink-500"></i>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 px-4 sm:px-6 lg:px-8 bg-secondary/40 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 gsap-fade-up">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 glow-text">About Me</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-accent to-neonBlue mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="gsap-fade-right space-y-6 text-gray-300 text-base md:text-lg leading-relaxed text-center lg:text-left">
+                    <p>
+                        I am <span class="text-neonBlue font-semibold">Ansh Raj</span>, a passionate Full-Stack Web Developer based in Bihar (Gaya), India. 
+                        Alongside being a perfect web developer, I am also a dedicated <span class="text-accent font-semibold">AI & ML Learner</span> currently working with the <strong>PyTorch</strong> framework.
+                    </p>
+                    <p>
+                        My mission is to help businesses establish a powerful digital presence. I have successfully designed and delivered websites for <strong class="text-white text-xl">50+ Schools and Hospitals</strong>. Reliability and trust are the core of my services.
+                    </p>
+                    <p>
+                        I don't just build the visible parts. I provide end-to-end solutions including <strong>Frontend, Backend, Database management, and Custom Admin Panels</strong> so you have full control over your platform.
+                    </p>
+                </div>
+                
+                <div class="gsap-fade-left grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Stats Cards -->
+                    <div class="bg-gray-800/60 p-8 rounded-2xl border border-gray-700 text-center glow-box backdrop-blur-sm">
+                        <i class="fas fa-hospital text-4xl text-accent mb-4"></i>
+                        <h3 class="text-5xl font-bold text-white counter" data-target="50">0</h3>
+                        <p class="text-gray-400 mt-2 font-medium">Schools & Hospitals</p>
+                    </div>
+                    <div class="bg-gray-800/60 p-8 rounded-2xl border border-gray-700 text-center glow-box backdrop-blur-sm">
+                        <i class="fas fa-check-circle text-4xl text-neonBlue mb-4"></i>
+                        <h3 class="text-5xl font-bold text-white">100%</h3>
+                        <p class="text-gray-400 mt-2 font-medium">Client Satisfaction</p>
+                    </div>
+                    <div class="bg-gray-800/60 p-6 rounded-2xl border border-gray-700 text-center glow-box backdrop-blur-sm sm:col-span-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <i class="fas fa-network-wired text-4xl text-pink-500"></i>
+                        <div class="text-center sm:text-left">
+                            <h3 class="text-2xl font-bold text-white">AI & Machine Learning</h3>
+                            <p class="text-gray-400">Actively building models with PyTorch</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 gsap-fade-up">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 glow-text">My Arsenal</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-accent to-neonBlue mx-auto rounded-full"></div>
+                <p class="text-gray-400 mt-4 text-lg">Languages and technologies I specialize in.</p>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 gsap-stagger">
+                
+                <!-- Skill Items -->
+                <div class="bg-secondary p-6 rounded-xl border border-gray-700 text-center glow-box flex flex-col items-center justify-center group">
+                    <i class="fab fa-html5 text-5xl md:text-6xl text-orange-500 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="font-semibold text-gray-200">HTML5</h3>
+                </div>
+                <div class="bg-secondary p-6 rounded-xl border border-gray-700 text-center glow-box flex flex-col items-center justify-center group">
+                    <i class="fab fa-css3-alt text-5xl md:text-6xl text-blue-500 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="font-semibold text-gray-200">CSS3</h3>
+                </div>
+                <div class="bg-secondary p-6 rounded-xl border border-gray-700 text-center glow-box flex flex-col items-center justify-center group">
+                    <i class="fab fa-js text-5xl md:text-6xl text-yellow-400 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="font-semibold text-gray-200">JavaScript</h3>
+                </div>
+                <div class="bg-secondary p-6 rounded-xl border border-gray-700 text-center glow-box flex flex-col items-center justify-center group">
+                    <i class="fab fa-python text-5xl md:text-6xl text-blue-400 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="font-semibold text-gray-200">Python</h3>
+                </div>
+                <div class="bg-secondary p-6 rounded-xl border border-gray-700 text-center glow-box flex flex-col items-center justify-center group">
+                    <i class="fas fa-file-code text-5xl md:text-6xl text-indigo-500 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="font-semibold text-gray-200">C++</h3>
+                </div>
+                <div class="bg-secondary p-6 rounded-xl border border-gray-700 text-center glow-box flex flex-col items-center justify-center group">
+                    <i class="fab fa-android text-5xl md:text-6xl text-green-500 mb-4 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="font-semibold text-gray-200">Kotlin</h3>
+                </div>
+
+            </div>
+
+            <!-- AI/ML Highlight -->
+            <div class="mt-12 bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 p-6 md:p-8 rounded-2xl flex flex-col md:flex-row items-center justify-between gsap-fade-up shadow-xl">
+                <div class="flex flex-col md:flex-row items-center gap-6 mb-6 md:mb-0 text-center md:text-left">
+                    <div class="bg-red-500/10 p-5 rounded-full border border-red-500/20">
+                        <i class="fas fa-fire text-4xl text-red-500"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-1">PyTorch Framework</h3>
+                        <p class="text-gray-400">Deep Learning & Artificial Intelligence</p>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/3 bg-gray-800 rounded-full h-3 border border-gray-700 overflow-hidden">
+                    <div class="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 h-full rounded-full w-[75%] relative overflow-hidden">
+                        <div class="absolute inset-0 bg-white/20 w-full animate-[shimmer_2s_infinite]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section (UPDATED: LIVE IFRAME PREVIEWS) -->
+    <section id="projects" class="py-20 px-4 sm:px-6 lg:px-8 bg-secondary/20 relative border-y border-gray-800/50">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 gsap-fade-up">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 glow-text">Featured Live Projects</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-accent to-neonBlue mx-auto rounded-full"></div>
+                <p class="text-gray-400 mt-4 text-lg">Live previews of my recent works. Click on cards to visit the websites.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gsap-stagger-cards">
+                
+                <!-- Project 1: Ansh Studios (LIVE PREVIEW) -->
+                <a href="https://anshstudios.pages.dev/" target="_blank" class="group block bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden hover:border-accent transition-all duration-300 hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] relative transform hover:-translate-y-2">
+                    
+                    <div class="iframe-container">
+                        <!-- Live Website Iframe -->
+                        <iframe src="https://anshstudios.pages.dev/" class="iframe-preview" tabindex="-1"></iframe>
+                        <!-- Overlay to handle clicks and hover effects smoothly -->
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-300 z-10"></div>
+                        
+                        <!-- Floating Badge -->
+                        <div class="absolute top-4 right-4 bg-accent text-white text-xs font-bold px-3 py-1 rounded-full z-20 shadow-lg">
+                            Live Preview
+                        </div>
+                    </div>
+
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-accent transition-colors">Ansh Studios</h3>
+                            <i class="fas fa-external-link-alt text-gray-500 group-hover:text-accent transition-colors"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4">Main agency landing page showcasing high-end design and layout architecture.</p>
+                        <div class="flex gap-2 flex-wrap">
+                            <span class="text-xs font-semibold bg-gray-700 text-gray-300 px-3 py-1 rounded-full">HTML/CSS/JS</span>
+                            <span class="text-xs font-semibold bg-gray-700 text-gray-300 px-3 py-1 rounded-full">Responsive</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Project 2: 3D Globe (LIVE PREVIEW) -->
+                <a href="https://anshstudios.pages.dev/3dglobe" target="_blank" class="group block bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden hover:border-neonBlue transition-all duration-300 hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] relative transform hover:-translate-y-2">
+                    
+                    <div class="iframe-container">
+                        <!-- Live Website Iframe -->
+                        <iframe src="https://anshstudios.pages.dev/3dglobe" class="iframe-preview" tabindex="-1"></iframe>
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-300 z-10"></div>
+                        
+                        <div class="absolute top-4 right-4 bg-neonBlue text-white text-xs font-bold px-3 py-1 rounded-full z-20 shadow-lg">
+                            Live Preview
+                        </div>
+                    </div>
+
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-neonBlue transition-colors">Interactive 3D Globe</h3>
+                            <i class="fas fa-external-link-alt text-gray-500 group-hover:text-neonBlue transition-colors"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4">An advanced 3D visual representation utilizing complex rendering and animations.</p>
+                        <div class="flex gap-2 flex-wrap">
+                            <span class="text-xs font-semibold bg-gray-700 text-gray-300 px-3 py-1 rounded-full">3D Animation</span>
+                            <span class="text-xs font-semibold bg-gray-700 text-gray-300 px-3 py-1 rounded-full">Interactivity</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Project 3: Portfolio (LIVE PREVIEW) -->
+                <a href="https://anshstudios.pages.dev/portfolio" target="_blank" class="group block bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden hover:border-pink-500 transition-all duration-300 hover:shadow-[0_0_30px_rgba(236,72,153,0.3)] relative transform hover:-translate-y-2 md:col-span-2 lg:col-span-1">
+                    
+                    <div class="iframe-container">
+                        <!-- Live Website Iframe -->
+                        <iframe src="https://anshstudios.pages.dev/portfolio" class="iframe-preview" tabindex="-1"></iframe>
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-300 z-10"></div>
+                        
+                        <div class="absolute top-4 right-4 bg-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full z-20 shadow-lg">
+                            Live Preview
+                        </div>
+                    </div>
+
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white group-hover:text-pink-500 transition-colors">Old Portfolio Design</h3>
+                            <i class="fas fa-external-link-alt text-gray-500 group-hover:text-pink-500 transition-colors"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4">A showcase of previous portfolio designs, displaying versatile UI/UX approaches.</p>
+                        <div class="flex gap-2 flex-wrap">
+                            <span class="text-xs font-semibold bg-gray-700 text-gray-300 px-3 py-1 rounded-full">UI/UX Design</span>
+                            <span class="text-xs font-semibold bg-gray-700 text-gray-300 px-3 py-1 rounded-full">Web Design</span>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+            
+            <div class="mt-12 text-center">
+                <a href="https://github.com/ANSH-ind" target="_blank" class="inline-flex items-center gap-2 text-gray-400 hover:text-white border-b border-gray-600 hover:border-white pb-1 transition-all">
+                    Explore more on GitHub <i class="fas fa-arrow-right text-sm"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 gsap-fade-up">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 glow-text">What I Do</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-accent to-neonBlue mx-auto rounded-full"></div>
+                <p class="text-gray-400 mt-4 text-lg">Complete digital solutions tailored for your business needs.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gsap-stagger-cards">
+                
+                <!-- Service 1 -->
+                <div class="bg-gray-800/80 p-8 rounded-2xl border border-gray-700 glow-box relative overflow-hidden group h-full">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-neonBlue/10 rounded-bl-full -z-10 group-hover:bg-neonBlue/20 transition-all duration-500"></div>
+                    <div class="bg-gray-900 w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-lg border border-gray-700 group-hover:border-neonBlue transition-colors">
+                        <i class="fas fa-desktop text-3xl text-neonBlue"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Frontend Development</h3>
+                    <p class="text-gray-400 leading-relaxed">Crafting animated, highly responsive, and beautiful user interfaces using modern HTML, CSS, and JS techniques.</p>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="bg-gray-800/80 p-8 rounded-2xl border border-gray-700 glow-box relative overflow-hidden group h-full">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-bl-full -z-10 group-hover:bg-accent/20 transition-all duration-500"></div>
+                    <div class="bg-gray-900 w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-lg border border-gray-700 group-hover:border-accent transition-colors">
+                        <i class="fas fa-server text-3xl text-accent"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Backend & Database</h3>
+                    <p class="text-gray-400 leading-relaxed">Building secure backend architectures and scalable databases to ensure your web application runs smoothly and lightning-fast.</p>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="bg-gray-800/80 p-8 rounded-2xl border border-gray-700 glow-box relative overflow-hidden group h-full md:col-span-2 lg:col-span-1">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 rounded-bl-full -z-10 group-hover:bg-pink-500/20 transition-all duration-500"></div>
+                    <div class="bg-gray-900 w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-lg border border-gray-700 group-hover:border-pink-500 transition-colors">
+                        <i class="fas fa-users-cog text-3xl text-pink-500"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Custom Admin Panel</h3>
+                    <p class="text-gray-400 leading-relaxed">Developing personalized, easy-to-use dashboards allowing you to manage content, users, and data without any coding knowledge.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 bg-secondary/30 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 gsap-fade-up">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 glow-text">Get In Touch</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-accent to-neonBlue mx-auto rounded-full"></div>
+                <p class="text-gray-400 mt-4 text-lg">Let's discuss your next big project today.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-gray-900/50 p-6 md:p-12 rounded-[2rem] border border-gray-700 shadow-2xl backdrop-blur-sm gsap-fade-up">
+                
+                <!-- Contact Info -->
+                <div class="space-y-10">
+                    <div>
+                        <h3 class="text-3xl font-bold text-white mb-4">Let's build something great!</h3>
+                        <p class="text-gray-400 text-lg">Whether you need a website for a school, hospital, or any enterprise, I am ready to turn your vision into reality.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-5">
+                            <div class="bg-gray-800 p-4 rounded-2xl text-neonBlue border border-gray-700 shadow-inner">
+                                <i class="fas fa-map-marker-alt text-2xl w-6 text-center"></i>
+                            </div>
+                            <div class="pt-1">
+                                <h4 class="text-gray-400 text-sm uppercase tracking-wider font-semibold mb-1">Address</h4>
+                                <p class="text-white font-medium text-lg">Simuara, Tekari, Gaya<br>Bihar (India)</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-5">
+                            <div class="bg-gray-800 p-4 rounded-2xl text-accent border border-gray-700 shadow-inner">
+                                <i class="fas fa-phone-alt text-2xl w-6 text-center"></i>
+                            </div>
+                            <div class="pt-1">
+                                <h4 class="text-gray-400 text-sm uppercase tracking-wider font-semibold mb-1">Mobile / WhatsApp</h4>
+                                <a href="https://wa.me/919508481289" target="_blank" class="text-white font-medium text-lg hover:text-accent transition-colors block">+91 9508481289</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-5">
+                            <div class="bg-gray-800 p-4 rounded-2xl text-pink-500 border border-gray-700 shadow-inner">
+                                <i class="fas fa-envelope text-2xl w-6 text-center"></i>
+                            </div>
+                            <div class="pt-1 w-full overflow-hidden">
+                                <h4 class="text-gray-400 text-sm uppercase tracking-wider font-semibold mb-1">Email</h4>
+                                <a href="mailto:anshraj0000000001@gmail.com" class="text-white font-medium text-lg hover:text-pink-500 transition-colors break-all block">anshraj0000000001@gmail.com</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Socials -->
+                    <div class="pt-4 border-t border-gray-800">
+                        <h4 class="text-gray-400 text-sm uppercase tracking-wider font-semibold mb-4">Connect With Me</h4>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="https://github.com/ANSH-ind" target="_blank" class="flex items-center gap-2 bg-gray-800 px-5 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-gray-700 border border-gray-700 transition-all font-medium">
+                                <i class="fab fa-github text-xl"></i> GitHub
+                            </a>
+                            <a href="https://www.youtube.com/@ansh_py" target="_blank" class="flex items-center gap-2 bg-gray-800 px-5 py-3 rounded-xl text-gray-300 hover:text-red-500 hover:bg-gray-700 border border-gray-700 transition-all font-medium">
+                                <i class="fab fa-youtube text-xl"></i> YouTube
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form (Visual Interface) -->
+                <div class="bg-gray-800 p-6 md:p-8 rounded-2xl border border-gray-700 shadow-xl h-fit">
+                    <h3 class="text-2xl font-bold text-white mb-6">Send a Quick Message</h3>
+                    <form class="space-y-5" onsubmit="event.preventDefault(); showCustomAlert();">
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-2">Your Name</label>
+                            <input type="text" class="w-full bg-gray-900 border border-gray-700 text-white rounded-xl px-4 py-3.5 focus:outline-none focus:border-neonBlue focus:ring-1 focus:ring-neonBlue transition-all" placeholder="John Doe" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-2">Email Address</label>
+                            <input type="email" class="w-full bg-gray-900 border border-gray-700 text-white rounded-xl px-4 py-3.5 focus:outline-none focus:border-neonBlue focus:ring-1 focus:ring-neonBlue transition-all" placeholder="john@example.com" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-2">Your Message</label>
+                            <textarea rows="4" class="w-full bg-gray-900 border border-gray-700 text-white rounded-xl px-4 py-3.5 focus:outline-none focus:border-neonBlue focus:ring-1 focus:ring-neonBlue transition-all resize-none" placeholder="What are your project requirements?" required></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-accent to-neonBlue text-white font-bold py-4 px-4 rounded-xl hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] transition-all flex justify-center items-center gap-2 text-lg">
+                            Send Message <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                    
+                    <!-- Custom Alert Message (Hidden by default) -->
+                    <div id="customAlert" class="hidden mt-4 p-4 bg-green-500/20 border border-green-500 text-green-400 rounded-xl text-center text-sm">
+                        Thank you! For instant replies, please message me directly on WhatsApp at +91 9508481289.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-10 text-center relative overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent to-transparent opacity-50"></div>
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-neonBlue mb-4 inline-block">
+                &lt;Ansh.Raj/&gt;
+            </div>
+            <p class="text-gray-500 mb-2">© 2026 Ansh Raj. All rights reserved.</p>
+            <p class="text-sm text-gray-600 font-medium">Designed & Developed by a Perfect Web Developer.</p>
+        </div>
+    </footer>
+
+    <!-- GSAP & Typed.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
+    <script>
+        // Mobile Menu Toggle Logic
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        // Toggle menu on button click
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close menu when a link is clicked
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 20) {
+                navbar.style.background = 'rgba(15, 23, 42, 0.95)';
+                navbar.style.boxShadow = '0 4px 20px -2px rgba(0, 0, 0, 0.5)';
+                navbar.style.paddingTop = '0px';
+                navbar.style.paddingBottom = '0px';
+            } else {
+                navbar.style.background = 'rgba(15, 23, 42, 0.85)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+
+        // Custom Alert Function for Form
+        function showCustomAlert() {
+            const alertBox = document.getElementById('customAlert');
+            alertBox.classList.remove('hidden');
+            setTimeout(() => {
+                alertBox.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Typed.js Initialization
+        var options = {
+            strings: ['Perfect Web Developer.', 'Passionate AI & ML Learner.', 'PyTorch Enthusiast.', 'Full-Stack Freelancer.'],
+            typeSpeed: 50,
+            backSpeed: 30,
+            backDelay: 1500,
+            loop: true
+        };
+        var typed = new Typed('#typed-element', options);
+
+        // --- GSAP Animations ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Handle prefers-reduced-motion for accessibility
+        const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+        
+        if(!mediaQuery.matches) {
+            // Hero Animations
+            gsap.from(".gsap-hero-text", {
+                duration: 1,
+                x: -50,
+                opacity: 0,
+                ease: "power3.out",
+                delay: 0.2
+            });
+
+            gsap.from(".gsap-hero-img", {
+                duration: 1,
+                x: 50,
+                opacity: 0,
+                ease: "power3.out",
+                delay: 0.4
+            });
+
+            // Scroll Reveal Animations
+            const fadeUpElements = document.querySelectorAll('.gsap-fade-up');
+            fadeUpElements.forEach((el) => {
+                gsap.from(el, {
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 85%",
+                    },
+                    y: 40,
+                    opacity: 0,
+                    duration: 0.7,
+                    ease: "power2.out"
+                });
+            });
+
+            gsap.from(".gsap-fade-right", {
+                scrollTrigger: {
+                    trigger: ".gsap-fade-right",
+                    start: "top 80%",
+                },
+                x: -40,
+                opacity: 0,
+                duration: 0.7,
+            });
+
+            gsap.from(".gsap-fade-left", {
+                scrollTrigger: {
+                    trigger: ".gsap-fade-left",
+                    start: "top 80%",
+                },
+                x: 40,
+                opacity: 0,
+                duration: 0.7,
+            });
+
+            // Staggered Animations for Grids
+            gsap.from(".gsap-stagger > div", {
+                scrollTrigger: {
+                    trigger: ".gsap-stagger",
+                    start: "top 85%",
+                },
+                y: 30,
+                opacity: 0,
+                duration: 0.5,
+                stagger: 0.1
+            });
+
+            gsap.from(".gsap-stagger-cards > a, .gsap-stagger-cards > div", {
+                scrollTrigger: {
+                    trigger: ".gsap-stagger-cards",
+                    start: "top 85%",
+                },
+                y: 40,
+                opacity: 0,
+                duration: 0.6,
+                stagger: 0.15
+            });
+
+            // Number Counter Animation for Stats
+            const counters = document.querySelectorAll('.counter');
+            counters.forEach(counter => {
+                let target = +counter.getAttribute('data-target');
+                
+                ScrollTrigger.create({
+                    trigger: counter,
+                    start: "top 90%",
+                    onEnter: () => {
+                        gsap.to(counter, {
+                            innerHTML: target,
+                            duration: 2,
+                            snap: { innerHTML: 1 },
+                            ease: "power1.out",
+                            onUpdate: function() {
+                                counter.innerHTML = Math.round(this.targets()[0].innerHTML) + "+";
+                            }
+                        });
+                    },
+                    once: true
+                });
+            });
+        }
+    </script>
+</body>
+</html>
