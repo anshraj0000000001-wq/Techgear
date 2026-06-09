@@ -153,7 +153,7 @@
                 </h1>
                 
                 <p class="animate-in stagger-3 text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed mb-10">
-                    My name is <span class="font-bold text-slate-900">Ansh Raj</span>. I am a software developer who believes in creating a significant impact through technology.
+                    i am  <span class="font-bold text-slate-900">Ansh Raj</span>. from Bihar,India and started learning ai & ml in class 9th and this all projects are made by me in class 9 to 10.
                 </p>
                 
                 <div class="animate-in stagger-4 flex flex-col sm:flex-row justify-center items-center gap-4">
@@ -456,49 +456,27 @@
                     const title = normalizedRow["title"] ?? "Untitled Project";
                     const description = normalizedRow["description"] ?? "No description provided.";
                     const category = normalizedRow["category"] ?? "Project";
-                    const fileUrl = normalizedRow["fileurl"] ?? "";
+                    
+                    // Fetching iframe URL and Project Link from Sheet
+                    const iframeUrl = normalizedRow["iframeurl"] ?? normalizedRow["iframe url"] ?? normalizedRow["url"] ?? "";
+                    const projectLink = normalizedRow["projectlink"] ?? normalizedRow["project link"] ?? normalizedRow["link"] ?? "";
 
                     if (!title && !description) return;
 
                     let mediaHTML = "";
 
-                    if (fileUrl) {
-                        let fileId = "";
-                        if (fileUrl.includes("id=")) {
-                            fileId = fileUrl.split("id=")[1].split("&")[0];
-                        } else if (fileUrl.includes("/d/")) {
-                            fileId = fileUrl.split("/d/")[1].split("/")[0];
-                        }
-
-                        if (fileId) {
-                            const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-                            const imageDirect = `https://lh3.googleusercontent.com/d/${fileId}`;
-
-                            if (category.toLowerCase().includes("video")) {
-                                mediaHTML = `
-                                    <div class="relative overflow-hidden rounded-[1.5rem] mb-5 shadow-sm group-hover:shadow-md transition-shadow">
-                                        <iframe 
-                                            src="${previewUrl}" 
-                                            class="w-full h-56 border-0"
-                                            allow="autoplay"
-                                            allowfullscreen>
-                                        </iframe>
-                                    </div>
-                                `;
-                            } else {
-                                mediaHTML = `
-                                    <div class="relative overflow-hidden rounded-[1.5rem] mb-5 shadow-sm group-hover:shadow-md transition-all">
-                                        <div class="absolute inset-0 bg-slate-900/10 group-hover:bg-transparent transition-colors z-10 pointer-events-none"></div>
-                                        <img 
-                                            src="${imageDirect}" 
-                                            class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-700"
-                                            loading="lazy"
-                                            referrerpolicy="no-referrer"
-                                        >
-                                    </div>
-                                `;
-                            }
-                        }
+                    // If an iframe URL is provided, display the iframe
+                    if (iframeUrl) {
+                        mediaHTML = `
+                            <div class="relative w-full aspect-video rounded-[1.5rem] overflow-hidden mb-5 shadow-sm group-hover:shadow-md transition-shadow bg-slate-100 border border-slate-200">
+                                <iframe 
+                                    src="${iframeUrl}" 
+                                    class="absolute top-0 left-0 w-full h-full border-0"
+                                    allow="autoplay; encrypted-media"
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                        `;
                     }
 
                     const shortDesc = description.length > 120 
@@ -508,16 +486,27 @@
                     // Fade in stagger calculation
                     const delay = (index % 3) * 0.15;
 
+                    let projectLinkHTML = "";
+                    if (projectLink) {
+                        projectLinkHTML = `
+                            <a href="${projectLink}" target="_blank" class="mb-4 inline-flex items-center gap-2 px-4 py-2 bg-blue-50/50 text-blue-700 rounded-xl font-bold text-xs hover:bg-blue-100 transition-colors w-max border border-blue-100 hover:shadow-sm">
+                                <i data-lucide="link" class="w-3 h-3"></i> View Project Link
+                            </a>
+                        `;
+                    }
+
                     htmlContent += `
                         <div class="bg-white/80 backdrop-blur-sm p-6 rounded-[2.5rem] shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover-card-shadow group border border-slate-100 flex flex-col h-full animate-in" style="animation-delay: ${delay}s; animation-fill-mode: both;">
 
                             ${mediaHTML}
 
                             <div class="flex-grow flex flex-col">
-                                <div class="flex justify-between items-start mb-3 gap-2">
+                                <div class="flex justify-between items-start mb-4 gap-2">
                                     <h3 class="text-xl font-black text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">${title}</h3>
                                     <span class="px-3 py-1 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-100/50 rounded-xl text-[10px] font-black uppercase tracking-wider whitespace-nowrap">${category}</span>
                                 </div>
+
+                                ${projectLinkHTML}
 
                                 <p id="desc-${index}" class="text-sm text-slate-500 font-medium leading-relaxed flex-grow">
                                     ${shortDesc}
