@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dharmendra pardhan abuse web</title>
+    
+    <!-- Premium Font (Outfit) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        creamy: '#FDFBF7',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS for Premium Animations -->
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #FDFBF7;
+            overflow-x: hidden;
+        }
+
+        /* Fade Up Animation on Page Load */
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-up {
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Button Tipne par Pop Effect */
+        @keyframes tapPop {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .animate-tap-pop {
+            animation: tapPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Message aane ka Bounce Effect */
+        @keyframes messageBounce {
+            0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+            50% { opacity: 1; transform: translateY(-5px) scale(1.02); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-message {
+            animation: messageBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Spinner Animation */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-custom {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Delays */
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        .delay-500 { animation-delay: 500ms; }
+        .delay-600 { animation-delay: 600ms; }
+
+        /* Disable interaction while loading */
+        .pointer-events-none { pointer-events: none; }
+    </style>
+</head>
+<body class="min-h-screen text-stone-800 flex flex-col items-center justify-between p-6 sm:p-12">
+
+    <div class="max-w-4xl w-full mx-auto flex flex-col items-center flex-grow">
+        
+        <!-- Header Section -->
+        <div class="mb-10 text-center animate-fade-up delay-100">
+            <h1 class="text-3xl sm:text-5xl font-light tracking-tight text-stone-900 mb-3">
+                Dharmendra <span class="font-serif italic text-stone-500">abuse web</span>
+            </h1>
+            <div class="w-16 h-0.5 bg-stone-300 mx-auto rounded-full"></div>
+        </div>
+
+        <!-- Image Section -->
+        <div class="w-full relative animate-fade-up delay-200 group flex justify-center">
+            <!-- Background Glow -->
+            <div class="absolute inset-0 bg-stone-200/50 rounded-[2rem] blur-2xl opacity-60 transition duration-1000 group-hover:opacity-100"></div>
+            
+            <div class="relative bg-white/60 p-2 sm:p-3 rounded-[2rem] shadow-xl border border-white/40 transition-transform duration-700 hover:scale-[1.01] w-full max-w-2xl">
+                <img 
+                    src="https://res.cloudinary.com/dbmcddwjd/image/upload/v1782441422/outstanding4_051216112055_zhxez9.jpg" 
+                    alt="Premium Subject" 
+                    class="w-full h-auto max-h-[70vh] object-contain rounded-[1.5rem]"
+                >
+            </div>
+        </div>
+
+        <!-- Buttons Section -->
+        <div class="w-full mt-16 sm:mt-20 max-w-2xl">
+            <p class="text-center text-stone-400 mb-6 tracking-widest uppercase text-[10px] sm:text-xs font-semibold animate-fade-up delay-300">
+                select abuse to abuse Dharmendra pardhan 
+            </p>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6" id="button-container">
+                <!-- Buttons dynamically generate honge JS se taaki unhe manage karna aasan ho -->
+            </div>
+        </div>
+
+        <!-- Feedback Message Area -->
+        <div class="mt-10 mb-8 h-12 flex justify-center w-full" id="message-container">
+            <!-- Messages yahan dikhenge -->
+        </div>
+
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="w-full mt-auto pt-10 pb-4 text-center animate-fade-up delay-600">
+        <div class="w-full max-w-md mx-auto border-t border-stone-200/60 pt-6">
+            <p class="text-stone-400 text-xs sm:text-sm tracking-wider font-light flex items-center justify-center gap-2">
+                <span>&copy; <span id="current-year"></span></span>
+                <span class="w-1 h-1 rounded-full bg-stone-300"></span>
+                <span class="font-medium text-stone-500">Ansh Raj</span>
+                <span class="w-1 h-1 rounded-full bg-stone-300"></span>
+                <span>All rights reserved.</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Advanced JavaScript Logic -->
+    <script>
+        // Footer me automatically current year set karna
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // API URL (Aapka diya hua link)
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOwKdFmEd0F0l2LyOFixJkYbzFbybt1xcDVZXS6Oskon2wrDxFgli25zDgQKYZ9Oqfmw/exec";
+        
+        // Button Data
+        const options = ['bahanchoda', 'matherchoda', 'iska maa ka land', 'None'];
+        const buttonContainer = document.getElementById('button-container');
+        const messageContainer = document.getElementById('message-container');
+        let isVoting = false; // Vote process me hone par double click rokne ke liye
+
+        // Buttons ko UI par render karna
+        function renderButtons() {
+            options.forEach((btn, index) => {
+                const delayClass = `delay-${300 + (index * 100)}`;
+                
+                const buttonHTML = `
+                    <button 
+                        id="btn-${btn}"
+                        onclick="handleVote('${btn}')"
+                        class="animate-fade-up ${delayClass} relative overflow-hidden group outline-none
+                               px-6 py-5 sm:py-6 rounded-2xl text-2xl sm:text-3xl font-light 
+                               flex items-center justify-center cursor-pointer select-none
+                               bg-white text-stone-600 shadow-sm border border-stone-200/80
+                               transition-all duration-300 active:scale-95 active:shadow-inner"
+                    >
+                        <!-- Hover Overlay -->
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-10 bg-stone-100 transition-opacity duration-300 id="overlay-${btn}"></div>
+                        
+                        <!-- Text ya Spinner yahan aayega -->
+                        <span class="relative z-10 flex items-center justify-center w-full" id="content-${btn}">
+                            ${btn}
+                        </span>
+                    </button>
+                `;
+                buttonContainer.insertAdjacentHTML('beforeend', buttonHTML);
+            });
+        }
+
+        // Jab user kisi button par tip (click) karta hai
+        async function handleVote(selectedButton) {
+            if (isVoting) return; // Agar pehle se loading chal rahi hai toh kuch mat karo
+            isVoting = true;
+
+            // UI update: Saare buttons ko disable karna aur selected ko highlight karna
+            options.forEach(btn => {
+                const el = document.getElementById(`btn-${btn}`);
+                el.classList.add('pointer-events-none'); // Click disable
+                
+                if (btn === selectedButton) {
+                    // Selected button ka look (Dark & Loading Spinner)
+                    el.className = `relative overflow-hidden group outline-none px-6 py-5 sm:py-6 rounded-2xl text-2xl sm:text-3xl font-light flex items-center justify-center select-none bg-stone-800 text-white shadow-xl border border-stone-800 scale-105 transition-all duration-300 animate-tap-pop pointer-events-none`;
+                    
+                    // Button ke andar Spinner dikhana
+                    document.getElementById(`content-${btn}`).innerHTML = `
+                        <svg class="animate-spin-custom h-7 w-7 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    `;
+                } else {
+                    // Baaki buttons ko thoda transparent karna
+                    el.classList.add('opacity-50');
+                }
+            });
+
+            // Status message: Loading
+            showMessage(`Vote <strong>${selectedButton}</strong> ke liye bheja jaa raha hai...`, 'loading');
+
+            try {
+                // API Call
+                const response = await fetch(`${SCRIPT_URL}?button=${selectedButton}`);
+                
+                // Note: Agar Google Script properly CORS handle karta hai, tabhi JSON aayega.
+                // Agar 'no-cors' error aata hai Google Script se, tab bhi data submit ho jata hai.
+                let data = null;
+                try {
+                    data = await response.json();
+                } catch(e) {
+                    console.log("JSON parse error, par vote shayad save ho gaya hai.", e);
+                }
+                
+                console.log("API Response:", data);
+
+                // Success UI update
+                document.getElementById(`content-${selectedButton}`).innerHTML = selectedButton; // Wapas text laana
+                showMessage(`you are choosing <strong>${selectedButton}</strong> for Dharmendra pardhan!`, 'success');
+                
+            } catch (error) {
+                console.error("Voting error:", error);
+                document.getElementById(`content-${selectedButton}`).innerHTML = selectedButton;
+                showMessage("technical error has been occurred please try again.", 'error');
+            } finally {
+                // Thodi der baad buttons wapas normal karna chaho toh yahan logic add kar sakte ho
+                // Filhal hum isko locked chhod dete hain taaki ek baar vote ho jaye
+                isVoting = false; 
+            }
+        }
+
+        // Message dikhane ka function
+        function showMessage(text, type) {
+            let icon = '';
+            let dotColor = 'bg-stone-800';
+
+            if(type === 'success') {
+                dotColor = 'bg-green-500';
+                icon = `<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>`;
+            } else if (type === 'error') {
+                dotColor = 'bg-red-500';
+                icon = `<svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+            } else {
+                icon = `<span class="flex h-2.5 w-2.5 rounded-full ${dotColor} animate-pulse"></span>`;
+            }
+
+            messageContainer.innerHTML = `
+                <div class="animate-message px-6 py-3 bg-white/90 backdrop-blur-md border border-stone-200/60 rounded-full shadow-lg flex items-center gap-3 text-stone-600 text-sm">
+                    ${icon}
+                    <span>${text}</span>
+                </div>
+            `;
+        }
+
+        // Initialize App
+        renderButtons();
+    </script>
+</body>
+</html>
+
+```
